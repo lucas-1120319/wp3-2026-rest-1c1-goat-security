@@ -31,7 +31,7 @@ class Database:
                     phone TEXT,
                     password TEXT NOT NULL,
                     role_id INTEGER,
-                    FOREIGN KEY (role_id) REFERENCES role(id)
+                    FOREIGN KEY (role_id) REFERENCES roles(id)
                 )
             ''')
 
@@ -57,6 +57,7 @@ class Database:
                 CREATE TABLE IF NOT EXISTS students (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     user_id INTEGER NOT NULL UNIQUE,
+                    external_id INTEGER UNIQUE,
                     first_name TEXT,
                     last_name TEXT,
                     postcode TEXT,
@@ -144,25 +145,32 @@ class Database:
                       learningGoal_id INTEGER NOT NULL,
                       source_id INTEGER NOT NULL,
                       FOREIGN KEY(learningGoal_id) REFERENCES learningGoals(id),
-                      FOREIGN KEY(source_id) REFERENCES source(id)
+                      FOREIGN KEY(source_id) REFERENCES sources(id)
 
                   )
               ''')
             # taxonomy
 
             cur.execute('''
-                      CREATE TABLE IF NOT EXISTS taxonomy (
-                          id INTEGER PRIMARY KEY AUTOINCREMENT,
-                          level TEXT NOT NULL,
-                          kennen INTERGER,
-                          kunnen INTEGER,
-                          confidence INTEGER,
-                          snapshot_id INTEGER NOT NULL,
-                          student_id INTEGER NOT NULL,
-                          FOREIGN KEY(snapshot_id) REFERENCES snapshots(id),
-                          FOREIGN KEY(student_id) REFERENCES students(id)
+                  CREATE TABLE IF NOT EXISTS taxonomy (
+                      id INTEGER PRIMARY KEY AUTOINCREMENT,
+                      level TEXT NOT NULL,
+                      kennen NUMERIC(3,2) NOT NULL,
+                      kunnen NUMERIC(3,2) NOT NULL,
+                      confidence NUMERIC(3,2) NOT NULL,
+                      snapshot_id INTEGER NOT NULL,
+                      student_id INTEGER NOT NULL,
+                      FOREIGN KEY(snapshot_id) REFERENCES snapshots(id),
+                      FOREIGN KEY(student_id) REFERENCES students(id)
 
-                      )
-                  ''')
+                  )
+              ''')
+
+            roles = ["admin", "student", "teacher"]
+            for role in roles:
+                cur.execute(
+                    "INSERT OR IGNORE INTO roles (name) VALUES (?)",
+                    (role,)
+                )
 
             con.commit()

@@ -5,6 +5,7 @@ from data.database import Database
 
 from models.students import Student
 from models.teachers import Teacher
+from models.data_converter import data_converter
 
 app = Flask(__name__)
 app.secret_key = "super_duper_secret_key"
@@ -15,6 +16,8 @@ DB_PATH = os.path.join(BASE_DIR, "data", "app.db")
 _db = Database(DB_PATH)
 students = Student(DB_PATH)
 teachers = Teacher(DB_PATH)
+json_data = os.path.join(BASE_DIR, "data", "data-sample-small.json")
+data_converter = data_converter(DB_PATH, json_data)
 
 @app.route("/")
 def index():
@@ -25,6 +28,8 @@ def index():
     #     "enrollments": enrollments.count_all()[0],
     # }
     return render_template("index.html")
+
+
 
 
 if __name__ == "__main__":
