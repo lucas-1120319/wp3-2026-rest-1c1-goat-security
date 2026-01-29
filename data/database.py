@@ -153,6 +153,7 @@ class Database:
             cur.execute('''
                       CREATE TABLE IF NOT EXISTS taxonomy (
                           id INTEGER PRIMARY KEY AUTOINCREMENT,
+                          level TEXT NOT NULL,
                           kennen INTERGER,
                           kunnen INTEGER,
                           confidence INTEGER,
