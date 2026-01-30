@@ -16,7 +16,7 @@ DB_PATH = os.path.join(BASE_DIR, "data", "app.db")
 _db = Database(DB_PATH)
 students = Student(DB_PATH)
 teachers = Teacher(DB_PATH)
-json_data = os.path.join(BASE_DIR, "data", "data-sample-small.json")
+json_data = os.path.join(BASE_DIR, "data", "data-sample.json")
 data_converter = data_converter(DB_PATH, json_data)
 
 @app.route("/")

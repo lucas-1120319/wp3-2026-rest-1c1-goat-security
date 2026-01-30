@@ -93,7 +93,8 @@ class Database:
             cur.execute('''
                     CREATE TABLE IF NOT EXISTS subjects (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        name TEXT NOT NULL UNIQUE
+                        name TEXT NOT NULL UNIQUE,
+                        external_id INTEGER UNIQUE
                     )
                 ''')
 
@@ -112,19 +113,29 @@ class Database:
             cur.execute('''
                    CREATE TABLE IF NOT EXISTS learningGoals (
                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                       external_id TEXT UNIQUE,
                        title TEXT NOT NULL,
                        subject_id INTEGER NOT NULL,
                        FOREIGN KEY(subject_id) REFERENCES subjects(id)
                    )
                ''')
 
-            # learnGoal_keywords
+            # keywords
             cur.execute('''
-                   CREATE TABLE IF NOT EXISTS learnGoal_keywords (
+                   CREATE TABLE IF NOT EXISTS keywords (
                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                       name TEXT NOT NULL,
+                       name TEXT NOT NULL UNIQUE
+                   )
+               ''')
+
+            # learningGoals ↔ keywords
+            cur.execute('''
+                   CREATE TABLE IF NOT EXISTS learningGoal_keywords (
                        learningGoal_id INTEGER NOT NULL,
-                       FOREIGN KEY(learningGoal_id) REFERENCES learningGoals(id)
+                       keyword_id INTEGER NOT NULL,
+                    UNIQUE(learningGoal_id, keyword_id),
+                       FOREIGN KEY(learningGoal_id) REFERENCES learningGoals(id) ON DELETE CASCADE,
+                       FOREIGN KEY(keyword_id) REFERENCES keywords(id) ON DELETE CASCADE
                    )
                ''')
 
@@ -132,7 +143,7 @@ class Database:
             cur.execute('''
                    CREATE TABLE IF NOT EXISTS sources (
                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                       source_id TEXT NOT NULL UNIQUE,
+                       external_id TEXT UNIQUE,
                        type TEXT NOT NULL
                    )
                ''')
@@ -152,7 +163,7 @@ class Database:
             # taxonomy
 
             cur.execute('''
-                  CREATE TABLE IF NOT EXISTS taxonomy (
+                  CREATE TABLE IF NOT EXISTS taxonomies (
                       id INTEGER PRIMARY KEY AUTOINCREMENT,
                       level TEXT NOT NULL,
                       kennen NUMERIC(3,2) NOT NULL,
