@@ -155,6 +155,8 @@ class Database:
                       at DATE NOT NULL,
                       learningGoal_id INTEGER NOT NULL,
                       source_id INTEGER NOT NULL,
+                          UNIQUE(learningGoal_id, source_id, at),
+
                       FOREIGN KEY(learningGoal_id) REFERENCES learningGoals(id),
                       FOREIGN KEY(source_id) REFERENCES sources(id)
 
