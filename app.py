@@ -29,8 +29,81 @@ def index():
     # }
     return render_template("index.html")
 
+@app.route("/signin", methods=["POST"])
+def signin():
+    """Gets the form's data and logs in the user with the correct validation (NEEDS REVAMP)"""
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+        # print("Form data:", email, password)
+        main_user = False #users.authenticate(email, password)
 
-#hoi
+        if not main_user:
+            return render_template(
+                "login.html.jinja", error="Verkeerde email en of wachtwoord"
+            )
+
+        session["id"] = main_user["id"]
+        session["role"] = main_user["role"]
+
+        # print(main_user, session["id"])
+
+        new_user = False #users.get_current_user(session["id"])
+
+        # print("New logged in user:", new_user)
+
+        # -- Can be used later to redirect certain roles to different pages [TEST] --
+        if session["role"] == "admin":
+            return redirect(url_for("admin_dashboard"))
+        elif session["role"] == "expert":
+            return redirect(url_for("expert_dashboard"))
+        elif session["role"] == "organization":
+            return redirect(url_for("dashboard_organizations"))
+        # --
+
+        return redirect(url_for("index"))
+
+
+@app.route("/signup", methods=["POST"])
+def signup():
+    """Gets the form's data and registers the user with correct validation (NEEDS REVAMP)"""
+    if g.current_user:
+        return redirect(url_for("index"))
+
+    if request.method == "POST":
+        role = "expert"  # request.form["role"] # HARD coded for nu
+        email = request.form["email"]
+        password = request.form["password"]
+        confirm_password = request.form["confirmpassword"]
+        print("Form data:", email, password, confirm_password)
+        existing_user = False #users.authenticate_register(email)
+
+        print(existing_user)
+
+        if existing_user:
+            return render_template("register.html.jinja", error="Gebruiker bestaat al")
+
+        if password != confirm_password:
+            return render_template(
+                "register.html.jinja", error="Wachtwoorden zijn niet gelijk aan elkaar"
+            )
+
+        new_user = False #users.create_new_user(email, password, role)
+        print("New User created:", new_user)
+
+        all_disabilities = False #users.get_all_disabilities()
+        return render_template(
+            "create_profile.html.jinja",
+            new_user=new_user,
+            all_disabilities=all_disabilities,
+        )
+
+
+@app.route("/signout")
+def signout():
+    """logs the current user out and clears the session"""
+    session.clear()
+    return redirect(url_for("index"))
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
