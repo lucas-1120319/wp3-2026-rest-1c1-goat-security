@@ -195,7 +195,7 @@ def make_entry(idx):
 
 def main():
     entries = [make_entry(i) for i in range(40000)]
-    with open("data-sample.json", "w", encoding="utf-8") as f:
+    with open("data/data-sample.json", "w", encoding="utf-8") as f:
         json.dump({"entries": entries}, f, ensure_ascii=False, indent=2)
 
 if __name__ == "__main__":

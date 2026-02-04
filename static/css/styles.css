@@ -1,4 +1,38 @@
-body{
-    background: #555;
+html{
+    background: #222;
+    display: flex;
+    width: 100%;
+    height: 100%;
 }
 
+body{
+    display: flex;
+    width: 100%;
+
+}
+
+aside{
+    background: #222;
+    width: 100%;
+    max-width: 12rem;
+
+    color: white;
+}
+
+#chart{
+    background-color: #555555;
+}
+aside ul{
+    list-style-type: none;
+}
+
+aside ul li{
+    padding-bottom: 1rem;
+
+}
+
+aside ul li i{
+    font-size: 1rem;
+        padding-right: 1rem;
+
+}
