@@ -11,6 +11,19 @@ body{
 
 }
 
+main {
+    width: 100%;
+    background-color: #fafafa;
+
+}
+
+#chart{
+    width: 100%;
+    max-width: 80rem;
+    max-height: 25rem;
+    background-color: #555555;
+}
+
 aside{
     background: #222;
     width: 100%;
@@ -19,9 +32,6 @@ aside{
     color: white;
 }
 
-#chart{
-    background-color: #555555;
-}
 aside ul{
     list-style-type: none;
 }
