@@ -29,6 +29,11 @@ def index():
     # }
     return render_template("index.html")
 
+@app.route("/login")
+def login():
+    """Shows the login page"""
+    return render_template("login.html")
+
 @app.route("/signin", methods=["POST"])
 def signin():
     """Gets the form's data and logs in the user with the correct validation (NEEDS REVAMP)"""
@@ -40,7 +45,7 @@ def signin():
 
         if not main_user:
             return render_template(
-                "login.html.jinja", error="Verkeerde email en of wachtwoord"
+                "login.html", error="Verkeerde email en of wachtwoord"
             )
 
         session["id"] = main_user["id"]
@@ -75,20 +80,17 @@ def signup():
         print(existing_user)
 
         if existing_user:
-            return render_template("register.html.jinja", error="Gebruiker bestaat al")
+            return render_template("register.html", error="Gebruiker bestaat al")
 
         if password != confirm_password:
             return render_template(
-                "register.html.jinja", error="Wachtwoorden zijn niet gelijk aan elkaar"
+                "register.html", error="Wachtwoorden zijn niet gelijk aan elkaar"
             )
 
         new_user = False #users.create_new_user(email, password, role)
         print("New User created:", new_user)
 
-        return render_template(
-            "create_profile.html.jinja",
-            new_user=new_user,
-        )
+        return redirect(url_for("index")) #Can later lead to creating your profile
 
 
 @app.route("/signout")
