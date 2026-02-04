@@ -5,6 +5,7 @@ from data.database import Database
 
 from models.students import Student
 from models.teachers import Teacher
+from models.user import User
 from models.data_converter import data_converter
 
 app = Flask(__name__)
@@ -15,6 +16,7 @@ DB_PATH = os.path.join(BASE_DIR, "data", "app.db")
 
 _db = Database(DB_PATH)
 students = Student(DB_PATH)
+users = User(DB_PATH)
 teachers = Teacher(DB_PATH)
 json_data = os.path.join(BASE_DIR, "data", "data-sample.json")
 # data_converter = data_converter(DB_PATH, json_data)
@@ -46,7 +48,7 @@ def signin():
         email = request.form["email"]
         password = request.form["password"]
         # print("Form data:", email, password)
-        main_user = False #users.authenticate(email, password)
+        main_user = users.authenticate(email, password)
 
         if not main_user:
             return render_template(
@@ -54,15 +56,15 @@ def signin():
             )
 
         session["id"] = main_user["id"]
-        session["role"] = main_user["role"]
+        # session["role"] = main_user["role"]
 
-        # print(main_user, session["id"])
+        print(main_user, session["id"])
 
         # -- Can be used later to redirect certain roles to different pages [TEST] --
         if session["role"] == "teacher":
-            return redirect(url_for("admin_dashboard"))
+            return redirect(url_for("index"))
         elif session["role"] == "student":
-            return redirect(url_for("expert_dashboard"))
+            return redirect(url_for("index"))
         # --
 
         return redirect(url_for("index"))
