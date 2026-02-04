@@ -17,7 +17,7 @@ _db = Database(DB_PATH)
 students = Student(DB_PATH)
 teachers = Teacher(DB_PATH)
 json_data = os.path.join(BASE_DIR, "data", "data-sample.json")
-data_converter = data_converter(DB_PATH, json_data)
+# data_converter = data_converter(DB_PATH, json_data)
 
 @app.route("/")
 def index():
@@ -32,8 +32,6 @@ def index():
 @app.route("/student-dashboard")
 def student_dashboard():
     return render_template("student-dashboard.html")
-
-
 
 
 if __name__ == "__main__":

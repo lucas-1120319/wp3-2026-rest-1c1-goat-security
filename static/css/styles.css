@@ -19,7 +19,9 @@ aside{
     color: white;
 }
 
-
+#chart{
+    background-color: #555555;
+}
 aside ul{
     list-style-type: none;
 }
