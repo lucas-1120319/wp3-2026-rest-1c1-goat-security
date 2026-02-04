@@ -48,17 +48,11 @@ def signin():
 
         # print(main_user, session["id"])
 
-        new_user = False #users.get_current_user(session["id"])
-
-        # print("New logged in user:", new_user)
-
         # -- Can be used later to redirect certain roles to different pages [TEST] --
-        if session["role"] == "admin":
+        if session["role"] == "teacher":
             return redirect(url_for("admin_dashboard"))
-        elif session["role"] == "expert":
+        elif session["role"] == "student":
             return redirect(url_for("expert_dashboard"))
-        elif session["role"] == "organization":
-            return redirect(url_for("dashboard_organizations"))
         # --
 
         return redirect(url_for("index"))
@@ -71,7 +65,7 @@ def signup():
         return redirect(url_for("index"))
 
     if request.method == "POST":
-        role = "expert"  # request.form["role"] # HARD coded for nu
+        role = "student"  # request.form["role"] # HARD coded for nu
         email = request.form["email"]
         password = request.form["password"]
         confirm_password = request.form["confirmpassword"]
@@ -91,11 +85,9 @@ def signup():
         new_user = False #users.create_new_user(email, password, role)
         print("New User created:", new_user)
 
-        all_disabilities = False #users.get_all_disabilities()
         return render_template(
             "create_profile.html.jinja",
             new_user=new_user,
-            all_disabilities=all_disabilities,
         )
 
 
