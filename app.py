@@ -5,7 +5,7 @@ from data.database import Database
 from router.student_route import student_bp
 from router.teacher_route import teacher_bp
 from models.students import Student
-from models.teachers_seed import Teacher
+from models.seed import Teacher
 from models.data_converter import data_converter
 
 app = Flask(__name__)
@@ -25,6 +25,9 @@ json_data = os.path.join(BASE_DIR, "data", "data-sample.json")
 
 # Seeding 2 users assigned to teacher
 teachers.create_row_teacher()
+teachers.create_student_group()
+teachers.create_row_student()
+teachers.add_students_in_group("1c")
 
 @app.route("/")
 def index():
