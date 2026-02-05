@@ -1,6 +1,9 @@
 from flask import Blueprint, render_template, session
 teacher_bp = Blueprint("teacher", __name__, url_prefix="/teacher")
 
+def inject_role():
+    return {'role': 'teacher'}
+
 @teacher_bp.route("/dashboard")
 def dashboard():
     return render_template("dashboard.html")

@@ -1,6 +1,11 @@
 from flask import Blueprint, render_template, session
 student_bp = Blueprint("student", __name__, url_prefix="/student")
 
+@student_bp.context_processor
+def inject_role():
+    return {'role': 'student'}
+
+
 @student_bp.route("/dashboard")
 def dashboard():
     return render_template("dashboard.html")

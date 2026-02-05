@@ -6,5 +6,61 @@
 {% endblock %}
 
 {% block content %}
-je gegevnes
+<form class="row g-3">
+    <div class="col-md-6">
+        <label for="firstnameInput" class="form-label">Voornaam:</label>
+        <input type="email" class="form-control" id="firstnameInput" aria-describedby="emailHelp">
+    </div>
+    <div class="col-md-6">
+        <label for="lastnameInput" class="form-label">Achternaam:</label>
+        <input type="email" class="form-control" id="lastnameInput" aria-describedby="emailHelp">
+    </div>
+    <div class="col-md-12">
+        <label for="emailInput" class="form-label">Emailadres:</label>
+        <input type="email" class="form-control" id="emailInput" aria-describedby="emailHelp">
+    </div>
+    <div class="col-md-12">
+        <label for="passwordInput" class="form-label">Wachtwoord</label>
+        <input type="password" class="form-control" id="passwordInput">
+    </div>
+    <div class="col-md-6">
+        <label for="phoneInput" class="form-label">Telefoonnummer:</label>
+        <input type="tel" class="form-control" id="phoneInput">
+    </div>
+    <div class="col-md-6">
+        <label for="birthDayInput" class="form-label">Geboorte datum:</label>
+        <input type="date" class="form-control" id="birthDayInput">
+    </div>
+    <div class="col-md-12">
+        <label for="genderSelect" class="form-label">Geslacht:</label>
+        <select id="genderSelect" class="form-select" aria-label="Default select example">
+          <option selected></option>
+          <option value="1">Man</option>
+          <option value="2">Vrouw</option>
+          <option value="3">Anders</option>
+        </select>
+    </div>
+    <div class="col-md-6">
+        <label for="postcodeInput" class="form-label">Postcode:</label>
+        <input type="text" class="form-control" id="postcodeInput">
+    </div>
+
+
+    <div class="col-md-6">
+        <label for="countryInput" class="form-label">Land:</label>
+        <input type="text" class="form-control" id="countryInput">
+    </div>
+    <div class="col-md-6">
+        <label for="cityInput" class="form-label">Stad:</label>
+        <input type="text" class="form-control" id="cityInput">
+    </div>
+    <div class="col-md-6">
+        <label for="streetnameInput" class="form-label">Straatnaam:</label>
+        <input type="text" class="form-control" id="streetnameInput">
+    </div>
+
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Sign in</button>
+    </div>
+</form>
 {% endblock %}
