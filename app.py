@@ -17,8 +17,8 @@ app.register_blueprint(student_bp)
 app.register_blueprint(teacher_bp)
 
 _db = Database(DB_PATH)
-students = Student(DB_PATH)
-teachers = Teacher(DB_PATH)
+app.students = Student(DB_PATH)
+app.teachers = Teacher(DB_PATH)
 json_data = os.path.join(BASE_DIR, "data", "data-sample.json")
 # data_converter = data_converter(DB_PATH, json_data)
 

@@ -8,9 +8,15 @@ def inject_role():
 def dashboard():
     return render_template("dashboard.html")
 
-@teacher_bp.route("/profile")
+@teacher_bp.route("/profile", methods=["GET", "POST"])
 def profile():
-    return render_template("profile.html")
+    user_id = 6
+    if request.method == "POST":
+        form_data = request.form.to_dict()
+        app.teacher.update_profile(user_id, form_data)
+
+    user = app.students.get_all_teacher_user_info(user_id)
+    return render_template("profile.html", user=user)
 
 @teacher_bp.route("/subjects")
 def subjects():
