@@ -2,10 +2,11 @@ from datetime import datetime
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash, session, g
 from data.database import Database
-
+from router.student_route import student_bp
+from router.teacher_route import teacher_bp
 from models.students import Student
-from models.teachers import Teacher
 from models.user import User
+from models.seed import Teacher
 from models.data_converter import data_converter
 
 app = Flask(__name__)
@@ -13,6 +14,8 @@ app.secret_key = "super_duper_secret_key"
 
 BASE_DIR = os.path.dirname(__file__)
 DB_PATH = os.path.join(BASE_DIR, "data", "app.db")
+app.register_blueprint(student_bp)
+app.register_blueprint(teacher_bp)
 
 _db = Database(DB_PATH)
 students = Student(DB_PATH)
@@ -20,6 +23,12 @@ users = User(DB_PATH)
 teachers = Teacher(DB_PATH)
 json_data = os.path.join(BASE_DIR, "data", "data-sample.json")
 # data_converter = data_converter(DB_PATH, json_data)
+
+# Seeding 2 users assigned to teacher
+teachers.create_row_teacher()
+teachers.create_student_group()
+teachers.create_row_student()
+teachers.add_students_in_group("1c")
 
 @app.route("/")
 def index():
@@ -40,6 +49,10 @@ def login():
 def register():
     """Shows the register page"""
     return render_template("register.html")
+  
+@app.route("/student-dashboard")
+def student_dashboard():
+    return render_template("student-dashboard.html")
 
 @app.route("/signin", methods=["POST"])
 def signin():
