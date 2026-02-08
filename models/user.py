@@ -17,6 +17,17 @@ class User:
             con.commit()
             return cur.fetchone()
 
+    def get_user_role(self, user_id):
+        """ get the current user's role """
+        with self.db.connect() as con:
+            cur = con.cursor()
+            cur.execute(
+                "SELECT * FROM users LEFT JOIN roles ON users.role_id = roles.id WHERE users.id = ?",
+                (user_id,),
+            )
+            con.commit()
+            return cur.fetchone()
+
     def get_current_user(self, user_id):
         """Getting the current user"""
         if not user_id:

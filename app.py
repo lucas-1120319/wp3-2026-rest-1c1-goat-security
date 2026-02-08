@@ -47,7 +47,7 @@ def signin():
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]
-        # print("Form data:", email, password)
+        print("Form data:", email, password)
         main_user = users.authenticate(email, password)
 
         if not main_user:
@@ -55,10 +55,14 @@ def signin():
                 "login.html", error="Verkeerde email en of wachtwoord"
             )
 
-        session["id"] = main_user["id"]
-        # session["role"] = main_user["role"]
+        user_role = users.get_user_role(main_user["id"])
 
-        print(main_user, session["id"])
+        session["id"] = main_user["id"]
+        session["role"] = user_role["name"]
+
+        print(user_role["name"], session["id"])
+
+        print("SUCCESSFULLY LOGGED IN")
 
         # -- Can be used later to redirect certain roles to different pages [TEST] --
         if session["role"] == "teacher":
