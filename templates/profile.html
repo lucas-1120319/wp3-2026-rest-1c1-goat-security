@@ -6,5 +6,63 @@
 {% endblock %}
 
 {% block content %}
-je gegevnes
+<form method="POST"  class="row g-3">
+    <div class="col-md-6">
+        <label for="first_nameInput" class="form-label">Voornaam:</label>
+        <input type="text" class="form-control" id="first_nameInput" name="first_name" value="{{ user.first_name or '' }}" required>
+    </div>
+    <div class="col-md-6">
+        <label for="last_nameInput" class="form-label">Achternaam:</label>
+        <input type="text" class="form-control" id="last_nameInput" name="last_name" value="{{ user.last_name or ''}}" required>
+    </div>
+    <div class="col-md-12">
+
+        <label for="emailInput" class="form-label">Emailadres:</label>
+        <input type="email" class="form-control" id="emailInput" name="email" aria-describedby="emailHelp" value="{{ user.email or '' }}" required>
+
+    </div>
+    <div class="col-md-12">
+        <label for="passwordInput" class="form-label">Wachtwoord</label>
+        <input type="password" class="form-control" id="passwordInput" name="password" >
+    </div>
+    <div class="col-md-6">
+        <label for="phoneInput" class="form-label">Telefoonnummer:</label>
+        <input type="tel" class="form-control" id="phoneInput" name="phone" value="{{ user.phone or '' }}" required>
+    </div>
+    <div class="col-md-6">
+        <label for="birth_dateInput" class="form-label">Geboorte datum:</label>
+        <input type="date" class="form-control" id="birth_dateInput" name="birth_date" value="{{ user.birth_date or '' }}" required>
+    </div>
+    <div class="col-md-12">
+        <label for="genderInput" class="form-label">Geslacht:</label>
+        <select id="genderInput" class="form-select" name="gender" >
+          <option selected></option>
+          <option value="man" {{ 'selected' if user.gender == 'man' else '' }}> Man</option>
+          <option value="vrouw" {{ 'selected' if user.gender == 'vrouw' else '' }}>Vrouw</option>
+          <option value="anders" {{ 'selected' if user.gender == 'anders' else '' }}>Anders</option>
+        </select>
+    </div>
+    <div class="col-md-6">
+        <label for="postcodeInput" class="form-label">Postcode:</label>
+        <input type="text" class="form-control" id="postcodeInput" name="postcode" value="{{ user.postcode or '' }}" required>
+    </div>
+
+
+    <div class="col-md-6">
+        <label for="countryInput" class="form-label">Land:</label>
+        <input type="text" class="form-control" id="countryInput" name="country" value="{{ user.country or '' }}" required>
+    </div>
+    <div class="col-md-6">
+        <label for="cityInput" class="form-label">Stad:</label>
+        <input type="text" class="form-control" id="cityInput" name="city" value="{{ user.city or '' }}" required>
+    </div>
+    <div class="col-md-6">
+        <label for="street_nameInput" class="form-label">Straatnaam:</label>
+        <input type="text" class="form-control" id="street_nameInput" name="street_name" value="{{ user.street_name or '' }}" required>
+    </div>
+
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Opslaan</button>
+    </div>
+</form>
 {% endblock %}

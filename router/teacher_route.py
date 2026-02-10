@@ -1,13 +1,22 @@
 from flask import Blueprint, render_template, session
 teacher_bp = Blueprint("teacher", __name__, url_prefix="/teacher")
 
+def inject_role():
+    return {'role': 'teacher'}
+
 @teacher_bp.route("/dashboard")
 def dashboard():
     return render_template("dashboard.html")
 
-@teacher_bp.route("/profile")
+@teacher_bp.route("/profile", methods=["GET", "POST"])
 def profile():
-    return render_template("profile.html")
+    user_id = 2
+    if request.method == "POST":
+        form_data = request.form.to_dict()
+        app.teacher.update_profile(user_id, form_data)
+
+    user = app.students.get_all_teacher_user_info(user_id)
+    return render_template("profile.html", user=user)
 
 @teacher_bp.route("/subjects")
 def subjects():

@@ -18,17 +18,17 @@ app.register_blueprint(student_bp)
 app.register_blueprint(teacher_bp)
 
 _db = Database(DB_PATH)
-students = Student(DB_PATH)
+app.students = Student(DB_PATH)
+app.teachers = Teacher(DB_PATH)
 users = User(DB_PATH)
-teachers = Teacher(DB_PATH)
 json_data = os.path.join(BASE_DIR, "data", "data-sample.json")
 # data_converter = data_converter(DB_PATH, json_data)
 
 # Seeding 2 users assigned to teacher
-teachers.create_row_teacher()
-teachers.create_student_group()
-teachers.create_row_student()
-teachers.add_students_in_group("1c")
+app.teachers.create_row_teacher()
+app.teachers.create_student_group()
+app.teachers.create_row_student()
+app.teachers.add_students_in_group("1c")
 
 @app.route("/")
 def index():
@@ -49,7 +49,7 @@ def login():
 def register():
     """Shows the register page"""
     return render_template("register.html")
-  
+
 @app.route("/student-dashboard")
 def student_dashboard():
     return render_template("student-dashboard.html")
