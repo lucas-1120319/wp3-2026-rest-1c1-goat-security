@@ -10,7 +10,7 @@ def dashboard():
 
 @teacher_bp.route("/profile", methods=["GET", "POST"])
 def profile():
-    user_id = 6
+    user_id = 2
     if request.method == "POST":
         form_data = request.form.to_dict()
         app.teacher.update_profile(user_id, form_data)
