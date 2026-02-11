@@ -38,14 +38,14 @@
     <main>
         <form method="post" action="/signin" class="m-4">
                 <h1 class="text-center mb-4">Login</h1>
-                    {% if error %}
-                    <label for="id_error">{{ error }}</label><br>
-                    {% endif %}
                     <label for="email" class="form-label">Email address</label>
                     <input type="email" class="form-control mb-3" id="email" name="email" placeholder="name@example.com">
                     <label for="password" class="form-label">Password</label>
                     <input type="password" class="form-control mb-3" id="password" name="password" placeholder="Your password...">
                 <button type="submit" class="btn btn-primary w-100">Login</button>
+                {% if error %}
+                <label for="id_error">{{ error }}</label><br>
+                {% endif %}
         </form>
     </main>
 
