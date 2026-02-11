@@ -1,7 +1,7 @@
 import sqlite3
 from data.database import Database
 
-class Teacher:
+class Seed:
     def __init__(self, db_path: str):
         self.db = Database(db_path)
 

@@ -5,8 +5,10 @@ from data.database import Database
 from router.student_route import student_bp
 from router.teacher_route import teacher_bp
 from models.students import Student
+from models.teachers import Teacher
 from models.user import User
-from models.seed import Teacher
+from models.seed import Seed
+
 from models.data_converter import data_converter
 
 app = Flask(__name__)
@@ -20,15 +22,16 @@ app.register_blueprint(teacher_bp)
 _db = Database(DB_PATH)
 app.students = Student(DB_PATH)
 app.teachers = Teacher(DB_PATH)
+app.seeder = Seed(DB_PATH)
 users = User(DB_PATH)
 json_data = os.path.join(BASE_DIR, "data", "data-sample.json")
 # data_converter = data_converter(DB_PATH, json_data)
 
 # Seeding 2 users assigned to teacher
-app.teachers.create_row_teacher()
-app.teachers.create_student_group()
-app.teachers.create_row_student()
-app.teachers.add_students_in_group("1c")
+app.seeder.create_row_teacher()
+app.seeder.create_row_student()
+app.seeder.create_student_group()
+app.seeder.add_students_in_group("1c")
 
 @app.route("/")
 def index():
@@ -79,9 +82,9 @@ def signin():
 
         # -- Can be used later to redirect certain roles to different pages [TEST] --
         if session["role"] == "teacher":
-            return redirect(url_for("index"))
+            return redirect(url_for("teacher.profile"))
         elif session["role"] == "student":
-            return redirect(url_for("index"))
+            return redirect(url_for("student.profile"))
         # --
 
         return redirect(url_for("index"))
