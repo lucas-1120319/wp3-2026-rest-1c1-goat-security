@@ -143,3 +143,25 @@ class Seed:
 
                 con.commit()
 
+    def assign_class_subjects(self):
+        """ Connect classes to subjects """
+        with self.db.connect() as con:
+            cur = con.cursor()
+
+            cur.execute("DELETE FROM studentGroup_subjects") # CLEAR EXISTING TABLE
+
+            cur.execute("SELECT id, name FROM studentGroups")
+            groups = cur.fetchall()
+
+            cur.execute("SELECT id, external_id, name FROM subjects")
+            subjects = cur.fetchall()
+
+            for group_id, _group_name in groups:
+                for subject_id, _ext_id, _subj_name in subjects:
+                    cur.execute(
+                        """
+                        INSERT OR IGNORE INTO studentGroup_subjects (studentGroup_id, subject_id)
+                        VALUES (?, ?)
+                        """,
+                        (group_id, subject_id),
+                    )
