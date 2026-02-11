@@ -14,6 +14,7 @@ def dashboard():
 
 @student_bp.route("/profile", methods=["GET", "POST"])
 def profile():
+    """ Get student profile """
     user_id = session["id"]
     if request.method == "POST":
         form_data = request.form.to_dict()
@@ -28,8 +29,10 @@ def subjects():
 
 @student_bp.route("/subject/learningGoals")
 def subject_learningGoals():
-    return render_template("subject_learningGoals.html")
+    subject_id = 1
+    learning_goals = app.students.get_learning_goals(subject_id)
+    return render_template("leerdoelen.html", learning_goals=learning_goals)
 
-@student_bp.route("/learningGoals")
-def learningGoals():
-    return render_template("learningGoals.html")
+# @student_bp.route("/learningGoals")
+# def learningGoals():
+#     return render_template("learningGoals.html")

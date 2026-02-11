@@ -28,3 +28,11 @@ class Student:
             con.commit()
 
             return cur.fetchone()
+
+    def get_learning_goals(self, subject_id: int):
+        """ Get list of learning goals of DB """
+        with self.db.connect() as con:
+            con.row_factory = sqlite3.Row  # <--- make rows dictionary-like
+            cur = con.cursor()
+            cur.execute("""SELECT id, title FROM learningGoals WHERE subject_id = ?""", (subject_id,))
+            return cur.fetchall()
