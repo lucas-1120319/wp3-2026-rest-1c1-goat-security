@@ -11,16 +11,17 @@ class Seed:
             cur = con.cursor()
 
             users = [
-                {"first_name": "Nina", "last_name": "Barak", "email": "nina@mail.nl", "phone": "0123456789", "role_id": 2},
-                {"first_name": "Kees", "last_name": "Sterk", "email": "kees@mail.nl", "phone": "0123456789", "role_id": 2},
-                {"first_name": "Henk", "last_name": "Spaans", "email": "henk@mail.nl", "phone": "0123456789", "role_id": 3},
-                {"first_name": "Frits", "last_name": "Fristie", "email": "frits@mail.nl", "phone": "0123456789", "role_id": 3}
+                {"first_name": "Henk", "last_name": "Spaans", "email": "henk@mail.nl",
+                 "phone": "0123456789", "role_id": 3},
+                {"first_name": "Frits", "last_name": "Fristie", "email": "frits@mail.nl",
+                 "phone": "0123456789", "role_id": 3}
             ]
 
             # Create Users
             for user in users:
                 cur.execute(
-                    "INSERT OR IGNORE INTO users (email, phone, password, role_id) VALUES (?, ?, ?, ?)",
+                    "INSERT OR IGNORE INTO users (email, phone, password, role_id) "
+                    "VALUES (?, ?, ?, ?)",
                     (user['email'], user['phone'], 'secret', user['role_id']),
                 )
 
@@ -40,6 +41,43 @@ class Seed:
                     )
             con.commit()
 
+    def assign_teacher_group(self):
+        """ Assign teacher group to students """
+        with self.db.connect() as con:
+            con.row_factory = sqlite3.Row
+            cur = con.cursor()
+            cur.execute(
+                "SELECT id FROM teachers "
+                "WHERE first_name = 'Henk'",
+            )
+            henk = cur.fetchone()
+            print(henk)
+
+            cur.execute(
+                "SELECT id FROM teachers "
+                "WHERE first_name = 'Frits'",
+            )
+            frits = cur.fetchone()
+            print(frits)
+
+            cur.execute("SELECT id FROM studentGroups WHERE name = '1c'")
+            group_b = cur.fetchone()
+
+            cur.execute("SELECT id FROM studentGroups WHERE name = '1a'")
+            group_a = cur.fetchone()
+            cur.execute(
+                "INSERT OR IGNORE INTO teacher_studentGroup (studentGroup_id, teacher_id)"
+                "VALUES (?, ?)",
+                (group_a["id"], henk['id'])
+            )
+
+            cur.execute(
+                "INSERT OR IGNORE INTO teacher_studentGroup (studentGroup_id, teacher_id)"
+                "VALUES (?, ?)",
+                (group_b["id"], frits['id'])
+            )
+            con.commit()
+
 
     def create_student_group(self):
         """ Create a new student group/class """
@@ -55,24 +93,24 @@ class Seed:
             con.commit()
 
 
-    def create_row_student(self):
-        """ Create a new row student """
-        with self.db.connect() as con:
-            cur = con.cursor()
-            cur.execute(
-                "SELECT id FROM users WHERE role_id = 2",
-            )
-            student_ids = cur.fetchall()
-
-            for student in student_ids:
-                student_id = student[0]
-                print("student_id:", student_id)
-                cur.execute(
-                    "INSERT OR IGNORE INTO students (user_id)" 
-                    "VALUES(?) ",
-                    (student_id,)
-                )
-            con.commit()
+    # def create_row_student(self):
+    #     """ Create a new row student """
+    #     with self.db.connect() as con:
+    #         cur = con.cursor()
+    #         cur.execute(
+    #             "SELECT id FROM users WHERE role_id = 2",
+    #         )
+    #         student_ids = cur.fetchall()
+    #
+    #         for student in student_ids:
+    #             student_id = student[0]
+    #             print("student_id:", student_id)
+    #             cur.execute(
+    #                 "INSERT OR IGNORE INTO students (user_id)"
+    #                 "VALUES(?) ",
+    #                 (student_id,)
+    #             )
+    #         con.commit()
 
 
     def add_students_in_group(self, group_name):
@@ -102,4 +140,6 @@ class Seed:
                     "VALUES (?, ?)",
                     (student_id, group_id)
                 )
+
+                con.commit()
 

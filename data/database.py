@@ -179,6 +179,19 @@ class Database:
                   )
               ''')
 
+            cur.execute('''
+                        CREATE TABLE IF NOT EXISTS teacher_studentGroup
+                        (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            studentGroup_id  INTEGER   NOT NULL,
+                            teacher_id  INTEGER   NOT NULL,
+                          UNIQUE(studentGroup_id, teacher_id),
+
+                            FOREIGN KEY (teacher_id) REFERENCES teachers (id),
+                            FOREIGN KEY (studentGroup_id) REFERENCES studentGroups (id)
+                        )
+                        ''')
+
             roles = ["admin", "student", "teacher"]
             for role in roles:
                 cur.execute(
