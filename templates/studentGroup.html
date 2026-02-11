@@ -6,18 +6,17 @@
 {% endblock %}
 
 {% block content%}
-<div class="row g-3">
-
+<div class="row">
     {%for group in studentGroups %}
-
-                <div class="card col-md-6" >
-                    <a href="/subjects/{{ group["id"]  }}">
-
-                      <div class="card-body">
-                        klas {{ group["name"] }}
-                      </div>
-                    </a>
-                </div>
+        <div class="col-md-4">
+            <div class="card  " >
+                <a class="link-underline link-underline-opacity-0  " href="/teacher/studentGroup/{{ group["id"]  }}">
+                  <div class="card-body">
+                    <div class="fs-3">klas {{ group["name"] }}</div>
+                  </div>
+                </a>
+            </div>
+        </div>
 
     {%endfor%}
 {% endblock %}
