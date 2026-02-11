@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, session
+from flask import request, Blueprint, render_template,current_app as app,  session
 teacher_bp = Blueprint("teacher", __name__, url_prefix="/teacher")
 
+@teacher_bp.context_processor
 def inject_role():
     return {'role': 'teacher'}
 
@@ -10,12 +11,13 @@ def dashboard():
 
 @teacher_bp.route("/profile", methods=["GET", "POST"])
 def profile():
-    user_id = 2
+    user_id = session["id"]
+
     if request.method == "POST":
         form_data = request.form.to_dict()
-        app.teacher.update_profile(user_id, form_data)
+        app.teachers.update_profile(user_id, form_data)
 
-    user = app.students.get_all_teacher_user_info(user_id)
+    user = app.teachers.get_all_teacher_user_info(user_id)
     return render_template("profile.html", user=user)
 
 @teacher_bp.route("/subjects")

@@ -14,7 +14,7 @@ def dashboard():
 
 @student_bp.route("/profile", methods=["GET", "POST"])
 def profile():
-    user_id = 3
+    user_id = session["id"]
     if request.method == "POST":
         form_data = request.form.to_dict()
         app.students.update_profile(user_id, form_data)

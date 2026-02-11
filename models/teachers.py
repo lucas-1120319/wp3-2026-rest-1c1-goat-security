@@ -21,7 +21,7 @@ class Teacher:
                                   street_name,
                                   birth_date
                            FROM teachers
-                                    inner join users ON students.user_id = users.id
+                                    inner join users ON teachers.user_id = users.id
                            WHERE user_id = ?""", (user_id,))
             return cur.fetchone()
 
