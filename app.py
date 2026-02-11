@@ -124,7 +124,7 @@ def signup():
 def signout():
     """logs the current user out and clears the session"""
     session.clear()
-    return redirect(url_for("index"))
+    return redirect(url_for("login"))
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
