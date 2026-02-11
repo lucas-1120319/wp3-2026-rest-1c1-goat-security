@@ -13,6 +13,19 @@ class Student:
             cur.execute("""SELECT email, phone, first_name, last_name, postcode, gender, city, country, street_name, birth_date FROM students inner join users ON students.user_id = users.id WHERE user_id = ?""", (user_id,))
             return cur.fetchone()
 
+    def get_student_class(self, user_id):
+        """ get the current student's class """
+        with self.db.connect() as con:
+            cur = con.cursor()
+            cur.execute(
+                "SELECT * FROM students INNER JOIN student_studentGroups "
+                "ON students.id = student_studentGroups.student_id INNER JOIN studentGroups "
+                "ON studentGroups.id = student_studentGroups.studentGroup_id WHERE students.user_id = ?",
+                (user_id,),
+            )
+            con.commit()
+            return cur.fetchone()
+
     def update_profile(self,user_id: int, data: dict ):
         with self.db.connect() as con:
             cur = con.cursor()
