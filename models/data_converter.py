@@ -1,7 +1,7 @@
 import sqlite3
 from data.database import Database
 import json
-
+import os
 class data_converter:
     def __init__(self, db_path: str, json_path: str):
         self.db = Database(db_path)
@@ -13,6 +13,10 @@ class data_converter:
         json_path = self.json_path
         with self.db.connect() as con:
             cur = con.cursor()
+
+        if not os.path.exists(self.json_path):
+            print(f"File '{self.json_path}' does not exist.")
+            return  # stop the function safely
 
         with open(self.json_path, "r", encoding="utf-8") as f:
             data = json.load(f)
