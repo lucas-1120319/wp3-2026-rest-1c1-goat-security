@@ -24,16 +24,6 @@ app.students = Student(DB_PATH)
 app.teachers = Teacher(DB_PATH)
 app.seeder = Seed(DB_PATH)
 users = User(DB_PATH)
-json_data = os.path.join(BASE_DIR, "data", "data-sample.json")
-# data_converter = data_converter(DB_PATH, json_data)
-
-# Seeding 2 users assigned to teacher
-app.seeder.create_row_teacher()
-# app.seeder.create_row_student()
-app.seeder.create_student_group()
-app.seeder.add_students_in_group("1c")
-app.seeder.assign_teacher_group()
-app.seeder.assign_class_subjects()
 
 @app.route("/")
 def index():

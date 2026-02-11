@@ -14,6 +14,10 @@ class data_converter:
         with self.db.connect() as con:
             cur = con.cursor()
 
+        if not os.path.exists(self.json_path):
+            print(f"File '{self.json_path}' does not exist.")
+            return  # stop the function safely
+
         with open(self.json_path, "r", encoding="utf-8") as f:
             data = json.load(f)
 
