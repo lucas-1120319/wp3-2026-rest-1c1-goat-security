@@ -1,0 +1,23 @@
+{% extends 'index.html' %}
+{% block header %}
+    {% block title %}
+        Klassen
+    {% endblock %}
+{% endblock %}
+
+{% block content%}
+<div class="row g-3">
+
+    {%for group in studentGroups %}
+
+                <div class="card col-md-6" >
+                    <a href="/subjects/{{ group["id"]  }}">
+
+                      <div class="card-body">
+                        klas {{ group["name"] }}
+                      </div>
+                    </a>
+                </div>
+
+    {%endfor%}
+{% endblock %}

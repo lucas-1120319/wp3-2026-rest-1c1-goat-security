@@ -63,8 +63,9 @@ class Teacher:
     def get_studentGroups(self, teacher_id: int):
         with self.db.connect() as con:
             cur = con.cursor()
-            cur.execute("""SELECT studentGroups.name teacher_studentGroup
-                           WHERE teacher_id = ? """,
+            cur.execute("SELECT studentGroups.name, studentGroups.id FROM teacher_studentGroup "
+                        "INNER JOIN studentGroups ON studentGroups.id = teacher_studentGroup.studentGroup_id "
+                        "WHERE teacher_id = ? ",
                         (teacher_id,))
             con.commit()
-            return cur.fetchone()
+            return cur.fetchall()
