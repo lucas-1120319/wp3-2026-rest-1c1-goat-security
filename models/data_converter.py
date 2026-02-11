@@ -1,7 +1,7 @@
 import sqlite3
 from data.database import Database
 import json
-
+import os
 class data_converter:
     def __init__(self, db_path: str, json_path: str):
         self.db = Database(db_path)

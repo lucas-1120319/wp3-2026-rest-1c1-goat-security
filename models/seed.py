@@ -30,7 +30,6 @@ class Seed:
                     (user['email'],)
                 )
                 user_id = cur.fetchone()[0]
-                print("user_id:", user_id)
 
                 # Create teacher
                 if user["role_id"] == 3:
@@ -40,6 +39,18 @@ class Seed:
                         (user_id, user['first_name'], user['last_name'])
                     )
             con.commit()
+    def create_student_group(self):
+        """ Create a new student group/class """
+        with self.db.connect() as con:
+            cur = con.cursor()
+            groups = ['1a', '1b', '1c', '1d']
+            for group in groups:
+                cur.execute(
+                    "INSERT OR IGNORE INTO studentGroups (name)"
+                    "VALUES (?)",
+                    (group,)
+                )
+            con.commit()
 
     def assign_teacher_group(self):
         """ Assign teacher group to students """
@@ -48,17 +59,15 @@ class Seed:
             cur = con.cursor()
             cur.execute(
                 "SELECT id FROM teachers "
-                "WHERE first_name = 'Henk'",
+                "WHERE first_name = 'Henk' AND last_name = 'Spaans' ",
             )
             henk = cur.fetchone()
-            print(henk)
 
             cur.execute(
                 "SELECT id FROM teachers "
                 "WHERE first_name = 'Frits'",
             )
             frits = cur.fetchone()
-            print(frits)
 
             cur.execute("SELECT id FROM studentGroups WHERE name = '1c'")
             group_b = cur.fetchone()
@@ -79,69 +88,55 @@ class Seed:
             con.commit()
 
 
-    def create_student_group(self):
-        """ Create a new student group/class """
-        with self.db.connect() as con:
-            cur = con.cursor()
-            groups = ['1a', '1b', '1c', '1d']
-            for group in groups:
-                cur.execute(
-                    "INSERT OR IGNORE INTO studentGroups (name)"
-                    "VALUES (?)",
-                    (group,)
-                )
-            con.commit()
 
-
-    # def create_row_student(self):
-    #     """ Create a new row student """
-    #     with self.db.connect() as con:
-    #         cur = con.cursor()
-    #         cur.execute(
-    #             "SELECT id FROM users WHERE role_id = 2",
-    #         )
-    #         student_ids = cur.fetchall()
-    #
-    #         for student in student_ids:
-    #             student_id = student[0]
-    #             print("student_id:", student_id)
-    #             cur.execute(
-    #                 "INSERT OR IGNORE INTO students (user_id)"
-    #                 "VALUES(?) ",
-    #                 (student_id,)
-    #             )
-    #         con.commit()
-
-
-    def add_students_in_group(self, group_name):
+    def add_students_in_group(self):
         """ Add students to a group """
         with self.db.connect() as con:
             cur = con.cursor()
 
-            # Get ID form group
-            cur.execute("SELECT id FROM studentGroups WHERE name = ?", (group_name,))
-            group_row = cur.fetchone()
+            studentGroups = ["1a", "1c"]
 
-            if not group_row:
-                print("group does not exist")
-                return
-
-            group_id = group_row[0]
-
-            # get id from students
+            # Get all students
             cur.execute("SELECT id FROM students")
             student_rows = cur.fetchall()
 
-            # Add both items together in teh table
-            for student in student_rows:
-                student_id = student[0]
-                cur.execute(
-                    "INSERT OR IGNORE INTO student_studentGroups (student_id, studentGroup_id) "
-                    "VALUES (?, ?)",
-                    (student_id, group_id)
-                )
+            if not student_rows:
+                print("No students found.")
+                return
 
-                con.commit()
+            # Split students in half
+            half = len(student_rows) // 2
+            first_half = student_rows[:half]
+            second_half = student_rows[half:]# Loop through each group and assign students
+            for index, group_name in enumerate(studentGroups):
+
+                # Get group ID
+                cur.execute("SELECT id FROM studentGroups WHERE name = ?", (group_name,))
+                group_row = cur.fetchone()
+
+                if not group_row:
+                    print(f"Group '{group_name}' does not exist")
+                    continue
+
+                group_id = group_row[0]
+
+                # Decide which students belong to this group
+                if index == 0:
+                    assigned_students = first_half
+                else:
+                    assigned_students = second_half
+
+                # Insert into relation table
+                for student in assigned_students:
+                    student_id = student[0]
+                    cur.execute(
+                        "INSERT OR IGNORE INTO student_studentGroups (student_id, studentGroup_id) "
+                        "VALUES (?, ?)",
+                        (student_id, group_id)
+                    )
+
+            # Commit once at the end (better performance)
+            con.commit()
 
     def assign_class_subjects(self):
         """ Connect classes to subjects """
