@@ -1,9 +1,7 @@
 <aside class="side-bar vh-100 position-fixed  ">
     <ul class="list-group list-group-flush ms-4 mt-4">
         <li><a href="{{ url_for(role + '.dashboard') }}"><i class="bi bi-person-bounding-box"></i>Dashboard</a></li>
-        <li><i class="bi bi-grid-fill"></i>Menu</li>
-        <li><i class="bi bi-graph-up"></i>Score</li>
-        <li><i class="bi bi-flask-fill"></i>Exam</li>
+        <li><a href="{{ url_for(role + '.studentGroups') }}"><i class="bi bi-person-bounding-box"></i>Klassen</a></li>
         <li><a href="{{ url_for(role + '.profile') }}"><i class="bi bi-person-bounding-box"></i>Profile</a></li>
         <li><a href="{{ url_for('signout') }}"><i class="bi bi-person-bounding-box"></i>Uitloggen</a></li>
     </ul>
