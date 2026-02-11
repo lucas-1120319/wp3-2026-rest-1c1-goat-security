@@ -83,6 +83,8 @@ def signin():
 
         # -- Can be used later to redirect certain roles to different pages [TEST] --
         if session["role"] == "teacher":
+            session["teacher_id"] = app.teachers.get_teacher_id["id"]
+
             return redirect(url_for("teacher.profile"))
         elif session["role"] == "student":
             return redirect(url_for("student.profile"))

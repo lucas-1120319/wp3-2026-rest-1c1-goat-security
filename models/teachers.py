@@ -6,6 +6,15 @@ class Teacher:
     def __init__(self, db_path: str):
         self.db = Database(db_path)
 
+    def get_teacher_id(self, user_id: int):
+        with self.db.connect() as con:
+            con.row_factory = sqlite3.Row  # <--- make rows dictionary-like
+            cur = con.cursor()
+            cur.execute("""SELECT id
+                           FROM teachers
+                           WHERE user_id = ?""", (user_id,))
+            return cur.fetchone()
+
     def get_all_teacher_user_info(self, user_id: int):
         with self.db.connect() as con:
             con.row_factory = sqlite3.Row  # <--- make rows dictionary-like
@@ -49,4 +58,13 @@ class Teacher:
                         (data["email"], data["phone"], data["password"], user_id,))
             con.commit()
 
+            return cur.fetchone()
+
+    def get_studentGroups(self, teacher_id: int):
+        with self.db.connect() as con:
+            cur = con.cursor()
+            cur.execute("""SELECT studentGroups.name teacher_studentGroup
+                           WHERE teacher_id = ? """,
+                        (teacher_id,))
+            con.commit()
             return cur.fetchone()
