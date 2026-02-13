@@ -33,7 +33,7 @@ def index():
     #     "studies": studies.count_all()[0],
     #     "enrollments": enrollments.count_all()[0],
     # }
-    return render_template("index.html")
+    return render_template("login.html")
 
 @app.route("/login")
 def login():

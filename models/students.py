@@ -36,3 +36,34 @@ class Student:
             cur = con.cursor()
             cur.execute("""SELECT id, title FROM learningGoals WHERE subject_id = ?""", (subject_id,))
             return cur.fetchall()
+
+
+    def get_score(self, student_id: int):
+        """ Get score of learning goal with subject """
+        with self.db.connect() as con:
+            con.row_factory = sqlite3.Row
+            cur = con.cursor()
+            cur.execute(
+                "SELECT tax.id AS tax_id, "
+                "tax.level AS tax_level, "
+                "tax.kennen AS tax_kennen, "
+                "tax.kunnen AS tax_kunnen, "
+                "tax.confidence AS tax_confidence, "
+                "tax.snapshot_id AS tax_snap, "
+                "tax.student_id AS tax_student_id, "
+                
+                "snap.at AS snap_at, "
+                
+                "lg.external_id AS lg_external_id, "
+                "lg.title AS lg_title, "
+                
+                "sub.name AS lg_title "
+                
+                "FROM taxonomies tax "
+                "JOIN snapshots snap ON tax.snapshot_id = snap.id "
+                "JOIN learningGoals lg ON snap.learningGoal_id = lg.id "
+                "JOIN subjects sub ON sub.id = lg.id "
+                "WHERE tax.student_id = ?",
+                (student_id, )
+            )
+            return cur.fetchall()
