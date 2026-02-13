@@ -6,7 +6,17 @@
 {% endblock %}
 
 {% block content %}
+<div class="row">
+    {%for subject in subjects %}
+        <div class="col-md-4">
+            <div class="card  " >
+                <a class="link-underline link-underline-opacity-0" href="">
+                  <div class="card-body">
+                    <div class="fs-3">Vak {{ subject["name"] }}</div>
+                  </div>
+                </a>
+            </div>
+        </div>
 
-<h1> Vakken </h1>
-
+    {%endfor%}
 {% endblock %}
