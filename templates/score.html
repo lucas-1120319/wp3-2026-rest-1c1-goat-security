@@ -1,0 +1,28 @@
+{% extends 'index.html' %}
+{% block header %}
+    {% block title %}
+        Leerdoelen
+    {% endblock %}
+{% endblock %}
+
+{% block content%}
+<div class="row">
+{% for score in scores %}
+        <div class="col-md-4">
+            <div class="card  " >
+                  <div class="card-body">
+                    <div class="fs-5">{{ score["snap_at"] }}</div>
+                    <div class="fs-5">{{ score["lg_title"] }}</div>
+                    <div class="fs-5">{{ score["tax_id"] }}</div>
+                    <div class="fs-5">{{ score["tax_level"] }}</div>
+                    <div class="fs-5">{{ score["tax_kennen"] }}</div>
+                    <div class="fs-5">{{ score["tax_kunnen"] }}</div>
+                    <div class="fs-5">{{ score["tax_confidence"] }}</div>
+                    <div class="fs-5">{{ score["tax_snap"] }}</div>
+                    <div class="fs-5">{{ score["tax_student_id"] }}</div>
+                  </div>
+            </div>
+        </div>
+{% endfor %}
+</div>
+{% endblock %}
