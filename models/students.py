@@ -26,6 +26,19 @@ class Student:
             con.commit()
             return cur.fetchone()
 
+    def get_all_subjects_students(self, class_id):
+        """ get all subjects from a class """
+        with self.db.connect() as con:
+            cur = con.cursor()
+            cur.execute(
+                "SELECT * FROM subjects INNER JOIN studentGroup_subjects "
+                "ON subjects.id = studentGroup_subjects.subject_id INNER JOIN studentGroups "
+                "ON studentGroups.id = studentGroup_subjects.studentGroup_id WHERE studentGroups.name = ?",
+                (class_id,),
+            )
+            con.commit()
+            return cur.fetchall()
+
     def update_profile(self,user_id: int, data: dict ):
         with self.db.connect() as con:
             cur = con.cursor()

@@ -25,7 +25,9 @@ def profile():
 @student_bp.route("/subjects")
 def subjects():
     class_id = session["student_group"]
-    return render_template("subjects.html")
+    subjects = app.students.get_all_subjects_students(class_id)
+    print(subjects) #["id"] and ["name"] of the subjects
+    return render_template("subjects.html", subjects=subjects)
 
 @student_bp.route("/subject/learningGoals")
 def subject_learningGoals():
