@@ -1,4 +1,7 @@
 from flask import request, Blueprint, render_template,current_app as app,  session
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 student_bp = Blueprint("student", __name__, url_prefix="/student")
 
 @student_bp.context_processor
@@ -34,21 +37,24 @@ def subjects():
 
 @student_bp.route("/subject/learning_goals")
 def subject_learning_goals():
-    """ Routing for learning goals """
-    subject_id = 2
+    """ Get data of specifiek subject. """
+    subject_id = 2 #
     learning_goals = app.students.get_learning_goals(subject_id)
-    return render_template("learning_goal.html", learning_goals=learning_goals)
+    learning_title = app.students.get_learning_goals_title(subject_id)
+    return render_template("learning_goal.html", learning_goals=learning_goals, learning_title=learning_title)
 
 
-@student_bp.route("/subject/learning_goals/score")
-def subject_learning_goals_score():
-    """ Routing the scores for learning goals """
-
+@student_bp.route("/subject/learning_goals/<int:subject_id>/result", methods=["GET"])
+def subject_score(subject_id):
+    """ Get exam result data in a table setting. """
     student_id = 2
-    scores = app.students.get_score(student_id)
+    snapshot_id = subject_id
+    scores = app.students.get_snapshot_by_id(snapshot_id, student_id)
+    print('subject_id: ',subject_id)
+    print('student_id: ',student_id)
     return render_template("score.html", scores=scores)
 
 
-# @student_bp.route("/learningGoals")
-# def learningGoals():
-#     return render_template("learningGoals.html")
+@student_bp.route("/learningGoals")
+def learningGoals():
+    return render_template("learningGoals.html")

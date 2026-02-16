@@ -1,7 +1,7 @@
 {% extends 'index.html' %}
 {% block header %}
     {% block title %}
-        Leerdoelen
+        {{ learning_title["name"]}}
     {% endblock %}
 {% endblock %}
 
@@ -10,7 +10,7 @@
     {%for learning_goal in learning_goals %}
         <div class="col-md-4">
             <div class="card  " >
-                <a class="link-underline link-underline-opacity-0  " href="/teacher/studentGroup/{{ learning_goal["id"]  }}">
+                <a class="link-underline link-underline-opacity-0  " href="/student/subject/learning_goals/{{ learning_goal["id"]}}/result">
                   <div class="card-body">
                     <div class="fs-5">{{ learning_goal["title"] }}</div>
                   </div>

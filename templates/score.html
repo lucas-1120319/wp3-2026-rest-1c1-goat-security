@@ -6,23 +6,50 @@
 {% endblock %}
 
 {% block content%}
-<div class="row">
-{% for score in scores %}
-        <div class="col-md-4">
-            <div class="card  " >
-                  <div class="card-body">
-                    <div class="fs-5">{{ score["snap_at"] }}</div>
-                    <div class="fs-5">{{ score["lg_title"] }}</div>
-                    <div class="fs-5">{{ score["tax_id"] }}</div>
-                    <div class="fs-5">{{ score["tax_level"] }}</div>
-                    <div class="fs-5">{{ score["tax_kennen"] }}</div>
-                    <div class="fs-5">{{ score["tax_kunnen"] }}</div>
-                    <div class="fs-5">{{ score["tax_confidence"] }}</div>
-                    <div class="fs-5">{{ score["tax_snap"] }}</div>
-                    <div class="fs-5">{{ score["tax_student_id"] }}</div>
-                  </div>
-            </div>
-        </div>
-{% endfor %}
-</div>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">@</th>
+      <th scope="col">vak</th>
+      <th scope="col">Level</th>
+      <th scope="col">Kennen</th>
+      <th scope="col">Kunnen</th>
+      <th scope="col">Confidence</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for score in scores %}
+    <tr>
+      <th scope="row">{{ score["tax_id"] }}</th>
+      <td>{{ score["snap_at"] }}</td>
+      <td>{{ score["lg_title"] }}</td>
+      <td>{{ score["tax_level"] }}</td>
+      <td>{{ score["tax_kunnen"] }}</td>
+      <td>{{ score["tax_kennen"] }}</td>
+      <td>{{ score["tax_confidence"] }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+    <div class="row">
+        {% for score in scores %}
+                <div class="col-md-4">
+                    <div class="card  " >
+                          <div class="card-body">
+                            <div class="fs-5">snap_at: </div>
+                            <div class="fs-5">title: {{ score["lg_title"] }}</div>
+                            <div class="fs-5">tax_id: {{ score["tax_id"] }}</div>
+                            <div class="fs-5">level: {{ score["tax_level"] }}</div>
+                            <div class="fs-5">ken: </div>
+                            <div class="fs-5">kan: </div>
+                            <div class="fs-5">conf:</div>
+                            <div class="fs-5">snap_id: {{ score["tax_snap"] }}</div>
+                            <div class="fs-5">student_id: {{ score["tax_student_id"] }}</div>
+                          </div>
+                    </div>
+                </div>
+        {% endfor %}
+    </div>
 {% endblock %}
