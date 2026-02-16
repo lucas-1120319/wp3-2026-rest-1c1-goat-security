@@ -4,6 +4,7 @@
         {% if session["role"] == "teacher" %}
             <li><a href="{{ url_for(role + '.studentGroups') }}"><i class="bi bi-person-bounding-box"></i>Klassen</a></li>
         {% endif %}
+        <li><a href="{{ url_for(role + '.subjects') }}"><i class="bi bi-person-bounding-box"></i>Vakken</a></li>
         <li><a href="{{ url_for(role + '.profile') }}"><i class="bi bi-person-bounding-box"></i>Profile</a></li>
         <li><a href="{{ url_for('signout') }}"><i class="bi bi-person-bounding-box"></i>Uitloggen</a></li>
     </ul>
