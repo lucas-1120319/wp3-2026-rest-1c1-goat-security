@@ -1,0 +1,43 @@
+{% extends 'index.html' %}
+{% block header %}
+    {% block title %}
+        {{ subject_name.name }}
+    {% endblock %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+
+    {% if role == "teacher" %}
+
+        <div class="row">
+        {% for lg in learning_goals %}
+            <div class="col-md-4">
+                <div class="card  " >
+                    <a class="link-underline link-underline-opacity-0  " href="/teacher/subjects/{{ lg["id"] }}">
+                      <div class="card-body">
+                        <div class="fs-3">{{ lg['title'] }}</div>
+                      </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+        {%for subject in subjects %}
+            <div class="col-md-4">
+                <div class="card  " >
+                    <a class="link-underline link-underline-opacity-0" href="">
+                      <div class="card-body">
+                        <div class="fs-3">Vak {{ subject["name"] }}</div>
+                      </div>
+                    </a>
+                </div>
+            </div>
+        {%endfor%}
+    {% endif %}
+
+</div>
+{% endblock %}

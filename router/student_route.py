@@ -38,7 +38,7 @@ def subjects():
 @student_bp.route("/subject/learning_goals")
 def subject_learning_goals():
     """ Get data of specifiek subject. """
-    subject_id = 2 #
+    subject_id = 1 #
     learning_goals = app.students.get_learning_goals(subject_id)
     learning_title = app.students.get_learning_goals_title(subject_id)
     return render_template("learning_goal.html", learning_goals=learning_goals, learning_title=learning_title)
@@ -47,7 +47,7 @@ def subject_learning_goals():
 @student_bp.route("/subject/learning_goals/<int:subject_id>/result", methods=["GET"])
 def subject_score(subject_id):
     """ Get exam result data in a table setting. """
-    student_id = 2
+    student_id = 1
     snapshot_id = subject_id
     scores = app.students.get_snapshot_by_id(snapshot_id, student_id)
     print('subject_id: ',subject_id)

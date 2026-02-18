@@ -69,3 +69,39 @@ class Teacher:
                         (teacher_id,))
             con.commit()
             return cur.fetchall()
+
+    def get_all_subjects(self):
+        """ Get all subjects. """
+        with self.db.connect() as con:
+            con.row_factory = sqlite3.Row
+            cur = con.cursor()
+            cur.execute(
+                "SELECT subjects.name, subjects.id FROM subjects "
+                # "JOIN learningGoals ON subjects.id = learningGoals.subject_id "
+            )
+        return cur.fetchall()
+
+    def get_all_learning_goals(self, subject_id):
+        """ Get learning goals. """
+        with self.db.connect() as con:
+            con.row_factory = sqlite3.Row
+            cur = con.cursor()
+            cur.execute(
+                "SELECT learningGoals.title FROM subjects "
+                "JOIN learningGoals ON subjects.id = learningGoals.subject_id "
+                "WHERE subjects.id = ? ",
+                (subject_id, )
+            )
+            return cur.fetchall()
+
+    def get_single_subject(self, subject_id):
+        """ Get single subject. """
+        with self.db.connect() as con:
+            con.row_factory = sqlite3.Row
+            cur = con.cursor()
+            cur.execute(
+                "SELECT subjects.name FROM subjects "
+                "WHERE subjects.id = ? ",
+                (subject_id, )
+            )
+            return cur.fetchone()

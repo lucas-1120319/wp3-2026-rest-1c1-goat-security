@@ -7,16 +7,38 @@
 
 {% block content %}
 <div class="row">
-    {%for subject in subjects %}
-        <div class="col-md-4">
-            <div class="card  " >
-                <a class="link-underline link-underline-opacity-0" href="">
-                  <div class="card-body">
-                    <div class="fs-3">Vak {{ subject["name"] }}</div>
-                  </div>
-                </a>
+
+    {% if role == "teacher" %}
+
+        <div class="row">
+        {% for sub in subject_list %}
+            <div class="col-md-4">
+                <div class="card  " >
+                    <a class="link-underline link-underline-opacity-0  " href="/teacher/subjects/{{ sub["id"] }}">
+                      <div class="card-body">
+                        <div class="fs-3">{{ sub['name'] }}</div>
+                      </div>
+                    </a>
+                </div>
             </div>
         </div>
 
-    {%endfor%}
+        {% endfor %}
+
+
+    {% else %}
+        {%for subject in subjects %}
+            <div class="col-md-4">
+                <div class="card  " >
+                    <a class="link-underline link-underline-opacity-0" href="">
+                      <div class="card-body">
+                        <div class="fs-3">Vak {{ subject["name"] }}</div>
+                      </div>
+                    </a>
+                </div>
+            </div>
+        {%endfor%}
+    {% endif %}
+
+</div>
 {% endblock %}
