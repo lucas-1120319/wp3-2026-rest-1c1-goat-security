@@ -22,7 +22,16 @@ def profile():
 
 @teacher_bp.route("/subjects")
 def subjects():
-    return render_template("subjects.html")
+    """ Show list of subjects"""
+    subject_list = app.teachers.get_all_subjects()
+    return render_template("subjects.html", subject_list=subject_list)
+
+@teacher_bp.route("/subjects/<int:subject_id>", methods=["GET"])
+def select_subject(subject_id):
+    """ Select a single subject """
+    subject_name = app.teachers.get_single_subject(subject_id)
+    learning_goals = app.teachers.get_all_learning_goals(subject_id)
+    return render_template("single_subject.html", learning_goals=learning_goals, subject_name=subject_name)
 
 @teacher_bp.route("/subject/learningGoals")
 def subject_learningGoals():
