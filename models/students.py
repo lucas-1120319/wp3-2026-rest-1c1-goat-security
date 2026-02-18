@@ -11,7 +11,7 @@ class Student:
         with self.db.connect() as con:
             con.row_factory = sqlite3.Row  # <--- make rows dictionary-like
             cur = con.cursor()
-            cur.execute("""SELECT email, phone, first_name, last_name, postcode, gender, city, country, street_name, birth_date FROM students inner join users ON students.user_id = users.id WHERE user_id = ?""", (user_id,))
+            cur.execute("""SELECT user_id, email, phone, first_name, last_name, postcode, gender, city, country, street_name, birth_date FROM students inner join users ON students.user_id = users.id WHERE user_id = ?""", (user_id,))
             return cur.fetchone()
 
     def get_student_class(self, user_id):

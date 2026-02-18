@@ -14,7 +14,7 @@
         {% for sub in subject_list %}
             <div class="col-md-4">
                 <div class="card  " >
-                    <a class="link-underline link-underline-opacity-0  " href="/teacher/subjects/{{ sub["id"] }}">
+                    <a class="link-underline link-underline-opacity-0" href="/teacher/subjects/{{ sub["id"] }}">
                       <div class="card-body">
                         <div class="fs-3">{{ sub['name'] }}</div>
                       </div>
@@ -30,7 +30,7 @@
         {%for subject in subjects %}
             <div class="col-md-4">
                 <div class="card  " >
-                    <a class="link-underline link-underline-opacity-0" href="">
+                    <a class="link-underline link-underline-opacity-0" href="/student/subject/learning_goals/{{ subject['id'] }}">
                       <div class="card-body">
                         <div class="fs-3">Vak {{ subject["name"] }}</div>
                       </div>

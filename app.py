@@ -45,10 +45,6 @@ def register():
     """Shows the register page"""
     return render_template("register.html")
 
-@app.route("/student-dashboard")
-def student_dashboard():
-    return render_template("student-dashboard.html")
-
 @app.route("/signin", methods=["POST"])
 def signin():
     """Gets the form's data and logs in the user with the correct validation (NEEDS REVAMP)"""
