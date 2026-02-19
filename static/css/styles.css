@@ -1,43 +1,58 @@
-
-
 body{
     display: flex;
     width: 100%;
-
 }
 
 main {
+    margin-left: 12rem;
+    /*transition: margin-left 0.3s ease;*/
     width: 100%;
     background-color: #fafafa;
-
 }
 
+/* Sidebar Sectie */
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 12rem;
+    background: #222;
+    color: white;
+    transition: width 0.3s ease;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+#sidebar.close{
+    max-width: 4rem;
+}
+
+#sidebar.close .text{
+    opacity: 0;
+}
+
+#sidebar.close ~ main {
+    margin-left: 4rem;
+}
+
+.side-bar ul{
+    list-style-type: none;
+}
+
+.side-bar ul li{
+    padding-bottom: 1rem;
+}
+
+.side-bar ul li i{
+    font-size: 1rem;
+        padding-right: 1rem;
+}
+
+/* Test Sectie */
 #chart{
     width: 100%;
     max-width: 80rem;
     max-height: 25rem;
     background-color: #555555;
-}
-
-aside{
-    background: #222;
-    width: 100%;
-    max-width: 12rem;
-
-    color: white;
-}
-
-aside ul{
-    list-style-type: none;
-}
-
-aside ul li{
-    padding-bottom: 1rem;
-
-}
-
-aside ul li i{
-    font-size: 1rem;
-        padding-right: 1rem;
-
 }

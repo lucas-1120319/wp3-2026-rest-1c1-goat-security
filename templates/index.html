@@ -9,14 +9,16 @@
     <link rel="canonical" href="https://www.website.nl">
     <link rel="icon" type="image/png" href="/images/favicon/favicon.ico">
     <link rel="stylesheet" href="{{ url_for('static', filename='/css/styles.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.min.js" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.min.js" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <title>{% block title %}{% endblock %}</title>
-
+    <script src="{{url_for('static', filename='/js/MenuFold.js') }}" defer></script>
 </head>
-<body >
+
+<body>
     {% include 'navbar.html' %}
-    <div  class="p-4 container" style="margin-left: 12rem;"> <!-- Offset for sidebar width -->
+    <main class="container"> <!-- Offset for sidebar width -->
           <header id="header">
             <h1>{% block header %}{% endblock %}</h1>
           </header>
@@ -24,6 +26,6 @@
               {% block content %}
               {% endblock %}
           </div>
-      </div>
+      </main>
 </body>
 </html>
