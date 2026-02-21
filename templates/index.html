@@ -17,8 +17,9 @@
 </head>
 
 <body>
+<div class="layout">
     {% include 'navbar.html' %}
-    <main class="container"> <!-- Offset for sidebar width -->
+    <main class="main-container"> <!-- Offset for sidebar width -->
           <header id="header">
             <h1>{% block header %}{% endblock %}</h1>
           </header>
@@ -27,5 +28,6 @@
               {% endblock %}
           </div>
       </main>
+</div>
 </body>
 </html>

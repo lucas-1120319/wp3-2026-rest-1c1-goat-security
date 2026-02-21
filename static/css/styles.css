@@ -1,13 +1,31 @@
-body{
-    display: flex;
-    width: 100%;
+* {
+    box-sizing: border-box;
 }
 
-main {
-    margin-left: 12rem;
-    /*transition: margin-left 0.3s ease;*/
+
+:root{
+    --sidebar-open: 12rem;
+    --sidebar-closed: 4rem;
+}
+
+body{
+    position: relative;
+    display: flex;
     width: 100%;
-    background-color: #fafafa;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #111111;
+}
+
+.layout {
+    display: flex;
+    width: 100%;
+    margin: 0 auto;
+}
+
+#toggle{
+    cursor: pointer;
 }
 
 /* Sidebar Sectie */
@@ -16,24 +34,39 @@ main {
     top: 0;
     left: 0;
     height: 100%;
-    width: 12rem;
+    width: var(--sidebar-open);
     background: #222;
     color: white;
     transition: width 0.3s ease;
     overflow: hidden;
-    z-index: 1000;
+    z-index: 100;
 }
 
 #sidebar.close{
-    max-width: 4rem;
+    width: var(--sidebar-closed);
+
+}
+
+main {
+    position: relative;
+    left: 12rem;
+    width: calc(100% - 17rem);
+    /*background: #555555;*/
+    transition: width 0.3s ease;
+    margin: 2rem;
+
+}
+
+#sidebar.close ~ main{
+    left: 5rem;
+    width: calc(100% - 11rem);
+    /*background-color: red;*/
+    transition: width 0.3s ease;
+    margin: 2rem;
 }
 
 #sidebar.close .text{
     opacity: 0;
-}
-
-#sidebar.close ~ main {
-    margin-left: 4rem;
 }
 
 .side-bar ul{
@@ -46,7 +79,7 @@ main {
 
 .side-bar ul li i{
     font-size: 1rem;
-        padding-right: 1rem;
+    padding-right: 1rem;
 }
 
 /* Test Sectie */
