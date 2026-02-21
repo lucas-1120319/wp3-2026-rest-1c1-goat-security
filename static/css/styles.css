@@ -1,43 +1,91 @@
+* {
+    box-sizing: border-box;
+}
 
+
+:root{
+    --sidebar-open: 12rem;
+    --sidebar-closed: 4rem;
+}
 
 body{
+    position: relative;
     display: flex;
     width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #111111;
+}
+
+.layout {
+    display: flex;
+    width: 100%;
+    margin: 0 auto;
+}
+
+#toggle{
+    cursor: pointer;
+}
+
+/* Sidebar Sectie */
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: var(--sidebar-open);
+    background: #222;
+    color: white;
+    transition: width 0.3s ease;
+    overflow: hidden;
+    z-index: 100;
+}
+
+#sidebar.close{
+    width: var(--sidebar-closed);
 
 }
 
 main {
-    width: 100%;
-    background-color: #fafafa;
+    position: relative;
+    left: 12rem;
+    width: calc(100% - 17rem);
+    /*background: #555555;*/
+    transition: width 0.3s ease;
+    margin: 2rem;
 
 }
 
+#sidebar.close ~ main{
+    left: 5rem;
+    width: calc(100% - 11rem);
+    /*background-color: red;*/
+    transition: width 0.3s ease;
+    margin: 2rem;
+}
+
+#sidebar.close .text{
+    opacity: 0;
+}
+
+.side-bar ul{
+    list-style-type: none;
+}
+
+.side-bar ul li{
+    padding-bottom: 1rem;
+}
+
+.side-bar ul li i{
+    font-size: 1rem;
+    padding-right: 1rem;
+}
+
+/* Test Sectie */
 #chart{
     width: 100%;
     max-width: 80rem;
     max-height: 25rem;
     background-color: #555555;
-}
-
-aside{
-    background: #222;
-    width: 100%;
-    max-width: 12rem;
-
-    color: white;
-}
-
-aside ul{
-    list-style-type: none;
-}
-
-aside ul li{
-    padding-bottom: 1rem;
-
-}
-
-aside ul li i{
-    font-size: 1rem;
-        padding-right: 1rem;
-
 }

@@ -1,12 +1,19 @@
-<aside class="side-bar vh-100 position-fixed  ">
+<aside class="side-bar close vh-100" id="sidebar">
     <ul class="list-group list-group-flush ms-4 mt-4">
-        <li>#{{ user_id }} {{ username }} </li>
-        <li><a href="{{ url_for(role + '.dashboard') }}"><i class="bi bi-person-bounding-box"></i>Dashboard</a></li>
+        <i id="toggle">X</i>
+        <li><span class="text">#{{ user_id }} {{ username }} </span></li>
+        <li><a href="{{ url_for(role + '.dashboard') }}">
+            <i class="bi bi-person-bounding-box"></i><span class="text">Dashboard</span></a></li>
         {% if session["role"] == "teacher" %}
-            <li><a href="{{ url_for(role + '.studentGroups') }}"><i class="bi bi-person-bounding-box"></i>Klassen</a></li>
+            <li><a href="{{ url_for(role + '.studentGroups') }}">
+                <i class="bi bi-person-bounding-box"></i><span class="text">Klassen</span></a>
+            </li>
         {% endif %}
-        <li><a href="{{ url_for(role + '.subjects') }}"><i class="bi bi-person-bounding-box"></i>Vakken</a></li>
-        <li><a href="{{ url_for(role + '.profile') }}"><i class="bi bi-person-bounding-box"></i>Profile</a></li>
-        <li><a href="{{ url_for('signout') }}"><i class="bi bi-person-bounding-box"></i>Uitloggen</a></li>
+        <li><a href="{{ url_for(role + '.subjects') }}"><i class="bi bi-person-bounding-box"></i>
+            <span class="text">Vakken</span></a></li>
+        <li><a href="{{ url_for(role + '.profile') }}"><i class="bi bi-person-bounding-box"></i>
+            <span class="text">Profile</span></a></li>
+        <li><a href="{{ url_for('signout') }}"><i class="bi bi-person-bounding-box"></i>
+            <span class="text">Uitloggen</span></a></li>
     </ul>
 </aside>
