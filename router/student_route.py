@@ -1,6 +1,6 @@
 from flask import request, Blueprint, render_template,current_app as app,  session
-import seaborn as sns
-import matplotlib.pyplot as plt
+#import seaborn as sns
+#import matplotlib.pyplot as plt
 
 student_bp = Blueprint("student", __name__, url_prefix="/student")
 
