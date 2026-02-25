@@ -22,6 +22,7 @@ app.teachers = Teacher(DB_PATH)
 app.seeder = Seed(DB_PATH)
 users = User(DB_PATH)
 json_data = os.path.join(BASE_DIR, "data/test", "data-sample.json")
+print("hoi")
 data_converter = data_converter(DB_PATH, json_data)
 
 # Seeding 2 users assigned to teacher
@@ -31,5 +32,4 @@ app.seeder.add_students_in_group()
 app.seeder.assign_teacher_group()
 app.seeder.assign_class_subjects()
 
-if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+
