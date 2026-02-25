@@ -31,5 +31,4 @@ app.seeder.add_students_in_group()
 app.seeder.assign_teacher_group()
 app.seeder.assign_class_subjects()
 
-if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+
