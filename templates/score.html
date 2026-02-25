@@ -6,6 +6,36 @@
 {% endblock %}
 
 {% block content%}
+
+<div>
+  <canvas id="myChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const ctx = document.getElementById('myChart');
+
+  new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      datasets: [{
+        label: '# of Votes',
+        data: [12, 19, 3, 5, 2, 3],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
+
 <table class="table">
   <thead>
     <tr>
@@ -20,7 +50,7 @@
   </thead>
   <tbody>
   {% for score in scores %}
-    <tr>
+      <tr>
       <th scope="row">{{ score["tax_id"] }}</th>
       <td>{{ score["snap_at"] }}</td>
       <td>{{ score["lg_title"] }}</td>

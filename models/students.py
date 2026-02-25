@@ -74,27 +74,14 @@ class Student:
                 "WHERE subject_id = ?", (subject_id,))
             return cur.fetchone()
 
-
-
-    # def get_snapshot_by_id(self, snapshot_id:int, student_id:int):
-    #     with self.db.connect() as con:
-    #         con.row_factory = sqlite3.Row
-    #         cur = con.cursor()
-    #         cur.execute(
-    #             "SELECT student_id, snapshot_id FROM taxonomies "
-    #             "WHERE snapshot_id = ? AND student_id = ?",
-    #             (snapshot_id, student_id)
-    #         )
-    #         return cur.fetchall()
-
-
-    def get_snapshot_by_id(self, snapshot_id: int, student_id: int):
+    def get_snapshot_by_learning_goal_id(self, learning_goal_id: int, student_id: int):
         """ Get exam result data by snapshot id """
         with self.db.connect() as con:
             con.row_factory = sqlite3.Row
             cur = con.cursor()
+
             cur.execute(
-                "SELECT tax.id AS tax_id, "
+                "SELECT tax.id AS tax_id, " 
                 "tax.level AS tax_level, "
                 "tax.kennen AS tax_kennen, "
                 "tax.kunnen AS tax_kunnen, "
@@ -105,15 +92,12 @@ class Student:
                 "snap.at AS snap_at, "
 
                 "lg.external_id AS lg_external_id, "
-                "lg.title AS lg_title, "
-
-                "sub.name AS lg_title "
+                "lg.title AS lg_title "
 
                 "FROM taxonomies tax "
                 "JOIN snapshots snap ON tax.snapshot_id = snap.id "
                 "JOIN learningGoals lg ON snap.learningGoal_id = lg.id "
-                "JOIN subjects sub ON sub.id = lg.id "
-                "WHERE tax.snapshot_id = ? AND tax.student_id = ? ",
-                (snapshot_id, student_id)
+                "WHERE snap.learningGoal_id = ? AND tax.student_id = ? ",
+                (learning_goal_id, student_id)
             )
             return cur.fetchall()
