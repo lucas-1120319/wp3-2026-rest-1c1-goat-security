@@ -1,4 +1,5 @@
 {% extends 'index.html' %}
+
 {% block header %}
     {% block title %}
         Studenten
@@ -6,21 +7,60 @@
 {% endblock %}
 
 {% block content%}
-<div class="row">
-
-    {%for student in students %}
-        <div class="col-md-4">
-            <div class="card  " >
-                <a class="link-underline link-underline-opacity-0  " href="#">
-                  <div class="card-body">
-                    <div class="fs-3">Student {{ student["first_name"] }}</div>
-                  </div>
-                </a>
-            </div>
-        </div>
-
-    {% else %}
-        <h2 class="fs-3">Geen studenten in deze klass</h2>
-    {%endfor%}
+{% set Title = "Test Student" %}
+{% set Button_text = "Test Student" %}
+{% include "prompt.html" %}
+<div class="row mt-4">
+    <div class="col-12">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Voornaam</th>
+                <th scope="col">Achternaam</th>
+                <th scope="col">Postcode</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Stad</th>
+                <th scope="col">Land</th>
+                <th scope="col">Adres</th>
+                <th scope="col">Geboorte-datum</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for student in students %}
+            <tr>
+            <th scope="row">{{ student["id"] }}</th>
+                <td>{{ student["first_name"] }}</td>
+                <td>{{ student["last_name"] }}</td>
+                <td>{{ student["postcode"] }}</td>
+                <td>{{ student["gender"] }}</td>
+                <td>{{ student["city"] }}</td>
+                <td>{{ student["country"] }}</td>
+                <td>{{ student["street_name"] }}</td>
+                <td>{{ student["birth_date"] }}</td>
+            </tr>
+            {% else %}
+                <h2 class="fs-3">Geen studenten in deze klas</h2>
+            {%endfor%}
+            </tbody>
+        </table>
+    </div>
 </div>
+<!--<div class="row">-->
+
+<!--    {%for student in students %}-->
+<!--        <div class="col-md-4">-->
+<!--            <div class="card  " >-->
+<!--                <a class="link-underline link-underline-opacity-0  " href="#">-->
+<!--                  <div class="card-body">-->
+<!--                    <div class="fs-3">Student {{ student["first_name"] }}</div>-->
+<!--                  </div>-->
+<!--                </a>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--    {% else %}-->
+<!--        <h2 class="fs-3">Geen studenten in deze klass</h2>-->
+<!--    {%endfor%}-->
+<!--</div>-->
 {% endblock %}
