@@ -161,9 +161,9 @@ def main():
         entry = make_student_entry(student_id, student_name)
         students_data.append(entry)
 
-    with open("data/test/data-sample.json", "w", encoding="utf-8") as f:
+    with open("data/data-sample.json", "w", encoding="utf-8") as f:
         json.dump({"students": students_data}, f, ensure_ascii=False, indent=2)
-    print("JSON generation complete: data/test/data-sample.json")
+    print("JSON generation complete: data/data-sample.json")
 
 # -----------------------------
 if __name__ == "__main__":
