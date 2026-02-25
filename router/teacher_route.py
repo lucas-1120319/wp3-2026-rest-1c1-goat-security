@@ -43,9 +43,15 @@ def learningGoals():
 
 @teacher_bp.route("/studentGroups")
 def studentGroups():
+    studentGroups = app.teachers.get_all_studentGroups()
+    return render_template("studentGroup.html", studentGroups=studentGroups)
+
+@teacher_bp.route("/studentGroup")
+def studentGroup():
     teacher_id = session["teacher_id"]
     studentGroups = app.teachers.get_studentGroups(teacher_id)
     return render_template("studentGroup.html", studentGroups=studentGroups)
+
 
 @teacher_bp.route("/studentGroup/<string:name>", methods=["GET"])
 def select_studentGroup(name):

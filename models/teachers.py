@@ -70,6 +70,13 @@ class Teacher:
             con.commit()
             return cur.fetchall()
 
+    def get_all_studentGroups(self):
+        with self.db.connect() as con:
+            cur = con.cursor()
+            cur.execute("SELECT studentGroups.name, studentGroups.id FROM studentGroups",)
+            con.commit()
+            return cur.fetchall()
+
     def get_all_students_studentGroup(self, class_id: int):
         with self.db.connect() as con:
             cur = con.cursor()
