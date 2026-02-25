@@ -10,13 +10,15 @@
     {%for group in studentGroups %}
         <div class="col-md-4">
             <div class="card  " >
-                <a class="link-underline link-underline-opacity-0  " href="/teacher/studentGroup/{{ group["id"]  }}">
+                <a class="link-underline link-underline-opacity-0  " href="/teacher/studentGroup/{{ group["name"]  }}">
                   <div class="card-body">
                     <div class="fs-3">klas {{ group["name"] }}</div>
                   </div>
                 </a>
             </div>
         </div>
-
+    {% else %}
+        <h2 class="fs-3">Geen klassen beschikbaar</h2>
     {%endfor%}
+</div>
 {% endblock %}

@@ -6,7 +6,10 @@
             <i class="bi bi-person-bounding-box"></i><span class="text">Dashboard</span></a></li>
         {% if session["role"] == "teacher" %}
             <li><a href="{{ url_for(role + '.studentGroups') }}">
-                <i class="bi bi-person-bounding-box"></i><span class="text">Klassen</span></a>
+                <i class="bi bi-person-bounding-box"></i><span class="text">Alle Klassen</span></a>
+            </li>
+            <li><a href="{{ url_for(role + '.studentGroup') }}">
+                <i class="bi bi-person-bounding-box"></i><span class="text">Uw Klas</span></a>
             </li>
         {% endif %}
         <li><a href="{{ url_for(role + '.subjects') }}"><i class="bi bi-person-bounding-box"></i>

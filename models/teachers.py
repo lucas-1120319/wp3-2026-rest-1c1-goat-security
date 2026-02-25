@@ -70,6 +70,25 @@ class Teacher:
             con.commit()
             return cur.fetchall()
 
+    def get_all_studentGroups(self):
+        with self.db.connect() as con:
+            cur = con.cursor()
+            cur.execute("SELECT studentGroups.name, studentGroups.id FROM studentGroups",)
+            con.commit()
+            return cur.fetchall()
+
+    def get_all_students_studentGroup(self, class_id: int):
+        with self.db.connect() as con:
+            cur = con.cursor()
+            cur.execute(
+                "SELECT * FROM students INNER JOIN student_studentGroups "
+                "ON students.id = student_studentGroups.student_id INNER JOIN studentGroups "
+                "ON studentGroups.id = student_studentGroups.studentGroup_id WHERE studentGroups.name = ?",
+                (class_id,),
+            )
+            con.commit()
+            return cur.fetchall()
+
     def get_all_subjects(self):
         """ Get all subjects. """
         with self.db.connect() as con:

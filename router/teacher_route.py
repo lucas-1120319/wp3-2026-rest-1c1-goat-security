@@ -42,7 +42,20 @@ def learningGoals():
     return render_template("learningGoals.html")
 
 @teacher_bp.route("/studentGroups")
-def studentGroups ():
+def studentGroups():
+    studentGroups = app.teachers.get_all_studentGroups()
+    return render_template("studentGroup.html", studentGroups=studentGroups)
+
+@teacher_bp.route("/studentGroup")
+def studentGroup():
     teacher_id = session["teacher_id"]
     studentGroups = app.teachers.get_studentGroups(teacher_id)
     return render_template("studentGroup.html", studentGroups=studentGroups)
+
+
+@teacher_bp.route("/studentGroup/<string:name>", methods=["GET"])
+def select_studentGroup(name):
+    """ Select a single studentGroup """
+    all_students = app.teachers.get_all_students_studentGroup(name)
+    print()
+    return render_template("all_students.html", students=all_students)
