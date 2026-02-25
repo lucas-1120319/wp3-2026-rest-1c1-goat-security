@@ -21,7 +21,7 @@ app.students = Student(DB_PATH)
 app.teachers = Teacher(DB_PATH)
 app.seeder = Seed(DB_PATH)
 users = User(DB_PATH)
-json_data = os.path.join(BASE_DIR, "data", "data-sample.json")
+json_data = os.path.join(BASE_DIR, "data/test", "data-sample.json")
 data_converter = data_converter(DB_PATH, json_data)
 
 # Seeding 2 users assigned to teacher
