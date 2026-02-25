@@ -50,13 +50,11 @@ def subject_learning_goals(subject_id):
     return render_template("learning_goal.html", learning_goals=learning_goals, learning_title=learning_title)
 
 
-@student_bp.route("/subject/learning_goals/<int:subject_id>/result", methods=["GET"])
-def subject_score(subject_id):
+@student_bp.route("/subject/learning_goals/<int:learning_goal_id>/result", methods=["GET"])
+def subject_score(learning_goal_id):
     """ Get exam result data in a table setting. """
     student_id = session["id"]
-    snapshot_id = subject_id
-    scores = app.students.get_snapshot_by_id(snapshot_id, student_id)
-    print('subject_id: ',subject_id)
+    scores = app.students.get_snapshot_by_learning_goal_id(learning_goal_id, student_id)
     print('student_id: ',student_id)
     return render_template("score.html", scores=scores)
 
