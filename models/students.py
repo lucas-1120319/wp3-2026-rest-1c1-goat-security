@@ -107,7 +107,6 @@ class Student:
         with self.db.connect() as con:
             con.row_factory = sqlite3.Row
             cur = con.cursor()
-
             cur.execute(
                 "SELECT tax.id AS tax_id, "
                 "tax.level AS tax_level, "
@@ -135,7 +134,6 @@ class Student:
         with self.db.connect() as con:
             con.row_factory = sqlite3.Row
             cur = con.cursor()
-
             cur.execute(
                 "SELECT tax.id AS tax_id, "
                 "tax.level AS tax_level, "
