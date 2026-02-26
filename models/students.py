@@ -107,7 +107,6 @@ class Student:
         with self.db.connect() as con:
             con.row_factory = sqlite3.Row
             cur = con.cursor()
-
             cur.execute(
                 "SELECT tax.id AS tax_id, "
                 "tax.level AS tax_level, "
@@ -129,6 +128,33 @@ class Student:
                 (snapshot_id, student_id)
             )
             return cur.fetchall()
+
+    def get_snapshot_title(self, snapshot_id: int, student_id: int):
+        """ Get exam result data by snapshot id with title of subject"""
+        with self.db.connect() as con:
+            con.row_factory = sqlite3.Row
+            cur = con.cursor()
+            cur.execute(
+                "SELECT tax.id AS tax_id, "
+                "tax.level AS tax_level, "
+                "tax.kennen AS tax_kennen, "
+                "tax.kunnen AS tax_kunnen, "
+                "tax.confidence AS tax_confidence, "
+                "tax.snapshot_id AS tax_snap, "
+                "tax.student_id AS tax_student_id, "
+
+                "snap.at AS snap_at, "
+
+                "lg.external_id AS lg_external_id, "
+                "lg.title AS lg_title "
+
+                "FROM taxonomies tax "
+                "JOIN snapshots snap ON tax.snapshot_id = snap.id "
+                "JOIN learningGoals lg ON snap.learningGoal_id = lg.id "
+                "WHERE tax.snapshot_id = ? AND tax.student_id = ? ",
+                (snapshot_id, student_id)
+            )
+            return cur.fetchone()
 
 
     def get_exam_list(self, learning_goal_id: int, student_id: int):

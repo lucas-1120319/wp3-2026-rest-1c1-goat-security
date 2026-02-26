@@ -1,7 +1,7 @@
 {% extends 'index.html' %}
 {% block header %}
     {% block title %}
-        Leerdoelen
+        {{ score_title['lg_title'] }}
     {% endblock %}
 {% endblock %}
 
@@ -11,8 +11,6 @@
   <canvas id="myChart"></canvas>
 </div>
 
-
-
 <table class="table">
   <thead>
     <tr>
@@ -20,34 +18,34 @@
       <th scope="col">@</th>
       <th scope="col">vak</th>
       <th scope="col">Level</th>
+        <th scope="col">Kunnen</th>
       <th scope="col">Kennen</th>
-      <th scope="col">Kunnen</th>
+
       <th scope="col">Confidence</th>
     </tr>
   </thead>
   <tbody>
   {% for score in scores %}
-      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-  const ctx = document.getElementById('myChart');
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-      datasets: [{
-        label: '# of Votes',
-        data: [{{ score["tax_kennen"] }}, 19, 3, 5, 2, 3],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
+fetch("/student/data/{{ score["tax_snap"] }}")
+  .then(response => response.json())
+  .then(data => {
+      const ctx = document.getElementById('myChart');
+
+      new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: data.labels,
+              datasets: [
+                  {label: 'Onthouden', data: data.onthouden },
+                  {label: 'Begrijpen', data: data.begrijpen},
+                  {label: 'Analyseren', data: data.toepassen},
+                  {#{label: 'Toepassen', data: data.analyseren},#}
+
+              ],
+          }
+      });
   });
 </script>
 
