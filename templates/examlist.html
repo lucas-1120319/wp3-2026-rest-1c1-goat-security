@@ -1,0 +1,63 @@
+{% extends 'index.html' %}
+{% block header %}
+    {% block title %}
+        Leerdoelen
+    {% endblock %}
+{% endblock %}
+
+{% block content%}
+
+<div>
+  <canvas id="myChart"></canvas>
+</div>
+
+
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">@</th>
+      <th scope="col">EID</th>
+      <th scope="col">Type</th>
+      <th scope="col">Leerdoel</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for score in scores %}
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const ctx = document.getElementById('myChart');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      datasets: [{
+        label: '# of Votes',
+        data: [{{ score["tax_kennen"] }}, 19, 3, 5, 2, 3],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
+      <tr>
+        <th scope="row">{{ score["tax_snap"] }}</th>
+        <td><a class="link-underline link-underline-opacity-0"
+               href="/student/subject/learning_goals/{{ score['tax_snap'] }}/result">
+            {{ score["snap_at"] }}</a></td>
+        <td>{{ score["src_exid"] }}</td>
+        <td>{{ score["src_type"] }}</td>
+        <td>{{ score["lg_title"] }}</td>
+    </tr>
+ {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
