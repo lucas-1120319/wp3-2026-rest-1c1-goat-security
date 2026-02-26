@@ -1,6 +1,4 @@
-from flask import request, Blueprint, render_template,current_app as app,  session
-#import seaborn as sns
-#import matplotlib.pyplot as plt
+from flask import request, Blueprint, render_template, current_app as app, session, jsonify
 
 student_bp = Blueprint("student", __name__, url_prefix="/student")
 
@@ -68,14 +66,29 @@ def results(snapshot_id):
     return render_template("score.html", scores=scores, score_title=score_title)
 
 
+@student_bp.route("/data/<int:snapshot_id>", methods=["GET"])
+def data(snapshot_id):
+    student_id = session["id"]
+    scores = app.students.get_snapshot(snapshot_id, student_id)
+    kunnen = [score['tax_kunnen'] for score in scores]
+    kennen = [score['tax_kennen'] for score in scores]
+    confidence = [score['tax_confidence'] for score in scores]
+    date = [score['snap_at'] for score in scores]
+
+    return jsonify({
+        "labels": ['Onthouden', 'begrijpen', 'toepassen', 'analyseren'],
+        "onthouden": kunnen,
+        "begrijpen": kennen,
+        "toepassen": confidence,
+        # "analyseren": [kunnen[3], kennen[3], confidence[3]],
+    })
+
 @student_bp.route("/subject/learning_goals/<int:learning_goal_id>/examlist", methods=["GET"])
 def exam_list(learning_goal_id):
     """ Get exam result data in a table setting. """
     student_id = session["id"]
     scores = app.students.get_exam_list(learning_goal_id, student_id)
     return render_template("examlist.html", scores=scores)
-
-
 
 @student_bp.route("/learningGoals")
 def learningGoals():
