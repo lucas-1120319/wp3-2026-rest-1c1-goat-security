@@ -63,8 +63,9 @@ def results(snapshot_id):
     """ Get exam results per snapshot_id. """
     student_id = session["id"]
     scores = app.students.get_snapshot(snapshot_id, student_id)
+    score_title = app.students.get_snapshot_title(snapshot_id, student_id)
     print('student_id: ',student_id)
-    return render_template("score.html", scores=scores)
+    return render_template("score.html", scores=scores, score_title=score_title)
 
 
 @student_bp.route("/subject/learning_goals/<int:learning_goal_id>/examlist", methods=["GET"])
