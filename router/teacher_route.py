@@ -33,6 +33,7 @@ def select_subject(subject_id):
     learning_goals = app.teachers.get_all_learning_goals(subject_id)
     return render_template("single_subject.html", learning_goals=learning_goals, subject_name=subject_name)
 
+
 @teacher_bp.route("/subject/learningGoals")
 def subject_learningGoals():
     return render_template("subject_learningGoals.html")

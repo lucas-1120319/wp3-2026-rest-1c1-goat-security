@@ -124,3 +124,16 @@ class Teacher:
                 (subject_id, )
             )
             return cur.fetchone()
+
+    def get_exam_list(self, subject_id):
+        """ Get learning goals. """
+        with self.db.connect() as con:
+            con.row_factory = sqlite3.Row
+            cur = con.cursor()
+            cur.execute(
+                "SELECT learningGoals.title FROM subjects "
+                "JOIN learningGoals ON subjects.id = learningGoals.subject_id "
+                "WHERE subjects.id = ? and tax.snap",
+                (subject_id, )
+            )
+            return cur.fetchall()
