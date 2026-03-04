@@ -6,8 +6,15 @@
 {% endblock %}
 
 {% block content%}
-    <input name="average" id="average" >
+    <label for="average">Minimaal gemiddelde leerdoel (0–1)</label>
+    <input type="number" min="0" max="1" step="0.1" value="0.5" name="average" id="average" >
     <button onclick="calc_average()">Zoeken</button>
+    <div class="mb-3">
+        <strong>Legenda:</strong>
+        <span class="badge bg-danger">Slecht / laag</span>
+        <span class="badge bg-warning">Gemiddeld</span>
+        <span class="badge bg-success">Goed / hoog</span>
+    </div>
 <div class="row">
     {%for learning_goal in learning_goals %}
         <div class="col-md-4">
