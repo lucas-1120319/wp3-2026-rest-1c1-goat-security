@@ -44,11 +44,13 @@ def learningGoals():
 
 @teacher_bp.route("/studentGroups")
 def studentGroups():
+    """ Get all studentGroups """
     studentGroups = app.teachers.get_all_studentGroups()
     return render_template("studentGroup.html", studentGroups=studentGroups)
 
 @teacher_bp.route("/studentGroup")
 def studentGroup():
+    """ Get a single studentGroup """
     teacher_id = session["teacher_id"]
     studentGroups = app.teachers.get_studentGroups(teacher_id)
     return render_template("studentGroup.html", studentGroups=studentGroups)
@@ -56,7 +58,25 @@ def studentGroup():
 
 @teacher_bp.route("/studentGroup/<string:name>", methods=["GET"])
 def select_studentGroup(name):
-    """ Select a single studentGroup """
-    all_students = app.teachers.get_all_students_studentGroup(name)
-    print()
+    """ Get a whole list of Students from a studentGroup """
+
+    # [TEST] Calculator for now (To know if a student is doing good or is behind)
+    def determine_status(avg):
+        if avg is None:
+            return "Geen data"
+        elif avg < 0.5:
+            return "Achterloopt"
+        elif avg > 0.8:
+            return "Uitblinker"
+        else:
+            return "Op schema"
+
+    all_students_data = app.teachers.get_all_students_studentGroup(name)
+    all_students = []
+
+    for student in all_students_data:
+        student = dict(student)
+        student["status"] = determine_status(student["average"])
+        all_students.append(student)
+
     return render_template("all_students.html", students=all_students)
