@@ -42,11 +42,32 @@ def subjects():
 @student_bp.route("/subject/learning_goals/<int:subject_id>", methods=["GET"])
 def subject_learning_goals(subject_id):
     """ Get data of specifiek subject. """
-    # subject_id = 1 #
     learning_goals = app.students.get_learning_goals(subject_id)
     learning_title = app.students.get_learning_goals_title(subject_id)
-    return render_template("learning_goal.html", learning_goals=learning_goals, learning_title=learning_title)
 
+    learning_goals = [dict(row) for row in learning_goals]
+    student_id = session["id"]
+
+    for learning_goal in learning_goals:
+        learning_goal["result"] = app.students.get_learning_goals_number_of_results(0.5,    learning_goal["id"], student_id)
+    return render_template("learning_goal.html", learning_goals=learning_goals, learning_title=learning_title, subject_id=subject_id)
+
+@student_bp.route("/subject/learning_goals/filter_average")
+def filter_average():
+    student_id = session["id"]
+    try:
+        average = float(request.args.get("average", 0))
+    except ValueError:
+        average = 0
+
+    subject_id = int(request.args.get("subject_id"))
+    learning_goals = app.students.get_learning_goals(subject_id)
+    learning_goals = [dict(row) for row in learning_goals]
+
+    for goal in learning_goals:
+        goal["result"] = app.students.get_learning_goals_number_of_results(average ,goal["id"], student_id)
+
+    return jsonify(learning_goals)
 
 # @student_bp.route("/subject/learning_goals/<int:learning_goal_id>/result", methods=["GET"])
 # def subject_score(learning_goal_id):

@@ -189,3 +189,28 @@ class Student:
                 (learning_goal_id, student_id)
             )
             return cur.fetchall()
+
+    def get_learning_goals_number_of_results(self, min_average: float, learning_goal_id: int, student_id: int):
+        """ Get exam result data by snapshot id """
+        with self.db.connect() as con:
+            cur = con.cursor()
+
+
+            cur.execute(
+                "SELECT DISTINCT tax.id AS tax_id, "
+                "tax.level AS tax_level, "
+                "(AVG(tax.kennen) + AVG(tax.kunnen)) / 2.0 AS average "
+                "FROM taxonomies tax "
+                "JOIN snapshots snap ON tax.snapshot_id = snap.id "
+                "JOIN learningGoals lg ON snap.learningGoal_id = lg.id "
+                "WHERE snap.learningGoal_id = ? AND tax.student_id = ? "
+                "GROUP BY tax.level ",
+                (learning_goal_id, student_id)
+            )
+            all_results = cur.fetchall()
+            count = 0
+            for row in all_results:
+                if row["average"] > min_average:
+                    count += 1
+
+            return count
