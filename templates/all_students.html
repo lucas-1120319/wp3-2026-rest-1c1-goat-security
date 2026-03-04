@@ -24,6 +24,7 @@
                 <th scope="col">Land</th>
                 <th scope="col">Adres</th>
                 <th scope="col">Geboorte-datum</th>
+                <th scope="col">Status</th>
             </tr>
             </thead>
             <tbody>
@@ -38,6 +39,17 @@
                 <td>{{ student["country"] }}</td>
                 <td>{{ student["street_name"] }}</td>
                 <td>{{ student["birth_date"] }}</td>
+                <td>
+                    {% if student["status"] == "Achterloopt" %}
+                        <span class="badge bg-danger">Achterloopt</span>
+                    {% elif student["status"] == "Uitblinker" %}
+                        <span class="badge bg-success">Uitblinker</span>
+                    {% elif student["status"] == "Op schema" %}
+                        <span class="badge bg-warning text-dark">Op schema</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Geen data</span>
+                    {% endif %}
+                </td>
             </tr>
             {% else %}
                 <h2 class="fs-3">Geen studenten in deze klas</h2>
