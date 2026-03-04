@@ -1,4 +1,5 @@
-from flask import request, Blueprint, render_template,current_app as app,  session
+from flask import request, Blueprint, render_template, current_app as app, session, jsonify
+
 teacher_bp = Blueprint("teacher", __name__, url_prefix="/teacher")
 
 @teacher_bp.context_processor
@@ -79,4 +80,34 @@ def select_studentGroup(name):
         student["status"] = determine_status(student["average"])
         all_students.append(student)
 
-    return render_template("all_students.html", students=all_students)
+    return render_template("all_students.html", students=all_students, class_name=name)
+
+@teacher_bp.route("/studentGroup/<string:name>/filter_status", methods=["GET"])
+def filter_students_status(name):
+
+    status_filter = request.args.get("status")
+
+    def determine_status(avg):
+        if avg is None:
+            return "Geen data"
+        elif avg < 0.5:
+            return "Achterloopt"
+        elif avg > 0.8:
+            return "Uitblinker"
+        else:
+            return "Op schema"
+
+    all_students_data = app.teachers.get_all_students_studentGroup(name)
+
+    students = []
+
+    for student in all_students_data:
+        student = dict(student)
+        avg = student["average"] or 0
+        student_status = determine_status(avg)
+        student["status"] = student_status
+
+        if status_filter is None or student_status == status_filter:
+            students.append(student)
+
+    return jsonify(students)

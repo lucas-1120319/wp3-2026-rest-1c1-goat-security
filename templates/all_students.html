@@ -2,7 +2,7 @@
 
 {% block header %}
     {% block title %}
-        Studenten
+        Studenten {{ class_name }}
     {% endblock %}
 {% endblock %}
 
@@ -10,6 +10,31 @@
 {% set Title = "Test Student" %}
 {% set Button_text = "Test Student" %}
 {% include "prompt.html" %}
+    <div class="mb-3">
+        <button class="btn btn-danger btn-sm"
+            onclick="filterStatus('Achterloopt')">
+            Achterloopt
+        </button>
+
+        <button class="btn btn-warning btn-sm"
+            onclick="filterStatus('Op schema')">
+            Op schema
+        </button>
+
+        <button class="btn btn-success btn-sm"
+            onclick="filterStatus('Uitblinker')">
+            Uitblinker
+        </button>
+
+        <button class="btn btn-secondary btn-sm"
+            onclick="filterStatus(null)">
+            Alles tonen
+        </button>
+        <strong>Legenda:</strong>
+        <span class="badge bg-danger">Slecht / Achterloopt < 0.5</span>
+        <span class="badge bg-warning">Gemiddeld / Op Schema 0.5 ~ 0.8</span>
+        <span class="badge bg-success">Goed / Uitblinker > 0.8</span>
+    </div>
 <div class="row mt-4">
     <div class="col-12">
         <table class="table">
@@ -75,4 +100,66 @@
 <!--        <h2 class="fs-3">Geen studenten in deze klass</h2>-->
 <!--    {%endfor%}-->
 <!--</div>-->
+
+<script>
+    const className = "{{ class_name }}";
+
+    function filterStatus(status) {
+        let url = `/teacher/studentGroup/${className}/filter_status`;
+
+        if (status !== null) {
+            url += `?status=${encodeURIComponent(status)}`;
+        }
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => update_table(data));
+    }
+
+    function update_table(students) {
+        const tbody = document.querySelector("tbody");
+        tbody.innerHTML = "";
+
+        if (students.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="10" class="text-center">
+                        Geen studenten gevonden
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        students.forEach(student => {
+
+            let badge = "";
+            if (student.status === "Achterloopt")
+                badge = '<span class="badge bg-danger">Achterloopt</span>';
+            else if (student.status === "Uitblinker")
+                badge = '<span class="badge bg-success">Uitblinker</span>';
+            else if (student.status === "Op schema")
+                badge = '<span class="badge bg-warning text-dark">Op schema</span>';
+            else
+                badge = '<span class="badge bg-secondary">Geen data</span>';
+
+            const row = `
+                <tr>
+                    <th>${student.id}</th>
+                    <td>${student.first_name}</td>
+                    <td>${student.last_name}</td>
+                    <td>${student.postcode}</td>
+                    <td>${student.gender}</td>
+                    <td>${student.city}</td>
+                    <td>${student.country}</td>
+                    <td>${student.street_name}</td>
+                    <td>${student.birth_date}</td>
+                    <td>${badge}</td>
+                </tr>
+            `;
+
+            tbody.innerHTML += row;
+        });
+    }
+</script>
 {% endblock %}
