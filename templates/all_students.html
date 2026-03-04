@@ -2,7 +2,7 @@
 
 {% block header %}
     {% block title %}
-        Studenten
+        Studenten {{ class_name }}
     {% endblock %}
 {% endblock %}
 
@@ -10,6 +10,31 @@
 {% set Title = "Test Student" %}
 {% set Button_text = "Test Student" %}
 {% include "prompt.html" %}
+    <div class="mb-3">
+        <button class="btn btn-danger btn-sm"
+            onclick="filterStatus('Achterloopt')">
+            Achterloopt
+        </button>
+
+        <button class="btn btn-warning btn-sm"
+            onclick="filterStatus('Op schema')">
+            Op schema
+        </button>
+
+        <button class="btn btn-success btn-sm"
+            onclick="filterStatus('Uitblinker')">
+            Uitblinker
+        </button>
+
+        <button class="btn btn-secondary btn-sm"
+            onclick="filterStatus(null)">
+            Alles tonen
+        </button>
+        <strong>Legenda:</strong>
+        <span class="badge bg-danger">Slecht / Achterloopt < 0.5</span>
+        <span class="badge bg-warning">Gemiddeld / Op Schema 0.5 ~ 0.8</span>
+        <span class="badge bg-success">Goed / Uitblinker > 0.8</span>
+    </div>
 <div class="row mt-4">
     <div class="col-12">
         <table class="table">

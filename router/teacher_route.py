@@ -1,4 +1,5 @@
-from flask import request, Blueprint, render_template,current_app as app,  session
+from flask import request, Blueprint, render_template, current_app as app, session, jsonify
+
 teacher_bp = Blueprint("teacher", __name__, url_prefix="/teacher")
 
 @teacher_bp.context_processor
@@ -79,4 +80,4 @@ def select_studentGroup(name):
         student["status"] = determine_status(student["average"])
         all_students.append(student)
 
-    return render_template("all_students.html", students=all_students)
+    return render_template("all_students.html", students=all_students, class_name=name)
