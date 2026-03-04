@@ -42,11 +42,27 @@ def subjects():
 @student_bp.route("/subject/learning_goals/<int:subject_id>", methods=["GET"])
 def subject_learning_goals(subject_id):
     """ Get data of specifiek subject. """
-    # subject_id = 1 #
     learning_goals = app.students.get_learning_goals(subject_id)
     learning_title = app.students.get_learning_goals_title(subject_id)
+
+    learning_goals = [dict(row) for row in learning_goals]
+    student_id = session["id"]
+
+    for learning_goal in learning_goals:
+        learning_goal["result"] = app.students.get_learning_goals_number_of_results(learning_goal["id"], student_id)
     return render_template("learning_goal.html", learning_goals=learning_goals, learning_title=learning_title)
 
+@app.route("/student/subject/learning_goals/filter_average")
+def filter_average():
+    average = float(request.args.get("average", 0))
+    student_id = session["id"]
+    # get all learning goals
+    learning_goals = get_learning_goals(student_id)
+    for goal in learning_goals:
+        count = get_learning_goals_number_of_results(goal["id"], student_id)
+        goal["result"] = count
+
+    return jsonify(learning_goals)
 
 # @student_bp.route("/subject/learning_goals/<int:learning_goal_id>/result", methods=["GET"])
 # def subject_score(learning_goal_id):

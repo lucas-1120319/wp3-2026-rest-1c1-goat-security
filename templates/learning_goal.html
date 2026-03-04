@@ -6,17 +6,62 @@
 {% endblock %}
 
 {% block content%}
+    <input name="average" id="average" >
+    <button onclick="calc_average()">Zoeken</button>
 <div class="row">
     {%for learning_goal in learning_goals %}
         <div class="col-md-4">
-            <div class="card  " >
+            <div class="card {% if learning_goal.result <= 1 %} bg-danger
+                            {% elif learning_goal.result == 2 %} bg-warning
+                            {% elif learning_goal.result == 3 %} bg-warning
+                            {% elif learning_goal.result == 4 %} bg-success
+                            {% endif %}  " >
                 <a class="link-underline link-underline-opacity-0  " href="/student/subject/learning_goals/{{ learning_goal["id"]}}/examlist">
                   <div class="card-body">
-                    <div class="fs-5">{{ learning_goal["title"] }}</div>
+                    <div class="fs-5 ">{{ learning_goal["title"] }}</div>
                   </div>
                 </a>
             </div>
         </div>
     {%endfor%}
 </div>
+
+<script>
+    function calc_average(){
+        new_average = document.getElementById("average")
+        fetch(`/student/subject/learning_goals/filter_average?average=${avg}`)
+        .then(response => response.json())
+        .then(data => {
+            // data will be a list of learning_goals with their results
+            update_cards(data);
+        });
+
+    }
+    function update_cards(learning_goals){
+    const row = document.querySelector(".row");
+    row.innerHTML = "";  // clear current cards
+
+    learning_goals.forEach(goal => {
+        let color_class = "";
+        if(goal.result <= 1) color_class = "bg-danger";
+        else if(goal.result == 2) color_class = "bg-warning";
+        else if(goal.result == 3) color_class = "bg-warning";
+        else if(goal.result == 4) color_class = "bg-success";
+
+        const card_html = `
+        <div class="col-md-4">
+            <div class="card ${color_class}">
+                <a class="link-underline link-underline-opacity-0" href="/student/subject/learning_goals/${goal.id}/examlist">
+                    <div class="card-body">
+                        <div class="fs-5">${goal.title}</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        `;
+        row.innerHTML += card_html;
+    });
+}
+</script>
 {% endblock %}
+
