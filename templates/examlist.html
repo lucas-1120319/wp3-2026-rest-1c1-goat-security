@@ -28,25 +28,26 @@
       <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-  const ctx = document.getElementById('myChart');
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-      datasets: [{
-        label: '# of Votes',
-        data: [{{ score["tax_kennen"] }}, 19, 3, 5, 2, 3],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
+fetch("/student/learningGoals_data/{{ learning_goal_id }}")
+  .then(response => response.json())
+  .then(data => {
+      const ctx = document.getElementById('myChart');
+
+      new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: data.labels,
+              datasets: [
+                  {label: 'Onthouden', data: data.onthouden },
+                  {label: 'Begrijpen', data: data.begrijpen},
+                  {label: 'Toepassen', data: data.toepassen},
+                  {label: 'Analyseren', data: data.analyseren},
+
+              ],
+          }
+      });
   });
+
 </script>
       <tr>
         <th scope="row">{{ score["tax_snap"] }}</th>

@@ -214,3 +214,22 @@ class Student:
                     count += 1
 
             return count
+
+    def get_result_per_snapshot(self, learning_goal_id: int, student_id: int):
+        """ Get exam result data by snapshot id """
+        with self.db.connect() as con:
+            cur = con.cursor()
+            cur.execute(
+                "SELECT DISTINCT tax.id AS tax_id, "
+                "tax.level AS level, "
+                "(AVG(tax.kennen) + AVG(tax.kunnen)) / 2.0 AS average, "
+                "snap.at AS snap_date "
+                "FROM taxonomies tax "
+                "JOIN snapshots snap ON tax.snapshot_id = snap.id "
+                "JOIN learningGoals lg ON snap.learningGoal_id = lg.id "
+                "WHERE snap.learningGoal_id = ? AND tax.student_id = ? "
+                "GROUP BY snap.at, tax.level",
+                (learning_goal_id, student_id)
+            )
+            all_results = cur.fetchall()
+            return all_results
