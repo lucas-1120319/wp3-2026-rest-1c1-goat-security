@@ -81,9 +81,27 @@ class Teacher:
         with self.db.connect() as con:
             cur = con.cursor()
             cur.execute(
-                "SELECT * FROM students INNER JOIN student_studentGroups "
-                "ON students.id = student_studentGroups.student_id INNER JOIN studentGroups "
-                "ON studentGroups.id = student_studentGroups.studentGroup_id WHERE studentGroups.name = ?",
+                """
+                SELECT 
+                    students.id,
+                    students.first_name,
+                    students.last_name,
+                    students.postcode,
+                    students.gender,
+                    students.city,
+                    students.country,
+                    students.street_name,
+                    students.birth_date,
+                    (AVG(taxonomies.kennen) + AVG(taxonomies.kunnen)) / 2.0 AS average,
+                    AVG(taxonomies.confidence) AS avg_confidence
+                FROM students
+                INNER JOIN student_studentGroups ON students.id = student_studentGroups.student_id
+                INNER JOIN studentGroups ON studentGroups.id = student_studentGroups.studentGroup_id
+                INNER JOIN taxonomies ON students.id = taxonomies.student_id
+                WHERE studentGroups.name = ?
+                GROUP BY students.id
+                ORDER BY students.id ASC
+                """,
                 (class_id,),
             )
             con.commit()
