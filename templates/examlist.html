@@ -1,64 +1,80 @@
 {% extends 'index.html' %}
 {% block header %}
     {% block title %}
-        Snapshots
+        {{ subject_name }}<br>
+        <h2>
+        {{ learning_goal_title }}
+        </h2>
     {% endblock %}
 {% endblock %}
 
 {% block content%}
 
-<div>
-  <canvas id="myChart"></canvas>
-</div>
+    <div class="row">
+        <div class="col-6">
+            <canvas class="" id="level_progress_graph"></canvas>
+        </div>
+        <div class="col-6">
+            <canvas class="" id="level_progress_graph"></canvas>
+        </div>
+        <div class="col-12">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">@</th>
+                  <th scope="col">EID</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Leerdoel</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for score in scores %}
+                  <tr>
+                    <th scope="row">{{ score["tax_snap"] }}</th>
+                    <td><a class="link-underline link-underline-opacity-0"
+                           href="/student/subject/learning_goals/{{ score['tax_snap'] }}/result">
+                        {{ score["snap_at"] }}</a></td>
+                    <td>{{ score["src_exid"] }}</td>
+                    <td>{{ score["src_type"] }}</td>
+                    <td>{{ score["lg_title"] }}</td>
+                </tr>
+             {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        fetch("/student/learningGoals_data/{{ learning_goal_id }}")
+          .then(response => response.json())
+          .then(data => {
+              const ctx = document.getElementById('level_progress_graph');
 
+              new Chart(ctx, {
+                  type: 'line',
+                  data: {
+                      labels: data.labels,
+                      datasets: [
+                          {label: 'Onthouden', data: data.onthouden },
+                          {label: 'Begrijpen', data: data.begrijpen},
+                          {label: 'Toepassen', data: data.toepassen},
+                          {label: 'Analyseren', data: data.analyseren},
 
+                      ],
+                  },
+                   options: {
+                       scales: {
+                           y: {
+                               min: 0,
+                               max: 1,
+                               ticks: {
+                                   stepSize: 0.1
+                               }
+                           }
+                       }
+                   }
+              });
+          });
+    </script>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">@</th>
-      <th scope="col">EID</th>
-      <th scope="col">Type</th>
-      <th scope="col">Leerdoel</th>
-    </tr>
-  </thead>
-  <tbody>
-  {% for score in scores %}
-      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-fetch("/student/learningGoals_data/{{ learning_goal_id }}")
-  .then(response => response.json())
-  .then(data => {
-      const ctx = document.getElementById('myChart');
-
-      new Chart(ctx, {
-          type: 'line',
-          data: {
-              labels: data.labels,
-              datasets: [
-                  {label: 'Onthouden', data: data.onthouden },
-                  {label: 'Begrijpen', data: data.begrijpen},
-                  {label: 'Toepassen', data: data.toepassen},
-                  {label: 'Analyseren', data: data.analyseren},
-
-              ],
-          }
-      });
-  });
-
-</script>
-      <tr>
-        <th scope="row">{{ score["tax_snap"] }}</th>
-        <td><a class="link-underline link-underline-opacity-0"
-               href="/student/subject/learning_goals/{{ score['tax_snap'] }}/result">
-            {{ score["snap_at"] }}</a></td>
-        <td>{{ score["src_exid"] }}</td>
-        <td>{{ score["src_type"] }}</td>
-        <td>{{ score["lg_title"] }}</td>
-    </tr>
- {% endfor %}
-    </tbody>
-</table>
 {% endblock %}

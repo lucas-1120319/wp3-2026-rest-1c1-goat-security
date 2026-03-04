@@ -74,6 +74,22 @@ class Student:
                 "WHERE subject_id = ?", (subject_id,))
             return cur.fetchone()
 
+    def get_learning_goal(self, learningGoal_id: int):
+        with self.db.connect() as con:
+
+            cur = con.cursor()
+            cur.execute(
+                """
+                SELECT learningGoals.title, subjects.name as subject_name
+                FROM learningGoals
+                         INNER JOIN subjects ON subjects.id = learningGoals.subject_id
+                WHERE learningGoals.id = ?
+                """,
+                (learningGoal_id,)
+            )
+
+            return cur.fetchone()
+
     def get_snapshot_by_learning_goal_id(self, learning_goal_id: int, student_id: int):
         """ Get exam result data by snapshot id """
         with self.db.connect() as con:

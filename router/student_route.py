@@ -108,8 +108,13 @@ def data(snapshot_id):
 def exam_list(learning_goal_id):
     """ Get exam result data in a table setting. """
     student_id = session["id"]
+    learning_goal = app.students.get_learning_goal(learning_goal_id)
+    learning_goal_title  = learning_goal["title"]
+    subject_name  = learning_goal["subject_name"]
     scores = app.students.get_exam_list(learning_goal_id, student_id)
-    return render_template("examlist.html", scores=scores,learning_goal_id=learning_goal_id )
+    return render_template("examlist.html", scores=scores, learning_goal_id=learning_goal_id, learning_goal_title=learning_goal_title, subject_name=subject_name)
+
+
 @student_bp.route("/learningGoals_data/<int:learning_goal_id>", methods=["GET"])
 def learningGoals_data(learning_goal_id):
     student_id = session["id"]
