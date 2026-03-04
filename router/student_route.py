@@ -111,9 +111,44 @@ def exam_list(learning_goal_id):
     learning_goal = app.students.get_learning_goal(learning_goal_id)
     learning_goal_title  = learning_goal["title"]
     subject_name  = learning_goal["subject_name"]
+
     scores = app.students.get_exam_list(learning_goal_id, student_id)
+
+
+
     return render_template("examlist.html", scores=scores, learning_goal_id=learning_goal_id, learning_goal_title=learning_goal_title, subject_name=subject_name)
 
+@student_bp.route("/all_snapshot_average/<int:learning_goal_id>", methods=["GET"])
+def all_snapshot_average(learning_goal_id):
+    student_id = session["id"]
+    scores = app.students.get_result_per_snapshot(learning_goal_id, student_id)
+    # Extract data into separate lists
+    onthouden = []
+    begrijpen = []
+    toepassen = []
+    analyseren = []
+
+    for score in scores:
+        if score["level"] == "Onthouden":
+            onthouden.append(score["average"])
+        elif score["level"] == "Begrijpen":
+            begrijpen.append(score["average"])
+        elif score["level"] == "Toepassen":
+            toepassen.append(score["average"])
+        elif score["level"] == "Analyseren":
+            analyseren.append(score["average"])
+
+
+    def avg(values):
+        return round(sum(values) / len(values), 2) if values else 0
+
+
+    return jsonify({
+        "onthouden": avg(onthouden),
+        "begrijpen": avg(begrijpen),
+        "toepassen": avg(toepassen),
+        "analyseren": avg(analyseren),
+    })
 
 @student_bp.route("/learningGoals_data/<int:learning_goal_id>", methods=["GET"])
 def learningGoals_data(learning_goal_id):

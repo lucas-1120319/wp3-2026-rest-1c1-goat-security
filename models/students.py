@@ -238,7 +238,7 @@ class Student:
             cur.execute(
                 "SELECT DISTINCT tax.id AS tax_id, "
                 "tax.level AS level, "
-                "(AVG(tax.kennen) + AVG(tax.kunnen)) / 2.0 AS average, "
+                "ROUND((AVG(tax.kennen) + AVG(tax.kunnen)) / 2.0, 2) AS average, "
                 "snap.at AS snap_date "
                 "FROM taxonomies tax "
                 "JOIN snapshots snap ON tax.snapshot_id = snap.id "
