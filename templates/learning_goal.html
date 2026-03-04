@@ -28,8 +28,9 @@
 
 <script>
     function calc_average(){
-        new_average = document.getElementById("average")
-        fetch(`/student/subject/learning_goals/filter_average?average=${avg}`)
+        const avg = parseFloat(document.getElementById("average").value);
+        const subject_id = {{ subject_id }}
+        fetch(`/student/subject/learning_goals/filter_average?average=${avg}&subject_id=${subject_id}`)
         .then(response => response.json())
         .then(data => {
             // data will be a list of learning_goals with their results
@@ -37,7 +38,7 @@
         });
 
     }
-    function update_cards(learning_goals){
+function update_cards(learning_goals){
     const row = document.querySelector(".row");
     row.innerHTML = "";  // clear current cards
 

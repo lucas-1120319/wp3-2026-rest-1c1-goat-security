@@ -49,18 +49,25 @@ def subject_learning_goals(subject_id):
     student_id = session["id"]
 
     for learning_goal in learning_goals:
-        learning_goal["result"] = app.students.get_learning_goals_number_of_results(learning_goal["id"], student_id)
-    return render_template("learning_goal.html", learning_goals=learning_goals, learning_title=learning_title)
+        learning_goal["result"] = app.students.get_learning_goals_number_of_results(0.5,learning_goal["id"], student_id)
+    return render_template("learning_goal.html", learning_goals=learning_goals, learning_title=learning_title, subject_id=subject_id)
 
-@app.route("/student/subject/learning_goals/filter_average")
+@student_bp.route("/subject/learning_goals/filter_average")
 def filter_average():
-    average = float(request.args.get("average", 0))
     student_id = session["id"]
-    # get all learning goals
-    learning_goals = get_learning_goals(student_id)
+    try:
+        average = float(request.args.get("average", 0))
+    except ValueError:
+        average = 0
+    # get all learning goals for this student
+    # (assuming subject_id is passed via query param or session)
+    subject_id = int(request.args.get("subject_id"))
+    learning_goals = app.students.get_learning_goals(subject_id)
+    learning_goals = [dict(row) for row in learning_goals]
+
     for goal in learning_goals:
-        count = get_learning_goals_number_of_results(goal["id"], student_id)
-        goal["result"] = count
+        goal["result"] = app.students.get_learning_goals_number_of_results(average ,goal["id"], student_id)
+        print(goal["result"])
 
     return jsonify(learning_goals)
 
