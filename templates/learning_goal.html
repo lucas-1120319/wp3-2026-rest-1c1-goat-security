@@ -7,8 +7,7 @@
 
 {% block content%}
     <label for="average">Minimaal gemiddelde leerdoel (0–1)</label>
-    <input type="number" min="0" max="1" step="0.1" value="0.5" name="average" id="average" >
-    <button onclick="calc_average()">Zoeken</button>
+    <input onchange="calc_average()" type="number" min="0" max="1" step="0.1" value="0.5" name="average" id="average" >
     <div class="mb-3">
         <strong>Legenda:</strong>
         <span class="badge bg-danger">Slecht / laag</span>
@@ -23,7 +22,7 @@
                             {% elif learning_goal.result == 3 %} bg-warning
                             {% elif learning_goal.result == 4 %} bg-success
                             {% endif %}  " >
-                <a class="link-underline link-underline-opacity-0  " href="/student/subject/learning_goals/{{ learning_goal["id"]}}/examlist">
+                <a class="link-underline link-light link-underline-opacity-0  " href="/student/subject/learning_goals/{{ learning_goal["id"]}}/examlist">
                   <div class="card-body">
                     <div class="fs-5 ">{{ learning_goal["title"] }}</div>
                   </div>
@@ -59,9 +58,9 @@ function update_cards(learning_goals){
         const card_html = `
         <div class="col-md-4">
             <div class="card ${color_class}">
-                <a class="link-underline link-underline-opacity-0" href="/student/subject/learning_goals/${goal.id}/examlist">
+                <a class="link-light link-underline link-underline-opacity-0" href="/student/subject/learning_goals/${goal.id}/examlist">
                     <div class="card-body">
-                        <div class="fs-5">${goal.title}</div>
+                        <div class="fs-5" >${goal.title}</div>
                     </div>
                 </a>
             </div>
