@@ -97,9 +97,9 @@ def data(snapshot_id):
     date = [score['snap_at'] for score in scores]
 
     return jsonify({
-        "labels": ['Onthouden', 'begrijpen', 'toepassen', 'analyseren'],
-        "onthouden": kunnen,
-        "begrijpen": kennen,
+        "labels": ["Onthouden", "Begrijpen", "Toepassen", "Analyseren"],
+        "kunnen": kunnen,
+        "kennen": kennen,
         "toepassen": confidence,
         # "analyseren": [kunnen[3], kennen[3], confidence[3]],
     })

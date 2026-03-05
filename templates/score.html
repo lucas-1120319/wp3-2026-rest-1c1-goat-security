@@ -18,9 +18,8 @@
       <th scope="col">@</th>
       <th scope="col">vak</th>
       <th scope="col">Level</th>
-        <th scope="col">Kunnen</th>
+      <th scope="col">Kunnen</th>
       <th scope="col">Kennen</th>
-
       <th scope="col">Confidence</th>
     </tr>
   </thead>
@@ -38,9 +37,9 @@ fetch("/student/data/{{ score["tax_snap"] }}")
           data: {
               labels: data.labels,
               datasets: [
-                  {label: 'Onthouden', data: data.onthouden },
-                  {label: 'Begrijpen', data: data.begrijpen},
-                  {label: 'Analyseren', data: data.toepassen},
+                  {label: 'Kunnen', data: data.kunnen },
+                  {label: 'Kennen', data: data.kennen},
+                  {#{label: 'Analyseren', data: data.toepassen},#}
                   {#{label: 'Toepassen', data: data.analyseren},#}
 
               ],
@@ -61,24 +60,4 @@ fetch("/student/data/{{ score["tax_snap"] }}")
   {% endfor %}
   </tbody>
 </table>
-
-    <div class="row">
-        {% for score in scores %}
-                <div class="col-md-4">
-                    <div class="card  " >
-                          <div class="card-body">
-                            <div class="fs-5">snap_at: </div>
-                            <div class="fs-5">title: {{ score["lg_title"] }}</div>
-                            <div class="fs-5">tax_id: {{ score["tax_id"] }}</div>
-                            <div class="fs-5">level: {{ score["tax_level"] }}</div>
-                            <div class="fs-5">ken: </div>
-                            <div class="fs-5">kan: </div>
-                            <div class="fs-5">conf:</div>
-                            <div class="fs-5">snap_id: {{ score["tax_snap"] }}</div>
-                            <div class="fs-5">student_id: {{ score["tax_student_id"] }}</div>
-                          </div>
-                    </div>
-                </div>
-        {% endfor %}
-    </div>
 {% endblock %}

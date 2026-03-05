@@ -1,22 +1,22 @@
 <aside class="side-bar close vh-100" id="sidebar">
     <ul class="list-group list-group-flush ms-4 mt-4">
-        <i id="toggle">X</i>
-        <li><span class="text">#{{ user_id }} {{ username }} </span></li>
-        <li><a href="{{ url_for(role + '.dashboard') }}">
-            <i class="bi bi-person-bounding-box"></i><span class="text">Dashboard</span></a></li>
+        <i id="toggle"><i class="bi bi-microsoft"></i></i>
+        <li><span class="text"></span></li>
+        <li><a href="{{ url_for(role + '.dashboard') }}"><i class="bi bi-person-bounding-box"></i><p class="text">Dashboard</p></a></li>
+
         {% if session["role"] == "teacher" %}
-            <li><a href="{{ url_for(role + '.studentGroups') }}">
-                <i class="bi bi-person-bounding-box"></i><span class="text">Alle Klassen</span></a>
-            </li>
-            <li><a href="{{ url_for(role + '.studentGroup') }}">
-                <i class="bi bi-person-bounding-box"></i><span class="text">Uw Klas</span></a>
-            </li>
+            <li><a href="{{ url_for(role + '.studentGroups') }}"><i class="bi bi-person-bounding-box"></i><p class="text">Alle Klassen</p></a></li>
+            <li><a href="{{ url_for(role + '.studentGroup') }}"><i class="bi bi-person-bounding-box"></i><p class="text">Uw Klas</p></a></li>
         {% endif %}
-        <li><a href="{{ url_for(role + '.subjects') }}"><i class="bi bi-person-bounding-box"></i>
-            <span class="text">Vakken</span></a></li>
-        <li><a href="{{ url_for(role + '.profile') }}"><i class="bi bi-person-bounding-box"></i>
-            <span class="text">Profile</span></a></li>
-        <li><a href="{{ url_for('signout') }}"><i class="bi bi-person-bounding-box"></i>
-            <span class="text">Uitloggen</span></a></li>
+        <li><a href="{{ url_for(role + '.subjects') }}"><i class="bi bi-person-bounding-box"></i><p class="text">Vakken</p></a></li>
+        <li><a href="{{ url_for('signout') }}"><i class="bi bi-person-bounding-box"></i><p class="text">Uitloggen</p></a></li>
     </ul>
+<div id="sidebar-bottom">
+    <ul class="list-group list-group-flush ms-4 mt-4">
+        <li><a href="{{ url_for(role + '.profile') }}">
+            <i class="bi bi-person-bounding-box"></i>
+            <p class="text">{{ username }}</p></a>
+        </li>
+    </ul>
+</div>
 </aside>
