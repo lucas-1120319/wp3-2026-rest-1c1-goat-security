@@ -63,6 +63,14 @@ class Student:
             cur.execute("""SELECT id, title FROM learningGoals WHERE subject_id = ?""", (subject_id,))
             return cur.fetchall()
 
+    def get_learning_goals_filter_keywords(self, subject_id: int, keyword: str):
+        """ Get list of learning goals of DB """
+        with self.db.connect() as con:
+            con.row_factory = sqlite3.Row  # <--- make rows dictionary-like
+            cur = con.cursor()
+            cur.execute("""SELECT DISTINCT lg.id, lg.title FROM learningGoals as lg INNER JOIN learningGoal_keywords AS lg_kw ON lg.id = lg_kw.learningGoal_id INNER JOIN keywords ON keywords.id = lg_kw.keyword_id  WHERE subject_id = ? AND keywords.name LIKE ?""", (subject_id,f"%{keyword}%",))
+            return cur.fetchall()
+
 
     def get_learning_goals_title(self, subject_id: int):
         """ Get title of the learning goal. """

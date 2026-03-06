@@ -61,9 +61,10 @@ def filter_average():
         average = float(request.args.get("average", 0))
     except ValueError:
         average = 0
+    filter_keywords = request.args.get("filter_keywords")
 
     subject_id = int(request.args.get("subject_id"))
-    learning_goals = app.students.get_learning_goals(subject_id)
+    learning_goals = app.students.get_learning_goals_filter_keywords(subject_id, filter_keywords)
     learning_goals = [dict(row) for row in learning_goals]
 
     for goal in learning_goals:

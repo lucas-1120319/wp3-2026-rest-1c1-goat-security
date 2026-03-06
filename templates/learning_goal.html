@@ -8,6 +8,9 @@
 {% block content%}
     <label for="average">Minimaal gemiddelde leerdoel (0–1)</label>
     <input onchange="calc_average()" type="number" min="0" max="1" step="0.1" value="0.5" name="average" id="average" >
+
+    <label for="filter_keywords">Filter op de onderwerpen</label>
+    <input onkeyup="calc_average()"  type="text"  name="filter_keywords" id="filter_keywords" >
     <div class="mb-3">
         <strong>Legenda:</strong>
         <span class="badge bg-danger">Slecht / laag</span>
@@ -38,8 +41,9 @@
 <script>
     function calc_average(){
         const avg = parseFloat(document.getElementById("average").value);
+        const filter_keywords = document.getElementById("filter_keywords").value;
         const subject_id = {{ subject_id }}
-        fetch(`/student/subject/learning_goals/filter_average?average=${avg}&subject_id=${subject_id}`)
+        fetch(`/student/subject/learning_goals/filter_average?average=${avg}&filter_keywords=${filter_keywords}&subject_id=${subject_id}`)
         .then(response => response.json())
         .then(data => {
             // data will be a list of learning_goals with their results
