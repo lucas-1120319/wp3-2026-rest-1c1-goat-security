@@ -50,6 +50,8 @@ def subject_learning_goals(subject_id):
 
     for learning_goal in learning_goals:
         learning_goal["result"] = app.students.get_learning_goals_number_of_results(0.5,    learning_goal["id"], student_id)
+        learning_goal["keywords"] = app.students.learning_goal_keywords(learning_goal["id"])
+
     return render_template("learning_goal.html", learning_goals=learning_goals, learning_title=learning_title, subject_id=subject_id)
 
 @student_bp.route("/subject/learning_goals/filter_average")
@@ -59,14 +61,18 @@ def filter_average():
         average = float(request.args.get("average", 0))
     except ValueError:
         average = 0
+    filter_keywords = request.args.get("filter_keywords")
 
     subject_id = int(request.args.get("subject_id"))
-    learning_goals = app.students.get_learning_goals(subject_id)
+    learning_goals = app.students.get_learning_goals_filter_keywords(subject_id, filter_keywords)
     learning_goals = [dict(row) for row in learning_goals]
 
     for goal in learning_goals:
         goal["result"] = app.students.get_learning_goals_number_of_results(average ,goal["id"], student_id)
+        keywords = app.students.learning_goal_keywords(goal["id"])
+        keywords_list = [{"name": k[0]} for k in keywords]
 
+        goal["keywords"] = keywords_list
     return jsonify(learning_goals)
 
 # @student_bp.route("/subject/learning_goals/<int:learning_goal_id>/result", methods=["GET"])
@@ -108,9 +114,77 @@ def data(snapshot_id):
 def exam_list(learning_goal_id):
     """ Get exam result data in a table setting. """
     student_id = session["id"]
-    scores = app.students.get_exam_list(learning_goal_id, student_id)
-    return render_template("examlist.html", scores=scores)
+    learning_goal = app.students.get_learning_goal(learning_goal_id)
+    learning_goal_title  = learning_goal["title"]
+    subject_name  = learning_goal["subject_name"]
 
+    scores = app.students.get_exam_list(learning_goal_id, student_id)
+
+    keywords = app.students.learning_goal_keywords(learning_goal_id)
+
+    return render_template("examlist.html", scores=scores, learning_goal_id=learning_goal_id, keywords=keywords, learning_goal_title=learning_goal_title, subject_name=subject_name)
+
+@student_bp.route("/all_snapshot_average/<int:learning_goal_id>", methods=["GET"])
+def all_snapshot_average(learning_goal_id):
+    student_id = session["id"]
+    scores = app.students.get_result_per_snapshot(learning_goal_id, student_id)
+    # Extract data into separate lists
+    onthouden = []
+    begrijpen = []
+    toepassen = []
+    analyseren = []
+
+    for score in scores:
+        if score["level"] == "Onthouden":
+            onthouden.append(score["average"])
+        elif score["level"] == "Begrijpen":
+            begrijpen.append(score["average"])
+        elif score["level"] == "Toepassen":
+            toepassen.append(score["average"])
+        elif score["level"] == "Analyseren":
+            analyseren.append(score["average"])
+
+
+    def avg(values):
+        return round(sum(values) / len(values), 2) if values else 0
+
+
+    return jsonify({
+        "onthouden": avg(onthouden),
+        "begrijpen": avg(begrijpen),
+        "toepassen": avg(toepassen),
+        "analyseren": avg(analyseren),
+    })
+
+@student_bp.route("/learningGoals_data/<int:learning_goal_id>", methods=["GET"])
+def learningGoals_data(learning_goal_id):
+    student_id = session["id"]
+    scores = app.students.get_result_per_snapshot(learning_goal_id, student_id)
+    # Extract data into separate lists
+    labels = sorted(set(score["snap_date"] for score in scores))
+    average = [score["average"] for score in scores]
+    onthouden_average = []
+    begrijpen_average = []
+    toepassen_average = []
+    analyseren_average = []
+    for score in scores:
+        if score["level"] == "Onthouden":
+            onthouden_average.append(score["average"])
+        if score["level"] == "Begrijpen":
+            begrijpen_average.append(score["average"])
+        if score["level"] == "Toepassen":
+            toepassen_average.append(score["average"])
+        if score["level"] == "Analyseren":
+            analyseren_average.append(score["average"])
+
+    return jsonify({
+        "labels": labels,
+        "onthouden": onthouden_average,
+        "begrijpen": begrijpen_average,
+        "toepassen": toepassen_average,
+        "analyseren": analyseren_average,
+
+    })
 @student_bp.route("/learningGoals")
 def learningGoals():
     return render_template("learningGoals.html")

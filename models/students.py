@@ -63,6 +63,14 @@ class Student:
             cur.execute("""SELECT id, title FROM learningGoals WHERE subject_id = ?""", (subject_id,))
             return cur.fetchall()
 
+    def get_learning_goals_filter_keywords(self, subject_id: int, keyword: str):
+        """ Get list of learning goals of DB """
+        with self.db.connect() as con:
+            con.row_factory = sqlite3.Row  # <--- make rows dictionary-like
+            cur = con.cursor()
+            cur.execute("""SELECT DISTINCT lg.id, lg.title FROM learningGoals as lg INNER JOIN learningGoal_keywords AS lg_kw ON lg.id = lg_kw.learningGoal_id INNER JOIN keywords ON keywords.id = lg_kw.keyword_id  WHERE subject_id = ? AND keywords.name LIKE ?""", (subject_id,f"%{keyword}%",))
+            return cur.fetchall()
+
 
     def get_learning_goals_title(self, subject_id: int):
         """ Get title of the learning goal. """
@@ -72,6 +80,22 @@ class Student:
             cur.execute(
                 "SELECT lg.id AS lg_id, title, name FROM learningGoals lg JOIN subjects ON lg.subject_id = subjects.id "
                 "WHERE subject_id = ?", (subject_id,))
+            return cur.fetchone()
+
+    def get_learning_goal(self, learningGoal_id: int):
+        with self.db.connect() as con:
+
+            cur = con.cursor()
+            cur.execute(
+                """
+                SELECT learningGoals.title, subjects.name as subject_name
+                FROM learningGoals
+                         INNER JOIN subjects ON subjects.id = learningGoals.subject_id
+                WHERE learningGoals.id = ?
+                """,
+                (learningGoal_id,)
+            )
+
             return cur.fetchone()
 
     def get_snapshot_by_learning_goal_id(self, learning_goal_id: int, student_id: int):
@@ -214,3 +238,36 @@ class Student:
                     count += 1
 
             return count
+
+    def get_result_per_snapshot(self, learning_goal_id: int, student_id: int):
+        """ Get exam result data by snapshot id """
+        with self.db.connect() as con:
+            cur = con.cursor()
+            cur.execute(
+                "SELECT DISTINCT tax.id AS tax_id, "
+                "tax.level AS level, "
+                "ROUND((AVG(tax.kennen) + AVG(tax.kunnen)) / 2.0, 2) AS average, "
+                "snap.at AS snap_date "
+                "FROM taxonomies tax "
+                "JOIN snapshots snap ON tax.snapshot_id = snap.id "
+                "JOIN learningGoals lg ON snap.learningGoal_id = lg.id "
+                "WHERE snap.learningGoal_id = ? AND tax.student_id = ? "
+                "GROUP BY snap.at, tax.level",
+                (learning_goal_id, student_id)
+            )
+            all_results = cur.fetchall()
+            return all_results
+
+    def learning_goal_keywords(self, learning_goal_id):
+        with self.db.connect() as con:
+            cur = con.cursor()
+            cur.execute(
+                "SELECT kw.name "
+                "FROM keywords kw "
+                "JOIN learningGoal_keywords AS LG_KW ON LG_KW.keyword_id = kw.id "
+                "WHERE LG_KW.learningGoal_id = ? ",
+                (learning_goal_id,)
+            )
+
+            all_results = cur.fetchall()
+            return all_results
