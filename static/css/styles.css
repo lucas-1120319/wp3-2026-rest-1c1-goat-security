@@ -138,6 +138,9 @@ main {
     transition: opacity 0.2s;
 }
 
+.date {
+    font-size: 1.5rem;
+}
 /* Test Sectie */
 #chart{
     width: 100%;

@@ -2,6 +2,8 @@
 {% block header %}
     {% block title %}
         {{ score_title['lg_title'] }}
+        <br>
+        <p class="date">{{ score_title['snap_at'] }}</p>
     {% endblock %}
 {% endblock %}
 
@@ -14,13 +16,9 @@
 <table class="table">
   <thead>
     <tr>
-      <th scope="col">#</th>
-      <th scope="col">@</th>
-      <th scope="col">vak</th>
       <th scope="col">Level</th>
       <th scope="col">Kunnen</th>
       <th scope="col">Kennen</th>
-      <th scope="col">Confidence</th>
     </tr>
   </thead>
   <tbody>
@@ -47,15 +45,10 @@ fetch("/student/data/{{ score["tax_snap"] }}")
       });
   });
 </script>
-
       <tr>
-      <th scope="row">{{ score["tax_id"] }}</th>
-      <td>{{ score["snap_at"] }}</td>
-      <td>{{ score["lg_title"] }}</td>
       <td>{{ score["tax_level"] }}</td>
       <td>{{ score["tax_kunnen"] }}</td>
       <td>{{ score["tax_kennen"] }}</td>
-      <td>{{ score["tax_confidence"] }}</td>
     </tr>
   {% endfor %}
   </tbody>
