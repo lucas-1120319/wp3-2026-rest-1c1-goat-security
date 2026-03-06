@@ -24,8 +24,9 @@ body{
     margin: 0 auto;
 }
 
+
 #toggle{
-    /*padding-bottom: 1rem;*/
+    padding-bottom: 1rem;
     cursor: pointer;
 }
 
@@ -40,7 +41,7 @@ body{
     background: #222;
     color: white;
     transition: width 0.3s ease;
-    overflow: hidden;
+    overflow: visible;
     z-index: 100;
     flex-direction: column;
     justify-content: space-between;
@@ -76,7 +77,6 @@ main {
 }
 #sidebar.close{
     width: var(--sidebar-closed);
-
 }
 #sidebar.close ~ main{
     left: 5rem;
@@ -111,6 +111,31 @@ main {
     gap: 1rem;
     text-decoration: none;
     color: white;
+}
+
+#sidebar.close li:hover .hover-tooltip{
+    opacity: 1;
+}
+
+#sidebar .hover-tooltip{
+    display: none;
+}
+
+#sidebar.close .hover-tooltip{
+    display: block;
+}
+
+.hover-tooltip{
+    position: absolute;
+    left: 70px;
+    background: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
 }
 
 /* Test Sectie */
