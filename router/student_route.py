@@ -50,6 +50,8 @@ def subject_learning_goals(subject_id):
 
     for learning_goal in learning_goals:
         learning_goal["result"] = app.students.get_learning_goals_number_of_results(0.5,    learning_goal["id"], student_id)
+        learning_goal["keywords"] = app.students.learning_goal_keywords(learning_goal["id"])
+
     return render_template("learning_goal.html", learning_goals=learning_goals, learning_title=learning_title, subject_id=subject_id)
 
 @student_bp.route("/subject/learning_goals/filter_average")
@@ -66,6 +68,7 @@ def filter_average():
 
     for goal in learning_goals:
         goal["result"] = app.students.get_learning_goals_number_of_results(average ,goal["id"], student_id)
+        goal["keywords"] = app.students.learning_goal_keywords(learning_goal_id)
 
     return jsonify(learning_goals)
 
@@ -114,9 +117,9 @@ def exam_list(learning_goal_id):
 
     scores = app.students.get_exam_list(learning_goal_id, student_id)
 
+    keywords = app.students.learning_goal_keywords(learning_goal_id)
 
-
-    return render_template("examlist.html", scores=scores, learning_goal_id=learning_goal_id, learning_goal_title=learning_goal_title, subject_name=subject_name)
+    return render_template("examlist.html", scores=scores, learning_goal_id=learning_goal_id, keywords=keywords, learning_goal_title=learning_goal_title, subject_name=subject_name)
 
 @student_bp.route("/all_snapshot_average/<int:learning_goal_id>", methods=["GET"])
 def all_snapshot_average(learning_goal_id):

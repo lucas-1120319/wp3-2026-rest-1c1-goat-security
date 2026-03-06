@@ -9,13 +9,15 @@
 {% endblock %}
 
 {% block content%}
-
+    {% for keyword in keywords %}
+        <span class="badge text-bg-primary">{{ keyword["name"] }}</span>
+    {% endfor %}
     <div class="row">
         <div class="col-6">
             <canvas class="" id="level_progress_graph"></canvas>
         </div>
-        <div class="col-6  ">
-            <div class="col-6">
+        <div class="col-6  row">
+            <div class="col">
                 <h3 class="mb-3">Gemiddelde</h3>
 
                 <div class="row row-cols-2 g-3"> <!-- 2x2 grid with small gap -->
@@ -58,6 +60,7 @@
 
                 </div>
             </div>
+
         </div>
         <div class="col-12">
             <table class="table">

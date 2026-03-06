@@ -25,6 +25,9 @@
                 <a class="link-underline link-light link-underline-opacity-0  " href="/student/subject/learning_goals/{{ learning_goal["id"]}}/examlist">
                   <div class="card-body">
                     <div class="fs-5 ">{{ learning_goal["title"] }}</div>
+                      {% for keyword in learning_goal["keywords"] %}
+                        <span class="badge text-bg-primary">{{ keyword["name"] }}</span>
+                    {% endfor %}
                   </div>
                 </a>
             </div>
@@ -54,6 +57,9 @@ function update_cards(learning_goals){
         else if(goal.result == 2) color_class = "bg-warning";
         else if(goal.result == 3) color_class = "bg-warning";
         else if(goal.result == 4) color_class = "bg-success";
+        const badges_html = goal.keywords.map(keyword =>
+                    `<span class="badge text-bg-primary">${keyword.name}</span>`
+                ).join(' ');
 
         const card_html = `
         <div class="col-md-4">
@@ -61,6 +67,7 @@ function update_cards(learning_goals){
                 <a class="link-light link-underline link-underline-opacity-0" href="/student/subject/learning_goals/${goal.id}/examlist">
                     <div class="card-body">
                         <div class="fs-5" >${goal.title}</div>
+                         ${badges_html}
                     </div>
                 </a>
             </div>

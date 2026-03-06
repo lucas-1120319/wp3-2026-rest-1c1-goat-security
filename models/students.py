@@ -249,3 +249,17 @@ class Student:
             )
             all_results = cur.fetchall()
             return all_results
+
+    def learning_goal_keywords(self, learning_goal_id):
+        with self.db.connect() as con:
+            cur = con.cursor()
+            cur.execute(
+                "SELECT kw.name "
+                "FROM keywords kw "
+                "JOIN learningGoal_keywords AS LG_KW ON LG_KW.keyword_id = kw.id "
+                "WHERE LG_KW.learningGoal_id = ? ",
+                (learning_goal_id,)
+            )
+
+            all_results = cur.fetchall()
+            return all_results
