@@ -68,8 +68,10 @@ def filter_average():
 
     for goal in learning_goals:
         goal["result"] = app.students.get_learning_goals_number_of_results(average ,goal["id"], student_id)
-        goal["keywords"] = app.students.learning_goal_keywords(learning_goal_id)
+        keywords = app.students.learning_goal_keywords(goal["id"])
+        keywords_list = [{"name": k[0]} for k in keywords]
 
+        goal["keywords"] = keywords_list
     return jsonify(learning_goals)
 
 # @student_bp.route("/subject/learning_goals/<int:learning_goal_id>/result", methods=["GET"])
