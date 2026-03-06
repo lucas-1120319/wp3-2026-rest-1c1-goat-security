@@ -24,13 +24,16 @@ body{
     margin: 0 auto;
 }
 
+
 #toggle{
+    padding-bottom: 1rem;
     cursor: pointer;
 }
 
 /* Sidebar Sectie */
 #sidebar {
     position: fixed;
+    display: flex;
     top: 0;
     left: 0;
     height: 100%;
@@ -38,14 +41,30 @@ body{
     background: #222;
     color: white;
     transition: width 0.3s ease;
-    overflow: hidden;
+    overflow: visible;
     z-index: 100;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-#sidebar.close{
-    width: var(--sidebar-closed);
-
+.top-sidebar-li{
+    margin-bottom: 1rem;
 }
+#sidebar-bottom{
+    display: flex;
+    width: 100%;
+}
+
+.side-bar ul li a{
+    display: flex;
+    text-decoration: none;
+    color: white;
+}
+.side-bar ul li i{
+    font-size: 1rem;
+    /* padding-right: 1rem; */
+}
+
 
 main {
     position: relative;
@@ -56,7 +75,9 @@ main {
     margin: 2rem;
 
 }
-
+#sidebar.close{
+    width: var(--sidebar-closed);
+}
 #sidebar.close ~ main{
     left: 5rem;
     width: calc(100% - 11rem);
@@ -65,8 +86,15 @@ main {
     margin: 2rem;
 }
 
+.text{
+    white-space: nowrap;
+    transition: opacity 0.2s ease;
+}
+
 #sidebar.close .text{
     opacity: 0;
+    width: 0;
+    overflow: hidden;
 }
 
 .side-bar ul{
@@ -77,9 +105,37 @@ main {
     padding-bottom: 1rem;
 }
 
-.side-bar ul li i{
-    font-size: 1rem;
-    padding-right: 1rem;
+.side-bar ul li a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    color: white;
+}
+
+#sidebar.close li:hover .hover-tooltip{
+    opacity: 1;
+}
+
+#sidebar .hover-tooltip{
+    display: none;
+}
+
+#sidebar.close .hover-tooltip{
+    display: block;
+}
+
+.hover-tooltip{
+    position: absolute;
+    left: 70px;
+    background: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
 }
 
 /* Test Sectie */

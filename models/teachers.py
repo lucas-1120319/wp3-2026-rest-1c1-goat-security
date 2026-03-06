@@ -143,6 +143,41 @@ class Teacher:
             )
             return cur.fetchone()
 
+
+
+    # def get_learning_goals_list(self):
+    #     """ Get keyword and taxonomy score for group. """
+    #     with self.db.connect() as con:
+    #         cur = con.cursor()
+    #         cur.execute(
+    #             """
+    #             SELECT st.id,
+    #                 st.first_name AS st_name,
+    #                 lg.title AS lg_title,
+    #                 lg.id AS lg_id,
+    #                 tax.level AS tax_level,
+    #                 tax.kennen AS tax_kennen,
+    #                 tax.kunnen  AS tax_kunnen
+    #
+    #             FROM students st
+    #                 LEFT JOIN student_studentGroups ssg ON st.id = ssg.student_id
+    #                 LEFT JOIN studentGroups sg ON sg.id = ssg.studentGroup_id
+    #                 LEFT JOIN studentGroup_subjects sgs ON ssg.studentGroup_id = sgs.studentGroup_id
+    #                 LEFT JOIN taxonomies tax ON st.id = tax.student_id
+    #                 LEFT JOIN learningGoals lg ON sgs.subject_id = lg.subject_id
+    #                 INNER JOIN learningGoal_keywords ON learningGoal_keywords.learningGoal_id = lg.id
+    #                 INNER JOIN keywords key ON learningGoal_keywords.keyword_id = key.id
+    #                 INNER JOIN snapshots ss ON ss.learningGoal_id = lg.id
+    #
+    #                 GROUP BY lg.title
+    #                 ORDER BY lg.id
+    #
+    #             """,
+    #         )
+    #         return cur.fetchall()
+
+
+# Controleren of deze werkt of niet ?
     def get_exam_list(self, subject_id):
         """ Get learning goals. """
         with self.db.connect() as con:

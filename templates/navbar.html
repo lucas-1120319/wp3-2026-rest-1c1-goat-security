@@ -1,22 +1,64 @@
 <aside class="side-bar close vh-100" id="sidebar">
     <ul class="list-group list-group-flush ms-4 mt-4">
-        <i id="toggle">X</i>
-        <li><span class="text">#{{ user_id }} {{ username }} </span></li>
-        <li><a href="{{ url_for(role + '.dashboard') }}">
-            <i class="bi bi-person-bounding-box"></i><span class="text">Dashboard</span></a></li>
+        <li class="top-sidebar-li">
+            <a href="#" id="toggle">
+                <i class="bi bi-microsoft"></i>
+                <span class="text">Test-Correct</span>
+                <span class="hover-tooltip">Menu</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ url_for(role + '.dashboard') }}">
+                <i class="bi bi-calendar3-week"></i>
+                <span class="text">Dashboard</span>
+                <span class="hover-tooltip">Dashboard</span>
+            </a>
+        </li>
+
         {% if session["role"] == "teacher" %}
-            <li><a href="{{ url_for(role + '.studentGroups') }}">
-                <i class="bi bi-person-bounding-box"></i><span class="text">Alle Klassen</span></a>
-            </li>
-            <li><a href="{{ url_for(role + '.studentGroup') }}">
-                <i class="bi bi-person-bounding-box"></i><span class="text">Uw Klas</span></a>
-            </li>
+        <li>
+            <a href="{{ url_for(role + '.studentGroups') }}">
+                <i class="bi bi-person-lines-fill"></i>
+                <span class="text">Alle Klassen</span>
+                <span class="hover-tooltip">Alle Klassen</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ url_for(role + '.studentGroup') }}">
+                <i class="bi bi-person-workspace"></i>
+                <span class="text">Uw Klas</span>
+                <span class="hover-tooltip">Uw Klas</span>
+            </a>
+        </li>
         {% endif %}
-        <li><a href="{{ url_for(role + '.subjects') }}"><i class="bi bi-person-bounding-box"></i>
-            <span class="text">Vakken</span></a></li>
-        <li><a href="{{ url_for(role + '.profile') }}"><i class="bi bi-person-bounding-box"></i>
-            <span class="text">Profile</span></a></li>
-        <li><a href="{{ url_for('signout') }}"><i class="bi bi-person-bounding-box"></i>
-            <span class="text">Uitloggen</span></a></li>
+
+        <li>
+            <a href="{{ url_for(role + '.subjects') }}">
+                <i class="bi bi-clipboard-data"></i>
+                <span class="text">Vakken</span>
+                <span class="hover-tooltip">Vakken</span>
+            </a>
+        </li>
     </ul>
+
+    <div id="sidebar-bottom">
+        <ul class="list-group list-group-flush ms-4 mt-4">
+        <li>
+            <a href="{{ url_for('signout') }}">
+                <i class="bi bi-box-arrow-left"></i>
+                <span class="text">Uitloggen</span>
+                <span class="hover-tooltip">Uitloggen</span>
+            </a>
+        </li>
+            <li>
+                <a href="{{ url_for(role + '.profile') }}">
+                    <i class="bi bi-person-bounding-box"></i>
+                    <span class="text">{{ username }}</span>
+                    <span class="hover-tooltip">Profiel</span>
+                </a>
+            </li>
+        </ul>
+    </div>
 </aside>
