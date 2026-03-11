@@ -75,13 +75,6 @@ def filter_average():
         goal["keywords"] = keywords_list
     return jsonify(learning_goals)
 
-# @student_bp.route("/subject/learning_goals/<int:learning_goal_id>/result", methods=["GET"])
-# def subject_score(learning_goal_id):
-#     """ Get exam result data in a table setting. """
-#     student_id = session["id"]
-#     scores = app.students.get_snapshot_by_learning_goal_id(learning_goal_id, student_id)
-#     print('student_id: ',student_id)
-#     return render_template("score.html", scores=scores)
 
 @student_bp.route("/subject/learning_goals/<int:snapshot_id>/result", methods=["GET"])
 def results(snapshot_id):
@@ -89,7 +82,6 @@ def results(snapshot_id):
     student_id = session["id"]
     scores = app.students.get_snapshot(snapshot_id, student_id)
     score_title = app.students.get_snapshot_title(snapshot_id, student_id)
-    print('student_id: ',student_id)
     return render_template("score.html", scores=scores, score_title=score_title)
 
 
