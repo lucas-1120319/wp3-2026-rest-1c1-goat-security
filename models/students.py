@@ -214,7 +214,7 @@ class Student:
             )
             return cur.fetchall()
 
-    def get_learning_goals_number_of_results(self, min_average: float, learning_goal_id: int, student_id: int):
+    def get_learning_goals_number_of_results(self, learning_goal_id: int, student_id: int):
         """ Get exam result data by snapshot id """
         with self.db.connect() as con:
             cur = con.cursor()
@@ -234,7 +234,7 @@ class Student:
             all_results = cur.fetchall()
             count = 0
             for row in all_results:
-                if row["average"] > min_average:
+                if row["average"] > 0.5:
                     count += 1
 
             return count

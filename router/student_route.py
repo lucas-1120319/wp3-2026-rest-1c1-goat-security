@@ -49,7 +49,7 @@ def subject_learning_goals(subject_id):
     student_id = session["id"]
 
     for learning_goal in learning_goals:
-        learning_goal["result"] = app.students.get_learning_goals_number_of_results(0.5,    learning_goal["id"], student_id)
+        learning_goal["result"] = app.students.get_learning_goals_number_of_results(learning_goal["id"], student_id)
         learning_goal["keywords"] = app.students.learning_goal_keywords(learning_goal["id"])
 
     return render_template("learning_goal.html", learning_goals=learning_goals, learning_title=learning_title, subject_id=subject_id)
@@ -68,7 +68,7 @@ def filter_average():
     learning_goals = [dict(row) for row in learning_goals]
 
     for goal in learning_goals:
-        goal["result"] = app.students.get_learning_goals_number_of_results(average ,goal["id"], student_id)
+        goal["result"] = app.students.get_learning_goals_number_of_results(goal["id"], student_id)
         keywords = app.students.learning_goal_keywords(goal["id"])
         keywords_list = [{"name": k[0]} for k in keywords]
 
