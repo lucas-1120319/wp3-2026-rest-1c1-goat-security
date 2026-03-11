@@ -1,0 +1,34 @@
+{% extends 'index.html' %}
+
+{% block header %}
+    {% block title %}
+        {{ personInfo["first_name"] }} Profile
+    {% endblock %}
+{% endblock %}
+
+{% block content%}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-4 mb-5 mb-lg-0 wow fadeIn">
+            <div class="card border-0 shadow">
+                <div class="col-auto d-none d-lg-block">
+                    <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" focusable="false"><title>Placeholder</title></svg>
+                </div>
+                <div class="card-body p-1-9 p-xl-5">
+                    <div class="mb-4">
+                        <h3 class="h4 mb-0">{{ personInfo["first_name"] }} {{ personInfo["last_name"] }}</h3>
+                        <h2 class="h4 mb-0">{{ personrole["name"] }}</h2>
+                    </div>
+                    <ul class="list-unstyled mb-4">
+                        <li class="mb-3"><i class="far fa-envelope display-25 me-3 text-secondary"></i>{{ personInfo["email"] }}</li>
+                        <li class="mb-3"><i class="fas fa-mobile-alt display-25 me-3 text-secondary"></i>{{ personInfo["phone"] }}</li>
+                        <li><i class="fas fa-map-marker-alt display-25 me-3 text-secondary"></i>{{ personInfo["city"] }}, {{ personInfo["street_name"] }}, {{ personInfo["postcode"] }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

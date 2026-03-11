@@ -50,6 +50,7 @@
                 <th scope="col">Adres</th>
                 <th scope="col">Geboorte-datum</th>
                 <th scope="col">Status</th>
+                <th scope="col">Extra</th>
             </tr>
             </thead>
             <tbody>
@@ -75,6 +76,7 @@
                         <span class="badge bg-secondary"> Geen data </span>
                     {% endif %}
                 </td>
+                <td><a href="/teacher/studentdetail/{{ student["id"] }}" class="btn btn-primary">Gegevens</a></td>
             </tr>
             {% else %}
                 <h2 class="fs-3">Geen studenten in deze klas</h2>

@@ -56,6 +56,12 @@ def studentGroup():
     studentGroups = app.teachers.get_studentGroups(teacher_id)
     return render_template("studentGroup.html", studentGroups=studentGroups)
 
+@teacher_bp.route("/studentdetail/<string:id>", methods=["GET"])
+def studentDetail(id):
+    """ Get details about a certain person """
+    studentInfo = app.students.get_all_student_user_info(id)
+    role = app.users.get_user_role(id)
+    return render_template("single_student.html", personInfo=studentInfo, personrole=role)
 
 @teacher_bp.route("/studentGroup/<string:name>", methods=["GET"])
 def select_studentGroup(name):
