@@ -12,8 +12,8 @@
     <div class="row justify-content-center">
         <div class="col-md-7 col-lg-4 mb-5 mb-lg-0 wow fadeIn">
             <div class="card border-0 shadow">
-                <div class="col-auto d-none d-lg-block">
-                    <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" focusable="false"><title>Placeholder</title></svg>
+                <div>
+                    <canvas id="myChart"></canvas>
                 </div>
                 <div class="card-body p-1-9 p-xl-5">
                     <div class="mb-4">
@@ -30,5 +30,27 @@
         </div>
     </div>
 </div>
+
+    <script>
+  const ctx = document.getElementById('myChart');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      datasets: [{
+        label: '# of Votes',
+        data: [1, 19, 3, 5, 2, 3],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
 
 {% endblock %}

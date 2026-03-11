@@ -7,9 +7,6 @@
 {% endblock %}
 
 {% block content%}
-{% set Title = "Test Student" %}
-{% set Button_text = "Test Student" %}
-{% include "prompt.html" %}
     <div class="mb-3">
         <button class="btn btn-danger btn-sm"
             onclick="filterStatus('Achterloopt')">
@@ -32,7 +29,7 @@
         </button>
         <strong>Legenda:</strong>
         <span class="badge bg-danger">Slecht / Achterloopt < 0.5</span>
-        <span class="badge bg-warning">Gemiddeld / Op Schema 0.5 ~ 0.8</span>
+        <span class="badge bg-warning text-dark">Gemiddeld / Op Schema 0.5 ~ 0.8</span>
         <span class="badge bg-success">Goed / Uitblinker > 0.8</span>
     </div>
 <div class="row mt-4">
