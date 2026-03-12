@@ -7,9 +7,6 @@
 {% endblock %}
 
 {% block content%}
-{% set Title = "Test Student" %}
-{% set Button_text = "Test Student" %}
-{% include "prompt.html" %}
     <div class="mb-3">
         <button class="btn btn-danger btn-sm"
             onclick="filterStatus('Achterloopt')">
@@ -32,7 +29,7 @@
         </button>
         <strong>Legenda:</strong>
         <span class="badge bg-danger">Slecht / Achterloopt < 0.5</span>
-        <span class="badge bg-warning">Gemiddeld / Op Schema 0.5 ~ 0.8</span>
+        <span class="badge bg-warning text-dark">Gemiddeld / Op Schema 0.5 ~ 0.8</span>
         <span class="badge bg-success">Goed / Uitblinker > 0.8</span>
     </div>
 <div class="row mt-4">
@@ -50,6 +47,7 @@
                 <th scope="col">Adres</th>
                 <th scope="col">Geboorte-datum</th>
                 <th scope="col">Status</th>
+                <th scope="col">Extra</th>
             </tr>
             </thead>
             <tbody>
@@ -75,6 +73,7 @@
                         <span class="badge bg-secondary"> Geen data </span>
                     {% endif %}
                 </td>
+                <td><a href="/teacher/studentdetail/{{ student["id"] }}" class="btn btn-primary">Gegevens</a></td>
             </tr>
             {% else %}
                 <h2 class="fs-3">Geen studenten in deze klas</h2>
@@ -155,6 +154,7 @@
                     <td>${student.street_name}</td>
                     <td>${student.birth_date}</td>
                     <td>${badge}</td>
+                    <td><a href="/teacher/studentdetail/${ student["id"] }" class="btn btn-primary">Gegevens</a></td>
                 </tr>
             `;
 

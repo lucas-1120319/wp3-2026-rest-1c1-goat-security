@@ -23,7 +23,7 @@ _db = Database(DB_PATH)
 app.students = Student(DB_PATH)
 app.teachers = Teacher(DB_PATH)
 app.seeder = Seed(DB_PATH)
-users = User(DB_PATH)
+app.users = User(DB_PATH)
 
 @app.route("/")
 def index():
@@ -52,14 +52,14 @@ def signin():
         email = request.form["email"]
         password = request.form["password"]
         print("Form data:", email, password)
-        main_user = users.authenticate(email, password)
+        main_user = app.users.authenticate(email, password)
 
         if not main_user:
             return render_template(
                 "login.html", error="Verkeerde email en of wachtwoord"
             )
 
-        user_role = users.get_user_role(main_user["id"])
+        user_role = app.users.get_user_role(main_user["id"])
 
         session["id"] = main_user["id"]
         session["role"] = user_role["name"]
