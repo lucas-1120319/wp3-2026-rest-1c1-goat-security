@@ -27,6 +27,9 @@
 
 
     {% else %}
+        <div class="card">
+            <div id="latest_snapshot"></div>
+        </div>
         {%for subject in subjects %}
             <div class="col-md-4">
                 <div class="card  " >
@@ -39,7 +42,43 @@
                     </a>
                 </div>
             </div>
+
             <script>
+            fetch("/student/get_last_snapshot")
+              .then(response => response.json())
+             .then(data => {
+                    console.log(data);
+
+                    const snapshot_element = document.getElementById("latest_snapshot");
+
+                    if (data.length === 0) {
+                        snapshot_element.innerHTML = "Geen gegevens beschikbaar.";
+                        return;
+                    }
+
+                    // Get the snapshot date from the first item (all rows share the same snapshot date)
+                    const snapshotDate = data[0]["at"];
+
+                    // Build HTML for taxonomy levels
+                    let levelsHtml = "";
+                    data.forEach(level => {
+                        levelsHtml += `
+                            <div>
+                                ${level.level}: kennen=${level.kennen}, kunnen=${level.kunnen}, confidence=${level.confidence}
+                            </div>
+                        `;
+                    });
+
+                    // Combine into final HTML
+                    const snapshot_text = `
+                        <div class="mt-2">
+                            Laatste gegevens van je laatste toets/observering/proef: ${snapshotDate}
+                            ${levelsHtml}
+                        </div>
+                    `;
+
+                    snapshot_element.innerHTML = snapshot_text;
+                });
              fetch("/student/learing_goal_studenten_average_on_group")
               .then(response => response.json())
               .then(data => {

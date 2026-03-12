@@ -37,6 +37,13 @@ def subjects():
     subjects = app.students.get_all_subjects_students(class_id)
     return render_template("subjects.html", subjects=subjects)
 
+@student_bp.route("/get_last_snapshot")
+def get_last_snapshot():
+    student_id = session["id"]
+    snapshot = app.students.get_last_snapshot_of_student(student_id)
+    result = [dict(row) for row in snapshot]
+
+    return jsonify(result)
 @student_bp.route("/learing_goal_studenten_average_on_group" , methods=["GET"])
 def learing_goal_studenten_average_on_group():
     student_group_id = session["student_group_id"]
@@ -51,7 +58,6 @@ def learing_goal_studenten_average_on_group():
         for row in group_results
     }
 
-
     subjects = {}
 
     for row in student_results:
@@ -62,8 +68,6 @@ def learing_goal_studenten_average_on_group():
         student_avg = row[4]
 
         group_avg = group_avg_dict.get(learning_goal_id)
-
-
 
         if subject_id not in subjects:
             subjects[subject_id] = {

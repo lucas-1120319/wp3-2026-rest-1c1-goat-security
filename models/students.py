@@ -351,3 +351,38 @@ class Student:
 
             all_results = cur.fetchall()
             return all_results
+
+    def get_last_snapshot_of_student(self, student_id):
+        with self.db.connect() as con:
+            cur = con.cursor()
+            cur.execute(""" SELECT
+                        t.id,
+                        t.level,
+                        t.kennen,
+                        t.kunnen,
+                        t.confidence,
+                        t.student_id,
+                        t.snapshot_id,
+                        s.at
+                    FROM taxonomies t
+                    INNER JOIN main.snapshots s on s.id = t.snapshot_id
+                    WHERE t.student_id = ?
+                        AND t.snapshot_id = (
+                            SELECT s2.id
+                            FROM snapshots s2
+                            JOIN taxonomies t2 ON t2.snapshot_id = s2.id
+                            WHERE t2.student_id = t.student_id
+                              AND s2.at = (
+                                  SELECT MAX(s3.at)
+                                  FROM snapshots s3
+                                  JOIN taxonomies t3 ON t3.snapshot_id = s3.id
+                                  WHERE t3.student_id = t.student_id
+                              )
+                            LIMIT 1
+                        )
+                    """,
+                        (student_id,)
+                        )
+
+            all_results = cur.fetchall()
+            return all_results
