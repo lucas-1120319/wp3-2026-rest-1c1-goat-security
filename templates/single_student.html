@@ -8,23 +8,77 @@
 
 {% block content%}
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-7 col-lg-4 mb-5 mb-lg-0 wow fadeIn">
-            <div class="card border-0 shadow">
-                <div>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow border-0">
+                <div class="card-body text-center">
+                    <h3 class="mb-0">
+                        {{ personInfo["first_name"] }} {{ personInfo["last_name"] }}
+                    </h3>
+                    <p class="text-muted mb-3">
+                        {{ personrole["name"] }}
+                    </p>
+                    <ul class="list-unstyled text-start mt-4">
+                        <li class="mb-2">
+                            <i class="fas fa-envelope text-secondary me-2"></i>
+                            {{ personInfo["email"] }}
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-phone text-secondary me-2"></i>
+                            {{ personInfo["phone"] }}
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-map-marker-alt text-secondary me-2"></i>
+                            {{ personInfo["city"] }},
+                            {{ personInfo["street_name"] }},
+                            {{ personInfo["postcode"] }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow border-0">
+                <div class="card-header">
+                    <h5 class="mb-0">Gemiddelde overzicht</h5>
+                </div>
+                <div class="card-body">
                     <canvas id="myChart"></canvas>
                 </div>
-                <div class="card-body p-1-9 p-xl-5">
-                    <div class="mb-4">
-                        <h3 class="h4 mb-0">{{ personInfo["first_name"] }} {{ personInfo["last_name"] }}</h3>
-                        <h2 class="h4 mb-0">{{ personrole["name"] }}</h2>
-                    </div>
-                    <ul class="list-unstyled mb-4">
-                        <li class="mb-3"><i class="far fa-envelope display-25 me-3 text-secondary"></i>{{ personInfo["email"] }}</li>
-                        <li class="mb-3"><i class="fas fa-mobile-alt display-25 me-3 text-secondary"></i>{{ personInfo["phone"] }}</li>
-                        <li><i class="fas fa-map-marker-alt display-25 me-3 text-secondary"></i>{{ personInfo["city"] }}, {{ personInfo["street_name"] }}, {{ personInfo["postcode"] }}</li>
-                    </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow border-0">
+                <div class="card-header">
+                    <h5 class="mb-0">Vakken Scores</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Vak</th>
+                                <th>Gemiddelde</th>
+                                <th>Confidence</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for subject in subjects %}
+                            <tr>
+                                <td>{{ subject["name"] }}</td>
+                                <td>
+                                    {{ subject["average"] }}
+                                </td>
+                                <td>
+                                    {{ subject["confidence"] }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

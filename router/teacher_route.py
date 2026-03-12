@@ -62,6 +62,8 @@ def studentDetail(id):
     # [TEST] Can be expanded on later to make it multi-functional (So it can support Teachers/Students/etc)
     studentInfo = app.students.get_all_student_user_info(id)
     role = app.users.get_user_role(id)
+    subjectdata = app.teachers.get_single_student_subject(id)
+    print(subjectdata)
     return render_template("single_student.html", personInfo=studentInfo, personrole=role)
 
 @teacher_bp.route("/studentGroup/<string:name>", methods=["GET"])
