@@ -1,0 +1,137 @@
+{% extends 'index.html' %}
+{% block header %}
+    {% block title %}
+        {{ subject_name }}<br>
+        <h2>
+        {{ learning_goal_title }}
+        </h2>
+    {% endblock %}
+{% endblock %}
+
+{% block content%}
+    {% for keyword in keywords %}
+        <span class="badge text-bg-primary">{{ keyword["name"] }}</span>
+    {% endfor %}
+    <div class="row">
+        <div class="col-6">
+            <canvas class="" id="level_progress_graph"></canvas>
+        </div>
+        <div class="col-6  row">
+            <div class="col">
+                <h3 class="mb-3">Gemiddelde</h3>
+
+                <div class="row row-cols-2 g-3"> <!-- 2x2 grid with small gap -->
+
+                    <div class="col">
+                        <div class="card h-100 text-center">
+                            <div class="card-body d-flex flex-column justify-content-center">
+                                <h4 class="card-title fw-bold mb-3">Onthouden</h4>
+                                <p id="onthouden_average_snapshots" class="fs-4 mb-0"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card h-100 text-center">
+                            <div class="card-body d-flex flex-column justify-content-center">
+                                <h4 class="card-title fw-bold mb-3">Begrijpen</h4>
+                                <p id="begrijpen_average_snapshots" class="fs-4 mb-0"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card h-100 text-center">
+                            <div class="card-body d-flex flex-column justify-content-center">
+                                <h4 class="card-title fw-bold mb-3">Toepassen</h4>
+                                <p id="toepassen_average_snapshots" class="fs-4 mb-0"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card h-100 text-center">
+                            <div class="card-body d-flex flex-column justify-content-center">
+                                <h4 class="card-title fw-bold mb-3">Analyseren</h4>
+                                <p id="analyseren_average_snapshots" class="fs-4 mb-0"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-12">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">@</th>
+                  <th scope="col">EID</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Leerdoel</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for score in scores %}
+                  <tr>
+                    <th scope="row">{{ score["tax_snap"] }}</th>
+                    <td><a class="link-underline link-underline-opacity-0"
+                           href="/student/subject/learning_goals/{{ score['tax_snap'] }}/result">
+                        {{ score["snap_at"] }}</a></td>
+                    <td>{{ score["src_exid"] }}</td>
+                    <td>{{ score["src_type"] }}</td>
+                    <td>{{ score["lg_title"] }}</td>
+                </tr>
+             {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        fetch("/student/learningGoals_data/{{ learning_goal_id }}")
+          .then(response => response.json())
+          .then(data => {
+              const ctx = document.getElementById('level_progress_graph');
+
+              new Chart(ctx, {
+                  type: 'line',
+                  data: {
+                      labels: data.labels,
+                      datasets: [
+                          {label: 'Onthouden', data: data.onthouden },
+                          {label: 'Begrijpen', data: data.begrijpen},
+                          {label: 'Toepassen', data: data.toepassen},
+                          {label: 'Analyseren', data: data.analyseren},
+
+                      ],
+                  },
+                   options: {
+                       scales: {
+                           y: {
+                               min: 0,
+                               max: 1,
+                               ticks: {
+                                   stepSize: 0.1
+                               }
+                           }
+                       }
+                   }
+              });
+          });
+
+
+
+        fetch("/student/all_snapshot_average/{{ learning_goal_id }}")
+          .then(response => response.json())
+          .then(data => {
+            onthouden = document.getElementById("onthouden_average_snapshots").innerHTML = data.onthouden
+            begrijpen = document.getElementById("begrijpen_average_snapshots").innerHTML = data.begrijpen
+            toepassen = document.getElementById("toepassen_average_snapshots").innerHTML = data.toepassen
+            analyseren = document.getElementById("analyseren_average_snapshots").innerHTML = data.analyseren
+
+           });
+    </script>
+
+{% endblock %}

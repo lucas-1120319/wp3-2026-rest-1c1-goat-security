@@ -32,13 +32,16 @@
                 <div class="card  " >
                     <a class="link-underline link-underline-opacity-0" href="/student/subject/learning_goals/{{ subject['id'] }}">
                       <div class="card-body">
-                        <div class="fs-3">Vak {{ subject["name"] }}</div>
+                        <div class="fs-3">{{ subject["name"] }}</div>
+                        <i class="{{ ['img'] }}"></i>
+
                       </div>
                     </a>
                 </div>
             </div>
         {%endfor%}
     {% endif %}
+
 
 </div>
 {% endblock %}

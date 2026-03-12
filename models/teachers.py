@@ -143,6 +143,38 @@ class Teacher:
             )
             return cur.fetchone()
 
+    def get_learning_goal_by_class(self, class_id, learning_goal_id):
+        """ Get list of a group with selected learning goal. """
+        with self.db.connect() as con:
+            cur = con.cursor()
+            cur.execute(
+                """
+                SELECT
+                    sg.name AS class_name,
+                    sg.id AS class_id,
+                    st.first_name AS student_name,
+                    lg.id AS learning_goal_id,
+                    lg.title AS learning_goal,
+                    tax.level AS level,
+                    
+                    AVG(tax.kennen) AS kennen,
+                    AVG(tax.kunnen) AS kunnen
+            
+            FROM taxonomies tax
+            JOIN students st ON st.id = tax.student_id
+            JOIN snapshots ss ON ss.id = tax.snapshot_id
+            JOIN learningGoals lg ON lg.id = ss.learningGoal_id
+            JOIN student_studentGroups ssg ON ssg.student_id = st.id
+            JOIN studentGroups sg ON sg.id = ssg.studentGroup_id
+            WHERE sg.id = ? AND lg.id = ?
+            GROUP BY st.id
+            ORDER BY st.first_name, lg.id, ss.id
+                    
+                """,
+                (class_id, learning_goal_id)
+            )
+            return cur.fetchall()
+
 
 
     # def get_learning_goals_list(self):

@@ -11,19 +11,72 @@
     {% if role == "teacher" %}
 
         <div class="row">
-        {% for lg in learning_goals %}
-            <div class="col-md-4">
-                <div class="card  " >
-                    <a class="link-underline link-underline-opacity-0  " href="/teacher/subjects/{{ lg["id"] }}">
-                      <div class="card-body">
-                        <div class="fs-3">{{ lg['title'] }}</div>
-                      </div>
-                    </a>
-                </div>
-            </div>
-        </div>
+{#        {% for lg in learning_goals %}#}
+{#            <div class="col-md-4">#}
+{#                <div class="card  " >#}
+{#                    <a class="link-underline link-underline-opacity-0  " href="/teacher/subjects/{{ lg["id"] }}">#}
+{#                      <div class="card-body">#}
+{#                        <div class="fs-3">{{ lg['title'] }}</div>#}
+{#                      </div>#}
+{#                    </a>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#        {% endfor %}#}
 
-        {% endfor %}
+
+
+</div>
+  <canvas id="myChart"></canvas>
+</div>
+
+<table class="table">
+
+  <thead>
+    <tr>
+      <th scope="col">Klass</th>
+      <th scope="col">Naam</th>
+      <th scope="col">ID</th>
+      <th scope="col">Leerdoel</th>
+      <th scope="col">Level</th>
+      <th scope="col">Kennen</th>
+      <th scope="col">Kunnen</th>
+    </tr>
+  </thead>
+  <tbody>
+{% for group in groups %}
+    <script>
+    fetch("/teacher/subjects/{{ group['class_id'] }}/data")
+      .then(response => response.json())
+      .then(data => {
+          const ctx = document.getElementById('myChart');
+          new Chart(ctx, {
+              type: 'bar',
+              data: {
+                  labels: data.labels,
+                  datasets: [
+                      { label: 'Kunnen', data: data.kunnen },
+                      { label: 'Kennen', data: data.kennen },
+                  ],
+              }
+          });
+      })
+      .catch(err => console.error('Fetch error:', err));
+    </script>
+      <tr>
+      <td>{{ group['class_name']}}</td>
+      <td>{{ group['student_name']}}</td>
+      <td>{{ group['learning_goal_id']}}</td>
+      <td>{{ group['learning_goal']}}</td>
+      <td>{{ group['level']}}</td>
+      <td>{{ group['kennen']}}</td>
+      <td>{{ group['kunnen']}}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{#        {% endfor %}#}
 
     {% else %}
         {%for subject in subjects %}
@@ -38,6 +91,4 @@
             </div>
         {%endfor%}
     {% endif %}
-
-</div>
 {% endblock %}

@@ -32,7 +32,34 @@ def select_subject(subject_id):
     """ Select a single subject """
     subject_name = app.teachers.get_single_subject(subject_id)
     learning_goals = app.teachers.get_all_learning_goals(subject_id)
-    return render_template("single_subject.html", learning_goals=learning_goals, subject_name=subject_name)
+    groups = app.teachers.get_learning_goal_by_class(1, 1)
+    return render_template("single_subject.html",
+                           learning_goals=learning_goals,
+                           subject_name=subject_name,
+                           subject_id=subject_id, groups=groups)
+
+
+@teacher_bp.route("/subjects/<int:subject_id>/data", methods=["GET"])
+def data(subject_id):
+    groups = app.teachers.get_learning_goal_by_class(class_id='1', learning_goal_id='1')
+
+    student_name = [group['student_name'] for group in groups]
+    kennen = [group['kennen'] for group in groups]
+    kunnen = [group['kunnen'] for group in groups]
+
+    return jsonify({
+        "labels": student_name,
+        "kennen": kennen,
+        "kunnen": kunnen,
+    })
+
+
+@teacher_bp.route("/subjects/<int:subject_id>/selected", methods=["GET"])
+def go_subject(subject_id):
+    """ Select a single subject """
+    subject_name = app.teachers.get_single_subject(subject_id)
+    learning_goals = app.teachers.get_all_learning_goals(subject_id)
+    return render_template("teacher-student_learning_goal.html", learning_goals=learning_goals, subject_name=subject_name)
 
 
 @teacher_bp.route("/subject/learningGoals")
@@ -55,6 +82,7 @@ def studentGroup():
     teacher_id = session["teacher_id"]
     studentGroups = app.teachers.get_studentGroups(teacher_id)
     return render_template("studentGroup.html", studentGroups=studentGroups)
+
 
 @teacher_bp.route("/studentdetail/<string:id>", methods=["GET"])
 def studentDetail(id):
