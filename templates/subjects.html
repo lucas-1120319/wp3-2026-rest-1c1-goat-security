@@ -33,9 +33,9 @@
         {%for subject in subjects %}
             <div class="col-md-4">
                 <div class="card  " >
-                    <a class="link-underline link-underline-opacity-0" href="/student/subject/learning_goals/{{ subject['id'] }}">
+                    <a class="link-underline link-dark  link-underline-opacity-0" href="/student/subject/learning_goals/{{ subject['id'] }}">
                       <div class="card-body">
-                        <div class="fs-3">Vak {{ subject["name"] }}</div>
+                        <div class="fs-3 fw-bold">{{ subject["name"] }}</div>
                           <div id="amount_under_avg_{{ subject['id'] }}"></div>
 
                       </div>
@@ -64,7 +64,7 @@
                     data.forEach(level => {
                         levelsHtml += `
                             <div>
-                                ${level.level}: kennen=${level.kennen}, kunnen=${level.kunnen}, confidence=${level.confidence}
+                                ${level.level}: kennen=${level.kennen}, kunnen=${level.kunnen}
                             </div>
                         `;
                     });
@@ -72,7 +72,7 @@
                     // Combine into final HTML
                     const snapshot_text = `
                         <div class="mt-2">
-                            Laatste gegevens van je laatste toets/observering/proef: ${snapshotDate}
+                            Je laatste ingevoerde gegevens: ${snapshotDate}
                             ${levelsHtml}
                         </div>
                     `;
@@ -107,18 +107,18 @@
                             if (under_avg_element) {
                                 const card_html = `
                                    <div class="mt-2">
-                                    <div class="small text-dark fw-bold mb-1">Aantal leerdoelen boven, op of onder het klasgemiddelde:</div>
+                                    <div class="small text-dark mb-1">Aantal leerdoelen boven, op of onder het klasgemiddelde:</div>
 
-                                    <div class="d-flex gap-3">
-                                        <span class="text-success">
+                                    <span class="d-flex gap-3">
+                                        <span class="text-success fw-bold">
                                              Boven (${num_above_avg})
                                         </span>
 
-                                        <span class="text-warning">
+                                        <span class="text-warning fw-bold">
                                              Op (${num_on_avg})
                                         </span>
 
-                                        <span class="text-danger">
+                                        <span class="text-danger fw-bold">
                                              Onder (${num_below_avg})
                                         </span>
                                     </div>
