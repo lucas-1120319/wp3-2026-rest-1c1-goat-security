@@ -37,6 +37,15 @@
                     </a>
                 </div>
             </div>
+            <script>
+             fetch("/student/learing_goal_studenten_average_on_group")
+              .then(response => response.json())
+              .then(data => {
+
+                        console.log("data", data)
+                    });
+
+            </script>
         {%endfor%}
     {% endif %}
 

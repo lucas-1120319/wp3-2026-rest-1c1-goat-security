@@ -271,3 +271,83 @@ class Student:
 
             all_results = cur.fetchall()
             return all_results
+    def get_studentGroup_average_all_subjects(self, student_group_id):
+        with self.db.connect() as con:
+            cur = con.cursor()
+            cur.execute(""" WITH latest_snapshots AS (
+                    SELECT
+                        t.student_id,
+                        s.learningGoal_id,
+                        MAX(s.at) AS latest_at
+                    FROM taxonomies t
+                    JOIN snapshots s ON t.snapshot_id = s.id
+                    JOIN students st ON t.student_id = st.id
+                    JOIN student_studentGroups ssg ON st.id = ssg.student_id
+                    WHERE ssg.studentGroup_id = ?  -- Replace with your student group ID
+                    GROUP BY t.student_id, s.learningGoal_id
+                ),
+                student_averages AS (
+                    SELECT
+                        st.id AS student_id,
+                        lg.id AS learningGoal_id,
+                        (AVG(t.kennen) + AVG(t.kunnen)) / 2.0 AS avg_kennen_kunnen
+                    FROM latest_snapshots ls
+                    JOIN students st ON ls.student_id = st.id
+                    JOIN snapshots s
+                        ON s.learningGoal_id = ls.learningGoal_id
+                        AND s.at = ls.latest_at
+                    JOIN taxonomies t
+                        ON t.student_id = st.id AND t.snapshot_id = s.id
+                    JOIN learningGoals lg ON s.learningGoal_id = lg.id
+                    GROUP BY st.id, lg.id
+                )
+                SELECT
+                    lg.id AS learningGoal_id,
+                    lg.title AS learningGoal_title,
+                    sub.id AS subject_id,
+                    sub.name AS subject_title,
+                    AVG(avg_kennen_kunnen) AS group_avg_kennen_kunnen
+                FROM student_averages sa
+                JOIN learningGoals lg ON sa.learningGoal_id = lg.id
+                JOIN subjects sub ON lg.subject_id = sub.id
+                GROUP BY lg.id, sub.id
+                ORDER BY lg.id;"""        ,
+                (student_group_id,)
+            )
+            all_results = cur.fetchall()
+            return all_results
+
+    def get_student_average_all_learningGoals(self, student_id):
+        with self.db.connect() as con:
+            cur = con.cursor()
+            cur.execute(""" WITH latest_snapshots AS (
+                    SELECT
+                        t.student_id,
+                        s.learningGoal_id,
+                        MAX(s.at) AS latest_at
+                    FROM taxonomies t
+                    JOIN snapshots s ON t.snapshot_id = s.id
+                    WHERE t.student_id = ?  -- Replace with the target student ID
+                    GROUP BY t.student_id, s.learningGoal_id
+                )
+                SELECT
+                    lg.id AS learningGoal_id,
+                    lg.title AS learningGoal_title,
+                    sub.id AS subject_id,
+                    sub.name AS subject_title,
+                    (AVG(t.kennen) + AVG(t.kunnen)) / 2.0 AS avg_kennen_kunnen
+                FROM latest_snapshots ls
+                JOIN snapshots s
+                    ON s.learningGoal_id = ls.learningGoal_id
+                    AND s.at = ls.latest_at
+                JOIN taxonomies t
+                    ON t.student_id = ls.student_id AND t.snapshot_id = s.id
+                JOIN learningGoals lg ON s.learningGoal_id = lg.id
+                JOIN subjects sub ON lg.subject_id = sub.id
+                GROUP BY lg.id, sub.id
+                ORDER BY lg.id;""",
+                        (student_id,)
+                        )
+
+            all_results = cur.fetchall()
+            return all_results

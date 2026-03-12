@@ -35,9 +35,37 @@ def profile():
 def subjects():
     class_id = session["student_group"]
     subjects = app.students.get_all_subjects_students(class_id)
-    print(subjects) #["id"] and ["name"] of the subjects
     return render_template("subjects.html", subjects=subjects)
 
+@student_bp.route("/learing_goal_studenten_average_on_group" , methods=["GET"])
+def learing_goal_studenten_average_on_group():
+    student_group_id = session["student_group_id"]
+    student_id = session["id"]
+    studentGroup_average_all_subjects = app.students.get_studentGroup_average_all_subjects(student_group_id)
+    student_average_all_learningGoals = app.students.get_student_average_all_learningGoals(student_id)
+
+    group_avg_dict = {
+        row[0]: row[4]  # learningGoal_id -> group_avg_kennen_kunnen
+        for row in studentGroup_average_all_subjects
+    }
+    student_avg_dict = {
+        row[0]: row[4]  # learningGoal_id -> avg_kennen_kunnen
+        for row in student_average_all_learningGoals
+    }
+    above_average_learning_goals = []
+
+    for lg_id, student_avg in student_avg_dict.items():
+        group_avg = group_avg_dict.get(lg_id)
+        if group_avg is not None and student_avg > group_avg:
+            # Find the learning goal title
+            lg_title = next(row[1] for row in student_average_all_learningGoals if row[0] == lg_id)
+            above_average_learning_goals.append({
+                "learningGoal_id": lg_id,
+                "learningGoal_title": lg_title,
+                "student_avg": student_avg,
+                "group_avg": group_avg
+            })
+    return jsonify(above_average_learning_goals)
 
 @student_bp.route("/subject/learning_goals/<int:subject_id>", methods=["GET"])
 def subject_learning_goals(subject_id):

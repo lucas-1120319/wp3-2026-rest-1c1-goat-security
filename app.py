@@ -75,6 +75,7 @@ def signin():
             return redirect(url_for("teacher.profile"))
         elif session["role"] == "student":
             session["student_group"] = app.students.get_student_class(session["id"])["name"]
+            session["student_group_id"] = app.students.get_student_class(session["id"])["id"]
             return redirect(url_for("student.profile"))
         # --
 
