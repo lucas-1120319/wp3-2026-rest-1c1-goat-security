@@ -67,11 +67,23 @@
 
                             if (under_avg_element) {
                                 const card_html = `
-                                    <div>
-                                        <p class="text-success">Boven gemiddelde: ${num_above_avg}</p>
-                                        <p class="text-warning">Op gemiddelde: ${num_on_avg}</p>
-                                        <p class="text-danger">Onder gemiddelde: ${num_below_avg}</p>
+                                   <div class="mt-2">
+                                    <div class="small text-dark fw-bold mb-1">Aantal leerdoelen boven, op of onder het klasgemiddelde:</div>
+
+                                    <div class="d-flex gap-3">
+                                        <span class="text-success">
+                                             Boven (${num_above_avg})
+                                        </span>
+
+                                        <span class="text-warning">
+                                             Op (${num_on_avg})
+                                        </span>
+
+                                        <span class="text-danger">
+                                             Onder (${num_below_avg})
+                                        </span>
                                     </div>
+                                </div>
                                 `;
 
                                 under_avg_element.innerHTML = card_html;
