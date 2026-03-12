@@ -33,6 +33,8 @@
                     <a class="link-underline link-underline-opacity-0" href="/student/subject/learning_goals/{{ subject['id'] }}">
                       <div class="card-body">
                         <div class="fs-3">Vak {{ subject["name"] }}</div>
+                          <div id="amount_under_avg_{{ subject['id'] }}"></div>
+
                       </div>
                     </a>
                 </div>
@@ -41,10 +43,41 @@
              fetch("/student/learing_goal_studenten_average_on_group")
               .then(response => response.json())
               .then(data => {
+                      data.forEach((subject) => {
+                          let num_above_avg = 0
+                          let num_on_avg = 0
+                          let num_below_avg = 0
 
-                        console.log("data", data)
+                          subject.learning_goals.forEach((learningGoal) => {
+                                let student_avg = parseFloat(learningGoal.student_avg);
+                                let group_avg = parseFloat(learningGoal.group_avg);
+                                const margin_avg = 0.1;
+
+                                if ((student_avg + margin_avg) > group_avg && (student_avg - margin_avg) < group_avg) {
+                                    num_on_avg++;
+                                } else if (learningGoal.is_above_average === true) {
+                                    num_above_avg++;
+                                } else {
+                                    num_below_avg++;
+                                }
+
+                            });
+
+                          const under_avg_element = document.getElementById("amount_under_avg_" + subject.subject_id);
+
+                            if (under_avg_element) {
+                                const card_html = `
+                                    <div>
+                                        <p class="text-success">Boven gemiddelde: ${num_above_avg}</p>
+                                        <p class="text-warning">Op gemiddelde: ${num_on_avg}</p>
+                                        <p class="text-danger">Onder gemiddelde: ${num_below_avg}</p>
+                                    </div>
+                                `;
+
+                                under_avg_element.innerHTML = card_html;
+                            }
                     });
-
+});
             </script>
         {%endfor%}
     {% endif %}

@@ -41,31 +41,46 @@ def subjects():
 def learing_goal_studenten_average_on_group():
     student_group_id = session["student_group_id"]
     student_id = session["id"]
-    studentGroup_average_all_subjects = app.students.get_studentGroup_average_all_subjects(student_group_id)
-    student_average_all_learningGoals = app.students.get_student_average_all_learningGoals(student_id)
 
+    group_results = app.students.get_studentGroup_average_all_subjects(student_group_id)
+    student_results = app.students.get_student_average_all_learningGoals(student_id)
+
+    # group averages per learningGoal
     group_avg_dict = {
-        row[0]: row[4]  # learningGoal_id -> group_avg_kennen_kunnen
-        for row in studentGroup_average_all_subjects
+        row[0]: row[4]  # learningGoal_id -> group_avg
+        for row in group_results
     }
-    student_avg_dict = {
-        row[0]: row[4]  # learningGoal_id -> avg_kennen_kunnen
-        for row in student_average_all_learningGoals
-    }
-    above_average_learning_goals = []
 
-    for lg_id, student_avg in student_avg_dict.items():
-        group_avg = group_avg_dict.get(lg_id)
-        if group_avg is not None and student_avg > group_avg:
-            # Find the learning goal title
-            lg_title = next(row[1] for row in student_average_all_learningGoals if row[0] == lg_id)
-            above_average_learning_goals.append({
-                "learningGoal_id": lg_id,
-                "learningGoal_title": lg_title,
-                "student_avg": student_avg,
-                "group_avg": group_avg
-            })
-    return jsonify(above_average_learning_goals)
+
+    subjects = {}
+
+    for row in student_results:
+        learning_goal_id = row[0]
+        learning_goal_title = row[1]
+        subject_id = row[2]
+        subject_title = row[3]
+        student_avg = row[4]
+
+        group_avg = group_avg_dict.get(learning_goal_id)
+
+
+
+        if subject_id not in subjects:
+            subjects[subject_id] = {
+                "subject_id": subject_id,
+                "subject_title": subject_title,
+                "learning_goals": []
+            }
+
+        subjects[subject_id]["learning_goals"].append({
+            "learningGoal_id": learning_goal_id,
+            "learningGoal_title": learning_goal_title,
+            "student_avg": student_avg,
+            "group_avg": group_avg,
+            "is_above_average": False if student_avg > group_avg else True,
+        })
+
+    return jsonify(list(subjects.values()))
 
 @student_bp.route("/subject/learning_goals/<int:subject_id>", methods=["GET"])
 def subject_learning_goals(subject_id):
