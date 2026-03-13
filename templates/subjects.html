@@ -29,11 +29,17 @@
     {% else %}
         <div class="col-12 row">
         {%for subject in subjects %}
+
             <div class="col-md-4">
                 <div class="card  " >
                     <a class="link-underline link-dark  link-underline-opacity-0" href="/student/subject/learning_goals/{{ subject['id'] }}">
                       <div class="card-body">
-                        <div class="fs-3 fw-bold">{{ subject["name"] }}</div>
+                          <div class="d-flex justify-content-between align-items-start">
+                            <div class="fs-3 fw-bold">{{ subject["name"] }}</div>
+
+                            <div id="subject_score_{{ subject['id'] }}" class="fs-4 fw-semibold text-end"></div>
+                          </div>
+
                           <div id="amount_under_avg_{{ subject['id'] }}"></div>
 
                       </div>
@@ -52,6 +58,7 @@
             fetch("/student/get_last_snapshot")
               .then(response => response.json())
              .then(data => {
+                 console.log(data)
                     const snapshot_element = document.getElementById("latest_snapshot");
 
                     if (data.length === 0) {
@@ -76,7 +83,7 @@
 
                     // Combine into final HTML
                     const snapshot_text = `
-                         <h5 class="card-title">Je laatste ingevoerde gegevens</h5>
+                         <h5 class="card-title">Meest recente score</h5>
                         <h6 class="card-subtitle mb-3 text-muted">${snapshotDate}</h6>
                         <div class="card-text">
                             ${levelsHtml}
@@ -93,10 +100,17 @@
                           let num_on_avg = 0
                           let num_below_avg = 0
 
+                          let AVG_student_learninggoals = 0;
+                          let AVG_group_learninggoals = 0;
+                          let numGoals = subject.learning_goals.length;
+
                           subject.learning_goals.forEach((learningGoal) => {
                                 let student_avg = parseFloat(learningGoal.student_avg);
                                 let group_avg = parseFloat(learningGoal.group_avg);
                                 const margin_avg = 0.1;
+                                AVG_student_learninggoals += parseFloat(learningGoal.student_avg);
+                                AVG_group_learninggoals += parseFloat(learningGoal.group_avg);
+
 
                                 if ((student_avg + margin_avg) > group_avg && (student_avg - margin_avg) < group_avg) {
                                     num_on_avg++;
@@ -108,7 +122,33 @@
 
                             });
 
-                          const under_avg_element = document.getElementById("amount_under_avg_" + subject.subject_id);
+                            let student_subject_avg = (AVG_student_learninggoals / numGoals).toFixed(2)
+                            let group_subject_avg = (AVG_student_learninggoals / numGoals).toFixed(2)
+                            const margin_avg = 0.1;
+
+                            subject_score_element = document.getElementById("subject_score_" + subject.subject_id);
+                            let scoreColor;
+                            let toolTip_Text;
+                            if ((student_subject_avg + margin_avg) > group_subject_avg && (student_subject_avg - margin_avg) < group_subject_avg) {
+                                scoreColor = "orange";
+                                toolTip_Text = "Gelijk met groepsgenoten";
+                            } else if ((student_subject_avg + margin_avg) > group_subject_avg) {
+                                scoreColor = "green";
+                                toolTip_Text = "Boven groepsgemiddelde";
+                            } else {
+                                scoreColor = "red";
+                                toolTip_Text = "Onder groepsgemiddelde";
+                            }
+
+                            subject_score_element.innerHTML = ` <div style="color: ${scoreColor}; font-weight: 600;"
+                                                                 data-bs-toggle="tooltip"
+                                                                 title="${toolTip_Text}">
+                                                                ${student_subject_avg}
+                                                            </div>`;
+                        const tooltipDiv = subject_score_element.querySelector('div');
+                        new bootstrap.Tooltip(tooltipDiv);
+
+                            const under_avg_element = document.getElementById("amount_under_avg_" + subject.subject_id);
 
                             if (under_avg_element) {
                                 const card_html = `
@@ -132,9 +172,12 @@
                                 `;
 
                                 under_avg_element.innerHTML = card_html;
-                            }
-                    });
-});
+
+
+
+
+                            }});
+                });
             </script>
 
 
