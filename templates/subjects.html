@@ -52,6 +52,7 @@
             fetch("/student/get_last_snapshot")
               .then(response => response.json())
              .then(data => {
+                 console.log(data)
                     const snapshot_element = document.getElementById("latest_snapshot");
 
                     if (data.length === 0) {
@@ -76,7 +77,7 @@
 
                     // Combine into final HTML
                     const snapshot_text = `
-                         <h5 class="card-title">Je laatste ingevoerde gegevens</h5>
+                         <h5 class="card-title">Meest recente score</h5>
                         <h6 class="card-subtitle mb-3 text-muted">${snapshotDate}</h6>
                         <div class="card-text">
                             ${levelsHtml}
