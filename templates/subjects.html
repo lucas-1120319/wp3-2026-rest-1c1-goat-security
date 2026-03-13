@@ -27,9 +27,7 @@
 
 
     {% else %}
-        <div class="card">
-            <div id="latest_snapshot"></div>
-        </div>
+        <div class="col-12 row">
         {%for subject in subjects %}
             <div class="col-md-4">
                 <div class="card  " >
@@ -42,37 +40,45 @@
                     </a>
                 </div>
             </div>
+        {%endfor%}
+        </div>
+        <div class="card col-12 col-md-6 mt-5 " style="width: 100%; max-width: 18rem;">
+            <div class="card-body">
+                <div id="latest_snapshot"></div>
+            </div>
+        </div>
 
-            <script>
+        <script>
             fetch("/student/get_last_snapshot")
               .then(response => response.json())
              .then(data => {
-                    console.log(data);
-
                     const snapshot_element = document.getElementById("latest_snapshot");
 
                     if (data.length === 0) {
                         snapshot_element.innerHTML = "Geen gegevens beschikbaar.";
                         return;
                     }
-
-                    // Get the snapshot date from the first item (all rows share the same snapshot date)
                     const snapshotDate = data[0]["at"];
 
-                    // Build HTML for taxonomy levels
                     let levelsHtml = "";
                     data.forEach(level => {
+                                    const average = ((level.kennen + level.kunnen) / 2).toFixed(2);
+
                         levelsHtml += `
-                            <div>
-                                ${level.level}: kennen=${level.kennen}, kunnen=${level.kunnen}
+                           <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-semibold">${level.level}</span>
+                                <span class="badge bg-primary">${average}</span>
                             </div>
-                        `;
+                        </div>
+                                `;
                     });
 
                     // Combine into final HTML
                     const snapshot_text = `
-                        <div class="mt-2">
-                            Je laatste ingevoerde gegevens: ${snapshotDate}
+                         <h5 class="card-title">Je laatste ingevoerde gegevens</h5>
+                        <h6 class="card-subtitle mb-3 text-muted">${snapshotDate}</h6>
+                        <div class="card-text">
                             ${levelsHtml}
                         </div>
                     `;
@@ -130,7 +136,9 @@
                     });
 });
             </script>
-        {%endfor%}
+
+
+
     {% endif %}
 
 </div>
