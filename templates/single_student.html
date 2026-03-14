@@ -22,15 +22,15 @@
                     <ul class="list-unstyled text-start mt-4">
                         <li class="mb-2">
                             <i class="fas fa-envelope text-secondary me-2"></i>
-                            {{ personInfo["email"] }}
+                            Email: {{ personInfo["email"] }}
                         </li>
                         <li class="mb-2">
                             <i class="fas fa-phone text-secondary me-2"></i>
-                            {{ personInfo["phone"] }}
+                            Telefoon: {{ personInfo["phone"] }}
                         </li>
                         <li class="mb-2">
                             <i class="fas fa-map-marker-alt text-secondary me-2"></i>
-                            {{ personInfo["city"] }},
+                            Adres: {{ personInfo["city"] }},
                             {{ personInfo["street_name"] }},
                             {{ personInfo["postcode"] }}
                         </li>
@@ -69,12 +69,8 @@
                         {% for subject in subjects %}
                             <tr>
                                 <td>{{ subject["name"] }}</td>
-                                <td>
-                                    {{ subject["average"] }}
-                                </td>
-                                <td>
-                                    {{ subject["confidence"] }}
-                                </td>
+                                <td>{{ subject["average"] }}</td>
+                                <td>{{ subject["confidence"] }}</td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -85,26 +81,45 @@
     </div>
 </div>
 
-    <script>
-  const ctx = document.getElementById('myChart');
-  new Chart(ctx, {
+<script>
+const ctx = document.getElementById('myChart').getContext('2d');
+
+const labels = [
+{% for subject in subjects %}
+    "{{ subject['name'] }}",
+{% endfor %}
+];
+
+const averages = [
+{% for subject in subjects %}
+    {{ subject['average'] }},
+{% endfor %}
+];
+
+const confidences = [
+{% for subject in subjects %}
+    {{ subject['confidence'] }},
+{% endfor %}
+];
+
+new Chart(ctx, {
     type: 'line',
     data: {
-      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-      datasets: [{
-        label: '# of Votes',
-        data: [1, 19, 3, 5, 2, 3],
-        borderWidth: 1
-      }]
+        labels: labels,
+        datasets: [
+            {
+                label: 'Gemiddelde',
+                data: averages,
+                borderWidth: 1
+            },
+            {
+                label: 'Confidence',
+                data: confidences,
+                borderWidth: 1
+            }
+        ]
     },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
+});
 </script>
 
 {% endblock %}

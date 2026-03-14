@@ -63,8 +63,7 @@ def studentDetail(id):
     studentInfo = app.students.get_all_student_user_info(id)
     role = app.users.get_user_role(id)
     subjectdata = app.teachers.get_single_student_subject(id)
-    print(subjectdata)
-    return render_template("single_student.html", personInfo=studentInfo, personrole=role)
+    return render_template("single_student.html", personInfo=studentInfo, personrole=role, subjects=subjectdata)
 
 @teacher_bp.route("/studentGroup/<string:name>", methods=["GET"])
 def select_studentGroup(name):

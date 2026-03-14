@@ -115,8 +115,8 @@ class Teacher:
                 SELECT 
                     subjects.id,
                     subjects.name,
-                    (AVG(taxonomies.kennen) + AVG(taxonomies.kunnen)) / 2.0 AS average,
-                    AVG(taxonomies.confidence) AS avg_confidence
+                    ROUND((AVG(taxonomies.kennen) + AVG(taxonomies.kunnen)) / 2.0, 2) AS average,
+                    ROUND(AVG(taxonomies.confidence), 2) AS confidence
                 FROM taxonomies JOIN snapshots ON snapshots.id = taxonomies.snapshot_id
                 JOIN learningGoals ON learningGoals.id = snapshots.learningGoal_id
                 JOIN subjects ON subjects.id = learningGoals.subject_id
@@ -126,7 +126,7 @@ class Teacher:
                 (student_id,)
             )
 
-            return dict(cur.fetchone())
+            return cur.fetchall()
 
     def get_all_subjects(self):
         """ Get all subjects. """
