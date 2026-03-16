@@ -40,12 +40,12 @@
                 <th scope="col">#</th>
                 <th scope="col">Voornaam</th>
                 <th scope="col">Achternaam</th>
-                <th scope="col">Postcode</th>
-                <th scope="col">Gender</th>
-                <th scope="col">Stad</th>
-                <th scope="col">Land</th>
-                <th scope="col">Adres</th>
-                <th scope="col">Geboorte-datum</th>
+{#                <th scope="col">Postcode</th>#}
+{#                <th scope="col">Gender</th>#}
+{#                <th scope="col">Stad</th>#}
+{#                <th scope="col">Land</th>#}
+{#                <th scope="col">Adres</th>#}
+{#                <th scope="col">Geboorte-datum</th>#}
                 <th scope="col">Status</th>
                 <th scope="col">Extra</th>
             </tr>
@@ -56,12 +56,12 @@
             <th scope="row">{{ student["id"] }}</th>
                 <td>{{ student["first_name"] }}</td>
                 <td>{{ student["last_name"] }}</td>
-                <td>{{ student["postcode"] }}</td>
-                <td>{{ student["gender"] }}</td>
-                <td>{{ student["city"] }}</td>
-                <td>{{ student["country"] }}</td>
-                <td>{{ student["street_name"] }}</td>
-                <td>{{ student["birth_date"] }}</td>
+{#                <td>{{ student["postcode"] }}</td>#}
+{#                <td>{{ student["gender"] }}</td>#}
+{#                <td>{{ student["city"] }}</td>#}
+{#                <td>{{ student["country"] }}</td>#}
+{#                <td>{{ student["street_name"] }}</td>#}
+{#                <td>{{ student["birth_date"] }}</td>#}
                 <td>
                     {% if student["status"] == "Achterloopt" %}
                         <span class="badge bg-danger"> Achterloopt </span>
@@ -147,12 +147,12 @@
                     <th>${student.id}</th>
                     <td>${student.first_name}</td>
                     <td>${student.last_name}</td>
-                    <td>${student.postcode}</td>
-                    <td>${student.gender}</td>
-                    <td>${student.city}</td>
-                    <td>${student.country}</td>
-                    <td>${student.street_name}</td>
-                    <td>${student.birth_date}</td>
+                    {#<td>${student.postcode}</td>#}
+                    {#<td>${student.gender}</td>#}
+                    {#<td>${student.city}</td>#}
+                    {#<td>${student.country}</td>#}
+                    {#<td>${student.street_name}</td>#}
+                    {#<td>${student.birth_date}</td>#}
                     <td>${badge}</td>
                     <td><a href="/teacher/studentdetail/${ student["id"] }" class="btn btn-primary">Gegevens</a></td>
                 </tr>
