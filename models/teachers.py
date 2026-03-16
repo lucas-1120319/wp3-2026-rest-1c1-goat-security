@@ -157,8 +157,7 @@ class Teacher:
                     lg.title AS learning_goal,
                     tax.level AS level,
                     
-                    AVG(tax.kennen) AS kennen,
-                    AVG(tax.kunnen) AS kunnen
+                    AVG(tax.kennen + tax.kunnen) /2 * 10 AS average
             
             FROM taxonomies tax
             JOIN students st ON st.id = tax.student_id
@@ -168,7 +167,7 @@ class Teacher:
             JOIN studentGroups sg ON sg.id = ssg.studentGroup_id
             WHERE sg.id = ? AND lg.id = ?
             GROUP BY st.id
-            ORDER BY st.first_name, lg.id, ss.id
+            ORDER BY st.first_name
                     
                 """,
                 (class_id, learning_goal_id)

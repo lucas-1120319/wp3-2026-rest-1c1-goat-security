@@ -32,11 +32,16 @@ def select_subject(subject_id):
     """ Select a single subject """
     subject_name = app.teachers.get_single_subject(subject_id)
     learning_goals = app.teachers.get_all_learning_goals(subject_id)
-    groups = app.teachers.get_learning_goal_by_class(1, 1)
+    groups = app.teachers.get_learning_goal_by_class(class_id='1', learning_goal_id='1')
+
+    class_id = groups[0]['class_id'] if groups else 1
+    learning_goal_id = groups[0]['learning_goal_id'] if groups else 1
+
+
     return render_template("single_subject.html",
                            learning_goals=learning_goals,
                            subject_name=subject_name,
-                           subject_id=subject_id, groups=groups)
+                           subject_id=subject_id, groups=groups, class_id=class_id)
 
 
 @teacher_bp.route("/subjects/<int:subject_id>/data", methods=["GET"])
@@ -44,13 +49,16 @@ def data(subject_id):
     groups = app.teachers.get_learning_goal_by_class(class_id='1', learning_goal_id='1')
 
     student_name = [group['student_name'] for group in groups]
-    kennen = [group['kennen'] for group in groups]
-    kunnen = [group['kunnen'] for group in groups]
+    # kennen = [group['kennen'] for group in groups]
+    # kunnen = [group['kunnen'] for group in groups]
+    avg = [group['average'] for group in groups]
+    learning_goal = [group["learning_goal"] for group in groups]
 
     return jsonify({
         "labels": student_name,
-        "kennen": kennen,
-        "kunnen": kunnen,
+        "avg": avg,
+        "learning_goal": learning_goal,
+        # "kunnen": kunnen,
     })
 
 
