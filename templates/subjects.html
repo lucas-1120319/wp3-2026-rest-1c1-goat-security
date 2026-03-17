@@ -132,13 +132,13 @@
                             let toolTip_Text;
                             if ((student_subject_avg + margin_avg) > group_subject_avg && (student_subject_avg - margin_avg) < group_subject_avg) {
                                 scoreColor = "orange";
-                                toolTip_Text = "Gelijk met groepsgenoten";
+                                toolTip_Text = "Gemiddelde voor vak gelijk met groepsgenoten";
                             } else if ((student_subject_avg + margin_avg) > group_subject_avg) {
                                 scoreColor = "green";
-                                toolTip_Text = "Boven groepsgemiddelde";
+                                toolTip_Text = "Gemiddelde voor vak boven groepsgemiddelde";
                             } else {
                                 scoreColor = "red";
-                                toolTip_Text = "Onder groepsgemiddelde";
+                                toolTip_Text = "Gemiddelde voor vak onder groepsgemiddelde";
                             }
 
                             subject_score_element.innerHTML = ` <div style="color: ${scoreColor}; font-weight: 600;"
