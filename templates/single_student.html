@@ -87,12 +87,42 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="card shadow border-0">
+                <div class="card-header">
+                    <h5 id="learningGoalsTitle" class="mb-0">Leerdoelen</h5>
+                </div>
+                <div class="card-body" id="learningGoalsContainer">
+                    <p class="text-muted mb-0">Kies eerst een vak om leerdoelen te zien.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow border-0">
+                <div class="card-header">
+                    <h5 id="resultsTitle" class="mb-0">Resultaten</h5>
+                </div>
+                <div class="card-body" id="resultsContainer">
+                    <p class="text-muted mb-0">Kies eerst een leerdoel om resultaten te zien.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
 const studentId = "{{ personInfo['user_id'] }}";
-const ctx = document.getElementById('myChart').getContext('2d');
+const ctx = document.getElementById('mainChart').getContext('2d');
 const chartTitle = document.getElementById("chartTitle");
+const learningGoalsContainer = document.getElementById("learningGoalsContainer");
+const resultsContainer = document.getElementById("resultsContainer");
+const learningGoalsTitle = document.getElementById("learningGoalsTitle");
+const resultsTitle = document.getElementById("resultsTitle");
 
 let mainChart = null;
 
@@ -168,14 +198,14 @@ function loadSubject(subjectId, subjectName, average) {
                     <tbody>
             `;
 
-            data.learning_goals.forEach(function(lg) {
+            data.learning_goals.forEach(function(learning_goal) {
                 html += `
                     <tr>
-                        <td>${lg.title}</td>
+                        <td>${learning_goal.title}</td>
                         <td>
                             <button
                                 class="btn btn-sm btn-success"
-                                onclick="loadLearningGoal('${lg.id}', '${lg.title}')">
+                                onclick="loadLearningGoal('${learning_goal.id}', '${learning_goal.title}')">
                                 Bekijk resultaat
                             </button>
                         </td>
@@ -192,7 +222,57 @@ function loadSubject(subjectId, subjectName, average) {
         })
 }
 
+function loadLearningGoal(learningGoalId, learningGoalTitle) {
+    resultsTitle.innerText = "Resultaten voor: " + learningGoalTitle;
+
+    fetch(`/teacher/studentdetail/${studentId}/learning-goal/${learningGoalId}/results`)
+        .then(response => response.json())
+        .then(data => {
+            if (!data.results || !data.results.length) {
+                resultsContainer.innerHTML = "<p class='text-muted mb-0'>Geen resultaten gevonden.</p>";
+                return;
             }
+
+            const labels = data.results.map(function(result) {
+                return result.snap_date || '';
+            });
+
+            const values = data.results.map(function(result) {
+                return result.average || 0;
+            });
+
+            renderChart("Voortgang: " + learningGoalTitle, labels, values, 'line');
+
+            let html = `
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Datum</th>
+                            <th>Level</th>
+                            <th>Gemiddelde</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            data.results.forEach(function(result) {
+                html += `
+                    <tr>
+                        <td>${result.snap_date || ''}</td>
+                        <td>${result.level || ''}</td>
+                        <td>${result.average || ''}</td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                    </tbody>
+                </table>
+            `;
+
+            resultsContainer.innerHTML = html;
+        })
+}
 </script>
 
 {% endblock %}

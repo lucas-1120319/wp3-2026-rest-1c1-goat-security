@@ -120,6 +120,11 @@ def get_student_subject_learning_goals(subject_id):
     learning_goals = app.students.get_learning_goals(subject_id)
     return {"success": True, "learning_goals": [dict(row) for row in learning_goals]}, 200
 
+@teacher_bp.route("/studentdetail/<int:id>/learning-goal/<int:learning_goal_id>/results", methods=["GET"])
+def get_student_learning_goal_results(id, learning_goal_id):
+    results = app.students.get_result_per_snapshot(learning_goal_id, id)
+    return {"success": True, "results": [dict(row) for row in results]}, 200
+
 @teacher_bp.route("/studentGroup/<string:name>", methods=["GET"])
 def select_studentGroup(name):
     """ Get a whole list of Students from a studentGroup """
