@@ -11,7 +11,7 @@
     <div class="mb-3">
          <strong>Groepsgemiddelde:</strong>
         <span class="badge bg-danger">Onder</span>
-        <span class="badge bg-warning">Gelijk9</span>
+        <span class="badge bg-warning">Gelijk</span>
         <span class="badge bg-success">Boven</span>
     </div>
 <div class="row" id="learningGoals_container">
@@ -31,7 +31,6 @@ filterStatus()
 
     }
 function update_cards(learning_goals){
-    console.log("laerningGoals", learning_goals)
 
     learningGoals_container = document.getElementById("learningGoals_container");
     avg_badge = document.getElementById("avg_badge");
@@ -47,7 +46,7 @@ function update_cards(learning_goals){
         if ((student_avg + margin_avg) > group_avg && (student_avg - margin_avg) < group_avg) {
              scoreColor = "warning";
              toolTip_Text = "Gelijk met groepsgenoten";
-        } else if ((student_avg + margin_avg) > group_avg) {
+        } else if ((student_avg + margin_avg) < group_avg) {
               scoreColor = "success";
               toolTip_Text = "Boven groepsgemiddelde";
         } else {

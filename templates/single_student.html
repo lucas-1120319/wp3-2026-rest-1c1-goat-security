@@ -62,7 +62,6 @@
                             <tr>
                                 <th>Vak</th>
                                 <th>Gemiddelde</th>
-                                <th>Confidence</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -70,7 +69,6 @@
                             <tr>
                                 <td>{{ subject["name"] }}</td>
                                 <td>{{ subject["average"] }}</td>
-                                <td>{{ subject["confidence"] }}</td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -103,18 +101,13 @@ const confidences = [
 ];
 
 new Chart(ctx, {
-    type: 'line',
+    type: 'bar',
     data: {
         labels: labels,
         datasets: [
             {
                 label: 'Gemiddelde',
                 data: averages,
-                borderWidth: 1
-            },
-            {
-                label: 'Confidence',
-                data: confidences,
                 borderWidth: 1
             }
         ]

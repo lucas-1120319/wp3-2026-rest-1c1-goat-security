@@ -103,7 +103,9 @@ def subject_learning_goals(subject_id):
 
 @student_bp.route("/subject/learning_goals/filter_average")
 def filter_average():
+    student_group_id = session["student_group_id"]
     student_id = session["id"]
+
     try:
         average = float(request.args.get("average", 0))
     except ValueError:
@@ -114,11 +116,33 @@ def filter_average():
     learning_goals = app.students.get_learning_goals_filter_keywords(subject_id, filter_keywords)
     learning_goals = [dict(row) for row in learning_goals]
 
+    group_results = app.students.get_studentGroup_average_all_subjects(student_group_id)
+    student_results = app.students.get_student_average_all_learningGoals(student_id)
+
+    group_avg_dict = {
+        row[0]: row[4]  # learningGoal_id -> group_avg
+        for row in group_results
+    }
+
+
     for goal in learning_goals:
-        goal["result"] = app.students.get_learning_goals_number_of_results(goal["id"], student_id)
+        for row in student_results:
+
+            learning_goal_id = row[0]
+
+            if goal["id"] ==  learning_goal_id:
+                learning_goal_title = row[1]
+                student_avg = row[4]
+                group_avg = group_avg_dict.get(learning_goal_id)
+
+                goal["learningGoal_id"] = learning_goal_id
+                goal["learningGoal_title"] = learning_goal_title
+                goal["student_avg"] = student_avg
+                goal["group_avg"] = group_avg
+                goal["is_above_average"] = False if student_avg > group_avg else True
+
         keywords = app.students.learning_goal_keywords(goal["id"])
         keywords_list = [{"name": k[0]} for k in keywords]
-
         goal["keywords"] = keywords_list
     return jsonify(learning_goals)
 
