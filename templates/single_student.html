@@ -6,7 +6,7 @@
     {% endblock %}
 {% endblock %}
 
-{% block content%}
+{% block content %}
 
 <div class="container mt-4">
     <div class="row">
@@ -21,15 +21,12 @@
                     </p>
                     <ul class="list-unstyled text-start mt-4">
                         <li class="mb-2">
-                            <i class="fas fa-envelope text-secondary me-2"></i>
                             Email: {{ personInfo["email"] }}
                         </li>
                         <li class="mb-2">
-                            <i class="fas fa-phone text-secondary me-2"></i>
                             Telefoon: {{ personInfo["phone"] }}
                         </li>
                         <li class="mb-2">
-                            <i class="fas fa-map-marker-alt text-secondary me-2"></i>
                             Adres: {{ personInfo["city"] }},
                             {{ personInfo["street_name"] }},
                             {{ personInfo["postcode"] }}
@@ -38,20 +35,21 @@
                 </div>
             </div>
         </div>
+
         <div class="col-lg-8 mb-4">
             <div class="card shadow border-0">
                 <div class="card-header">
-                    <h5 class="mb-0">Gemiddelde overzicht</h5>
+                    <h5 id="chartTitle" class="mb-0">Alle vakken overzicht</h5>
                 </div>
                 <div class="card-body">
-                    <canvas id="myChart"></canvas>
+                    <canvas id="mainChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-12">
+        <div class="col-12 mb-4">
             <div class="card shadow border-0">
                 <div class="card-header">
                     <h5 class="mb-0">Vakken Scores</h5>
@@ -62,6 +60,7 @@
                             <tr>
                                 <th>Vak</th>
                                 <th>Gemiddelde</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -69,6 +68,17 @@
                             <tr>
                                 <td>{{ subject["name"] }}</td>
                                 <td>{{ subject["average"] }}</td>
+                                <td>
+                                    <button
+                                        class="btn btn-sm btn-primary"
+                                        onclick="loadSubject(
+                                                '{{ subject['id'] }}',
+                                                '{{ subject['name']|escape }}',
+                                                '{{ subject['average'] }}'
+                                                )">
+                                        Kies vak
+                                    </button>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -80,39 +90,109 @@
 </div>
 
 <script>
+const studentId = "{{ personInfo['user_id'] }}";
 const ctx = document.getElementById('myChart').getContext('2d');
+const chartTitle = document.getElementById("chartTitle");
 
-const labels = [
+let mainChart = null;
+
+const defaultLabels = [
 {% for subject in subjects %}
     "{{ subject['name'] }}",
 {% endfor %}
 ];
 
-const averages = [
+const defaultValues = [
 {% for subject in subjects %}
     {{ subject['average'] }},
 {% endfor %}
 ];
 
-const confidences = [
-{% for subject in subjects %}
-    {{ subject['confidence'] }},
-{% endfor %}
-];
+function renderChart(title, labels, values, type = 'bar') {
+    chartTitle.innerText = title;
 
-new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: labels,
-        datasets: [
-            {
-                label: 'Gemiddelde',
-                data: averages,
-                borderWidth: 1
+    if (mainChart) {
+        mainChart.destroy();
+    }
+
+    mainChart = new Chart(ctx, {
+        type: type,
+        data: {
+            labels: labels,
+            datasets: [{
+                label: title,
+                data: values,
+                borderWidth: 2,
+                tension: 0.2
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    min: 0,
+                    max: 1,
+                    ticks: {
+                        stepSize: 0.1
+                    }
+                }
             }
-        ]
-    },
-});
+        }
+    });
+}
+
+{#renderChart("Alle vakken overzicht", defaultLabels, defaultValues, 'bar');#} // TEST RENDER/OLD CHART
+
+function loadSubject(subjectId, subjectName, average) {
+    renderChart("Vak: " + subjectName, [subjectName], [average], 'bar');
+
+    learningGoalsTitle.innerText = "Leerdoelen van " + subjectName;
+    resultsTitle.innerText = "Resultaten";
+    resultsContainer.innerHTML = "<p class='text-muted mb-0'>Kies een leerdoel.</p>";
+
+    fetch(`/teacher/studentdetail/subject/${subjectId}/learning-goals`)
+        .then(response => response.json())
+        .then(data => {
+            if (!data.learning_goals || !data.learning_goals.length) {
+                learningGoalsContainer.innerHTML = "<p class='text-muted mb-0'>Geen leerdoelen gevonden.</p>";
+                return;
+            }
+
+            let html = `
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Leerdoel</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            data.learning_goals.forEach(function(lg) {
+                html += `
+                    <tr>
+                        <td>${lg.title}</td>
+                        <td>
+                            <button
+                                class="btn btn-sm btn-success"
+                                onclick="loadLearningGoal('${lg.id}', '${lg.title}')">
+                                Bekijk resultaat
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                    </tbody>
+                </table>
+            `;
+
+            learningGoalsContainer.innerHTML = html;
+        })
+}
+
+            }
 </script>
 
 {% endblock %}

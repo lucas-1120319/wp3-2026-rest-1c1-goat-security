@@ -115,6 +115,11 @@ def studentDetail(id):
     subjectdata = app.teachers.get_single_student_subject(id)
     return render_template("single_student.html", personInfo=studentInfo, personrole=role, subjects=subjectdata)
 
+@teacher_bp.route("/studentdetail/subject/<int:subject_id>/learning-goals", methods=["GET"])
+def get_student_subject_learning_goals(subject_id):
+    learning_goals = app.students.get_learning_goals(subject_id)
+    return {"success": True, "learning_goals": [dict(row) for row in learning_goals]}, 200
+
 @teacher_bp.route("/studentGroup/<string:name>", methods=["GET"])
 def select_studentGroup(name):
     """ Get a whole list of Students from a studentGroup """
