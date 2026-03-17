@@ -106,7 +106,7 @@ def studentGroup():
     return render_template("studentGroup.html", studentGroups=studentGroups)
 
 
-@teacher_bp.route("/studentdetail/<string:id>", methods=["GET"])
+@teacher_bp.route("/studentdetail/<int:id>", methods=["GET"])
 def studentDetail(id):
     """ Get details about a certain person """
     # [TEST] Can be expanded on later to make it multi-functional (So it can support Teachers/Students/etc)
