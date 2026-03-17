@@ -35,9 +35,56 @@ def profile():
 def subjects():
     class_id = session["student_group"]
     subjects = app.students.get_all_subjects_students(class_id)
-    print(subjects) #["id"] and ["name"] of the subjects
     return render_template("subjects.html", subjects=subjects)
 
+@student_bp.route("/get_last_snapshot")
+def get_last_snapshot():
+    student_id = session["id"]
+    snapshot = app.students.get_last_snapshot_of_student(student_id)
+    result = [dict(row) for row in snapshot]
+
+    return jsonify(result)
+@student_bp.route("/learing_goal_studenten_average_on_group" , methods=["GET"])
+def learing_goal_studenten_average_on_group():
+    student_group_id = session["student_group_id"]
+    student_id = session["id"]
+
+    group_results = app.students.get_studentGroup_average_all_subjects(student_group_id)
+    student_results = app.students.get_student_average_all_learningGoals(student_id)
+
+    # group averages per learningGoal
+    group_avg_dict = {
+        row[0]: row[4]  # learningGoal_id -> group_avg
+        for row in group_results
+    }
+
+    subjects = {}
+
+    for row in student_results:
+        learning_goal_id = row[0]
+        learning_goal_title = row[1]
+        subject_id = row[2]
+        subject_title = row[3]
+        student_avg = row[4]
+
+        group_avg = group_avg_dict.get(learning_goal_id)
+
+        if subject_id not in subjects:
+            subjects[subject_id] = {
+                "subject_id": subject_id,
+                "subject_title": subject_title,
+                "learning_goals": []
+            }
+
+        subjects[subject_id]["learning_goals"].append({
+            "learningGoal_id": learning_goal_id,
+            "learningGoal_title": learning_goal_title,
+            "student_avg": student_avg,
+            "group_avg": group_avg,
+            "is_above_average": False if student_avg > group_avg else True,
+        })
+
+    return jsonify(list(subjects.values()))
 
 @student_bp.route("/subject/learning_goals/<int:subject_id>", methods=["GET"])
 def subject_learning_goals(subject_id):
@@ -49,14 +96,16 @@ def subject_learning_goals(subject_id):
     student_id = session["id"]
 
     for learning_goal in learning_goals:
-        learning_goal["result"] = app.students.get_learning_goals_number_of_results(0.5,    learning_goal["id"], student_id)
+        learning_goal["result"] = app.students.get_learning_goals_number_of_results(learning_goal["id"], student_id)
         learning_goal["keywords"] = app.students.learning_goal_keywords(learning_goal["id"])
 
     return render_template("learning_goal.html", learning_goals=learning_goals, learning_title=learning_title, subject_id=subject_id)
 
 @student_bp.route("/subject/learning_goals/filter_average")
 def filter_average():
+    student_group_id = session["student_group_id"]
     student_id = session["id"]
+
     try:
         average = float(request.args.get("average", 0))
     except ValueError:
@@ -67,21 +116,36 @@ def filter_average():
     learning_goals = app.students.get_learning_goals_filter_keywords(subject_id, filter_keywords)
     learning_goals = [dict(row) for row in learning_goals]
 
+    group_results = app.students.get_studentGroup_average_all_subjects(student_group_id)
+    student_results = app.students.get_student_average_all_learningGoals(student_id)
+
+    group_avg_dict = {
+        row[0]: row[4]  # learningGoal_id -> group_avg
+        for row in group_results
+    }
+
+
     for goal in learning_goals:
-        goal["result"] = app.students.get_learning_goals_number_of_results(average ,goal["id"], student_id)
+        for row in student_results:
+
+            learning_goal_id = row[0]
+
+            if goal["id"] ==  learning_goal_id:
+                learning_goal_title = row[1]
+                student_avg = row[4]
+                group_avg = group_avg_dict.get(learning_goal_id)
+
+                goal["learningGoal_id"] = learning_goal_id
+                goal["learningGoal_title"] = learning_goal_title
+                goal["student_avg"] = student_avg
+                goal["group_avg"] = group_avg
+                goal["is_above_average"] = False if student_avg > group_avg else True
+
         keywords = app.students.learning_goal_keywords(goal["id"])
         keywords_list = [{"name": k[0]} for k in keywords]
-
         goal["keywords"] = keywords_list
     return jsonify(learning_goals)
 
-# @student_bp.route("/subject/learning_goals/<int:learning_goal_id>/result", methods=["GET"])
-# def subject_score(learning_goal_id):
-#     """ Get exam result data in a table setting. """
-#     student_id = session["id"]
-#     scores = app.students.get_snapshot_by_learning_goal_id(learning_goal_id, student_id)
-#     print('student_id: ',student_id)
-#     return render_template("score.html", scores=scores)
 
 @student_bp.route("/subject/learning_goals/<int:snapshot_id>/result", methods=["GET"])
 def results(snapshot_id):
@@ -89,7 +153,6 @@ def results(snapshot_id):
     student_id = session["id"]
     scores = app.students.get_snapshot(snapshot_id, student_id)
     score_title = app.students.get_snapshot_title(snapshot_id, student_id)
-    print('student_id: ',student_id)
     return render_template("score.html", scores=scores, score_title=score_title)
 
 

@@ -6,78 +6,77 @@
 {% endblock %}
 
 {% block content%}
-    <label for="average">Minimaal gemiddelde leerdoel (0–1)</label>
-    <input onchange="calc_average()" type="number" min="0" max="1" step="0.1" value="0.5" name="average" id="average" >
-
-    <label for="filter_keywords">Filter op de onderwerpen</label>
-    <input onkeyup="calc_average()"  type="text"  name="filter_keywords" id="filter_keywords" >
+        <label for="filter_keywords">Filter op de onderwerpen</label>
+    <input onkeyup="filterStatus()"  type="text"  name="filter_keywords" id="filter_keywords" >
     <div class="mb-3">
-        <strong>Legenda:</strong>
-        <span class="badge bg-danger">Slecht / laag</span>
-        <span class="badge bg-warning">Gemiddeld</span>
-        <span class="badge bg-success">Goed / hoog</span>
+         <strong>Groepsgemiddelde:</strong>
+        <span class="badge bg-danger">Onder</span>
+        <span class="badge bg-warning">Gelijk</span>
+        <span class="badge bg-success">Boven</span>
     </div>
-<div class="row">
-    {%for learning_goal in learning_goals %}
-        <div class="col-md-4">
-            <div class="card {% if learning_goal.result <= 1 %} bg-danger
-                            {% elif learning_goal.result == 2 %} bg-warning
-                            {% elif learning_goal.result == 3 %} bg-warning
-                            {% elif learning_goal.result == 4 %} bg-success
-                            {% endif %}  " >
-                <a class="link-underline link-light link-underline-opacity-0  " href="/student/subject/learning_goals/{{ learning_goal["id"]}}/examlist">
-                  <div class="card-body">
-                    <div class="fs-5 ">{{ learning_goal["title"] }}</div>
-                      {% for keyword in learning_goal["keywords"] %}
-                        <span class="badge text-bg-primary">{{ keyword["name"] }}</span>
-                    {% endfor %}
-                  </div>
-                </a>
-            </div>
-        </div>
-    {%endfor%}
+<div class="row" id="learningGoals_container">
+
 </div>
 
 <script>
-    function calc_average(){
-        const avg = parseFloat(document.getElementById("average").value);
+filterStatus()
+    function filterStatus(){
         const filter_keywords = document.getElementById("filter_keywords").value;
         const subject_id = {{ subject_id }}
-        fetch(`/student/subject/learning_goals/filter_average?average=${avg}&filter_keywords=${filter_keywords}&subject_id=${subject_id}`)
+        fetch(`/student/subject/learning_goals/filter_average?filter_keywords=${filter_keywords}&subject_id=${subject_id}`)
         .then(response => response.json())
         .then(data => {
-            // data will be a list of learning_goals with their results
             update_cards(data);
         });
 
     }
 function update_cards(learning_goals){
-    const row = document.querySelector(".row");
-    row.innerHTML = "";  // clear current cards
+
+    learningGoals_container = document.getElementById("learningGoals_container");
+    avg_badge = document.getElementById("avg_badge");
+    learningGoals_container.innerHTML = "";  // clear current cards
 
     learning_goals.forEach(goal => {
-        let color_class = "";
-        if(goal.result <= 1) color_class = "bg-danger";
-        else if(goal.result == 2) color_class = "bg-warning";
-        else if(goal.result == 3) color_class = "bg-warning";
-        else if(goal.result == 4) color_class = "bg-success";
+        let student_avg = parseFloat(goal.student_avg);
+        let group_avg = parseFloat(goal.group_avg);
+        const margin_avg = 0.1;
+
+        let scoreColor;
+        let toolTip_Text;
+        if ((student_avg + margin_avg) > group_avg && (student_avg - margin_avg) < group_avg) {
+             scoreColor = "warning";
+             toolTip_Text = "Gelijk met groepsgenoten";
+        } else if ((student_avg + margin_avg) < group_avg) {
+              scoreColor = "success";
+              toolTip_Text = "Boven groepsgemiddelde";
+        } else {
+            scoreColor = "danger";
+            toolTip_Text = "Onder groepsgemiddelde";
+        }
+
         const badges_html = goal.keywords.map(keyword =>
                     `<span class="badge text-bg-primary">${keyword.name}</span>`
                 ).join(' ');
 
+
+
         const card_html = `
         <div class="col-md-4">
-            <div class="card ${color_class}">
-                <a class="link-light link-underline link-underline-opacity-0" href="/student/subject/learning_goals/${goal.id}/examlist">
-                    <div class="card-body">
-                        <div class="fs-5" >${goal.title}</div>
+            <div class="card">
+                <a class="link-dark link-underline link-underline-opacity-0" href="/student/subject/learning_goals/${goal.id}/examlist">
+                    <div class="card-body column ">
+
+                        <div class="fs-3 fw-bold " >${goal.title}</div>
+                        <span class="badge bg-${scoreColor}">${toolTip_Text}</span>
+                        <div>
                          ${badges_html}
+                        </div>
                     </div>
                 </a>
             </div>
         </div>
         `;
-        row.innerHTML += card_html;
+        learningGoals_container.innerHTML += card_html;
     });
 }
 </script>

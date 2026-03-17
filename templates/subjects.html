@@ -27,17 +27,161 @@
 
 
     {% else %}
+        <div class="col-12 row">
         {%for subject in subjects %}
+
             <div class="col-md-4">
                 <div class="card  " >
-                    <a class="link-underline link-underline-opacity-0" href="/student/subject/learning_goals/{{ subject['id'] }}">
+                    <a class="link-underline link-dark  link-underline-opacity-0" href="/student/subject/learning_goals/{{ subject['id'] }}">
                       <div class="card-body">
-                        <div class="fs-3">Vak {{ subject["name"] }}</div>
+                          <div class="d-flex justify-content-between align-items-start">
+                            <div class="fs-3 fw-bold">{{ subject["name"] }}</div>
+
+                            <div id="subject_score_{{ subject['id'] }}" class="fs-4 fw-semibold text-end"></div>
+                          </div>
+
+                          <div id="amount_under_avg_{{ subject['id'] }}"></div>
+
                       </div>
                     </a>
                 </div>
             </div>
         {%endfor%}
+        </div>
+        <div class="card col-12 col-md-6 mt-5 " style="width: 100%; max-width: 18rem;">
+            <div class="card-body">
+                <div id="latest_snapshot"></div>
+            </div>
+        </div>
+
+        <script>
+            fetch("/student/get_last_snapshot")
+              .then(response => response.json())
+             .then(data => {
+                 console.log(data)
+                    const snapshot_element = document.getElementById("latest_snapshot");
+
+                    if (data.length === 0) {
+                        snapshot_element.innerHTML = "Geen gegevens beschikbaar.";
+                        return;
+                    }
+                    const snapshotDate = data[0]["at"];
+
+                    let levelsHtml = "";
+                    data.forEach(level => {
+                                    const average = ((level.kennen + level.kunnen) / 2).toFixed(2);
+
+                        levelsHtml += `
+                           <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-semibold">${level.level}</span>
+                                <span class="badge bg-primary">${average}</span>
+                            </div>
+                        </div>
+                                `;
+                    });
+
+                    // Combine into final HTML
+                    const snapshot_text = `
+                         <h5 class="card-title">Meest recente score</h5>
+                        <h6 class="card-subtitle mb-3 text-muted">${snapshotDate}</h6>
+                        <div class="card-text">
+                            ${levelsHtml}
+                        </div>
+                    `;
+
+                    snapshot_element.innerHTML = snapshot_text;
+                });
+             fetch("/student/learing_goal_studenten_average_on_group")
+              .then(response => response.json())
+              .then(data => {
+                      data.forEach((subject) => {
+                          let num_above_avg = 0
+                          let num_on_avg = 0
+                          let num_below_avg = 0
+
+                          let AVG_student_learninggoals = 0;
+                          let AVG_group_learninggoals = 0;
+                          let numGoals = subject.learning_goals.length;
+
+                          subject.learning_goals.forEach((learningGoal) => {
+                                let student_avg = parseFloat(learningGoal.student_avg);
+                                let group_avg = parseFloat(learningGoal.group_avg);
+                                const margin_avg = 0.1;
+                                AVG_student_learninggoals += parseFloat(learningGoal.student_avg);
+                                AVG_group_learninggoals += parseFloat(learningGoal.group_avg);
+
+
+                                if ((student_avg + margin_avg) > group_avg && (student_avg - margin_avg) < group_avg) {
+                                    num_on_avg++;
+                                } else if (learningGoal.is_above_average === true) {
+                                    num_above_avg++;
+                                } else {
+                                    num_below_avg++;
+                                }
+
+                            });
+
+                            let student_subject_avg = (AVG_student_learninggoals / numGoals).toFixed(2)
+                            let group_subject_avg = (AVG_student_learninggoals / numGoals).toFixed(2)
+                            const margin_avg = 0.1;
+
+                            subject_score_element = document.getElementById("subject_score_" + subject.subject_id);
+                            let scoreColor;
+                            let toolTip_Text;
+                            if ((student_subject_avg + margin_avg) > group_subject_avg && (student_subject_avg - margin_avg) < group_subject_avg) {
+                                scoreColor = "orange";
+                                toolTip_Text = "Gelijk met groepsgenoten";
+                            } else if ((student_subject_avg + margin_avg) > group_subject_avg) {
+                                scoreColor = "green";
+                                toolTip_Text = "Boven groepsgemiddelde";
+                            } else {
+                                scoreColor = "red";
+                                toolTip_Text = "Onder groepsgemiddelde";
+                            }
+
+                            subject_score_element.innerHTML = ` <div style="color: ${scoreColor}; font-weight: 600;"
+                                                                 data-bs-toggle="tooltip"
+                                                                 title="${toolTip_Text}">
+                                                                ${student_subject_avg}
+                                                            </div>`;
+                        const tooltipDiv = subject_score_element.querySelector('div');
+                        new bootstrap.Tooltip(tooltipDiv);
+
+                            const under_avg_element = document.getElementById("amount_under_avg_" + subject.subject_id);
+
+                            if (under_avg_element) {
+                                const card_html = `
+                                   <div class="mt-2">
+                                    <div class="small text-dark mb-1">Aantal leerdoelen boven, op of onder het klasgemiddelde:</div>
+
+                                    <span class="d-flex gap-3">
+                                        <span class="text-success fw-bold">
+                                             Boven (${num_above_avg})
+                                        </span>
+
+                                        <span class="text-warning fw-bold">
+                                             Op (${num_on_avg})
+                                        </span>
+
+                                        <span class="text-danger fw-bold">
+                                             Onder (${num_below_avg})
+                                        </span>
+                                    </div>
+                                </div>
+                                `;
+
+                                under_avg_element.innerHTML = card_html;
+
+
+
+
+                            }});
+                });
+            </script>
+
+
+
     {% endif %}
 
 </div>
