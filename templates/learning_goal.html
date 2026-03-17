@@ -15,7 +15,8 @@
         <span class="badge bg-warning">Gelijk</span>
         <span class="badge bg-success">Boven</span>
     </div>
-    <div class="container">
+    <div class="row">
+    <div class="col-6 container">
         <div class="row g-5" id="learningGoals_container">
 
         </div>
@@ -23,6 +24,7 @@
     <div class="col-6">
       <canvas class="" id="graph"></canvas>
 
+    </div>
     </div>
 <script>
 filterStatus()
@@ -67,7 +69,7 @@ function update_cards(learning_goals){
 
 
         const card_html = `
-        <div class="col-4 ">
+        <div class="col-6 ">
             <div class="card h-100  ">
                 <a class="link-dark link-underline link-underline-opacity-0" href="/student/subject/learning_goals/${goal.id}/examlist">
                     <div class="card-body column ">
