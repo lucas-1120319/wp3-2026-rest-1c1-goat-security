@@ -115,7 +115,7 @@
 
                                 if ((student_avg + margin_avg) > group_avg && (student_avg - margin_avg) < group_avg) {
                                     num_on_avg++;
-                                } else if (learningGoal.is_above_average === true) {
+                                } else if (student_avg > group_avg) {
                                     num_above_avg++;
                                 } else {
                                     num_below_avg++;

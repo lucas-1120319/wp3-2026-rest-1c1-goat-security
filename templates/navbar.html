@@ -8,14 +8,6 @@
             </a>
         </li>
 
-        <li>
-            <a href="{{ url_for(role + '.dashboard') }}">
-                <i class="bi bi-calendar3-week"></i>
-                <span class="text">Dashboard</span>
-                <span class="hover-tooltip">Dashboard</span>
-            </a>
-        </li>
-
         {% if session["role"] == "teacher" %}
         <li>
             <a href="{{ url_for(role + '.studentGroups') }}">
