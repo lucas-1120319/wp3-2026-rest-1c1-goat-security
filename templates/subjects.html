@@ -34,6 +34,9 @@
                 <div class="card  " >
                     <a class="link-underline link-dark  link-underline-opacity-0" href="/student/subject/learning_goals/{{ subject['id'] }}">
                       <div class="card-body">
+{#                        <div class="fs-3">{{ subject["name"] }}</div>#}
+                        <i class="{{ ['img'] }}"></i>
+
                           <div class="d-flex justify-content-between align-items-start">
                             <div class="fs-3 fw-bold">{{ subject["name"] }}</div>
 
@@ -183,6 +186,7 @@
 
 
     {% endif %}
+
 
 </div>
 {% endblock %}
