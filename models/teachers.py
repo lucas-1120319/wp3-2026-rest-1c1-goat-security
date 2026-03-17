@@ -107,6 +107,27 @@ class Teacher:
             con.commit()
             return cur.fetchall()
 
+    def get_single_student_subject(self, student_id: int):
+        with self.db.connect() as con:
+            cur = con.cursor()
+            cur.execute(
+                """
+                SELECT 
+                    subjects.id,
+                    subjects.name,
+                    ROUND((AVG(taxonomies.kennen) + AVG(taxonomies.kunnen)) / 2.0, 2) AS average,
+                    ROUND(AVG(taxonomies.confidence), 2) AS confidence
+                FROM taxonomies JOIN snapshots ON snapshots.id = taxonomies.snapshot_id
+                JOIN learningGoals ON learningGoals.id = snapshots.learningGoal_id
+                JOIN subjects ON subjects.id = learningGoals.subject_id
+                WHERE taxonomies.student_id = ?
+                GROUP BY subjects.id
+                """,
+                (student_id,)
+            )
+
+            return cur.fetchall()
+
     def get_all_subjects(self):
         """ Get all subjects. """
         with self.db.connect() as con:
