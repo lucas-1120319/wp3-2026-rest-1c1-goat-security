@@ -10,7 +10,7 @@
 
     {% if role == "teacher" %}
 
-        <div class="row">
+{#        <div class="row">#}
 {#        {% for lg in learning_goals %}#}
 {#            <div class="col-md-4">#}
 {#                <div class="card  " >#}
@@ -26,54 +26,73 @@
 
 
 
-</div>
-  <canvas id="myChart"></canvas>
-</div>
+{#</div>#}
+{#  <canvas id="myChart"></canvas>#}
+{#</div>#}
 
 <table class="table">
 
-  <thead>
-    <tr>
-      <th scope="col">Klass</th>
-      <th scope="col">Naam</th>
-      <th scope="col">ID</th>
-      <th scope="col">Leerdoel</th>
-      <th scope="col">Level</th>
-      <th scope="col">Kennen</th>
-      <th scope="col">Kunnen</th>
-    </tr>
-  </thead>
+{#  <thead>#}
+{#    <tr>#}
+{#      <th scope="col">Klass</th>#}
+{#      <th scope="col">Naam</th>#}
+{#      <th scope="col">ID</th>#}
+{#      <th scope="col">Leerdoel</th>#}
+{#      <th scope="col">Level</th>#}
+{#      <th scope="col">Kennen</th>#}
+{#      <th scope="col">Kunnen</th>#}
+{#    </tr>#}
+{#  </thead>#}
+{% for goal, values in goals.items() %}
+<div class="col-md-6 mb-4">
+{#<h3>{{ goal }}</h3>#}
+<canvas id="chart-{{ loop.index }}"></canvas>
+</div>
 <script>
-    fetch("/teacher/subjects/{{ class_id }}/data")
-      .then(response => response.json())
-      .then(data => {
-          console.log(data);
-          const ctx = document.getElementById('myChart');
-          new Chart(ctx, {
-              type: 'bar',
-              data: {
-                  labels: data.labels,
-                  datasets: [
-                      { label: 'Gemiddeld' , data: data.avg },
-                  ],
-              }
-          });
-      })
-      .catch(err => console.error('Fetch error:', err));
-    </script>
-  <tbody>
-    {% for group in groups %}
-      <tr>
-      <td>{{ group['class_name']}}</td>
-      <td>{{ group['student_name']}}</td>
-      <td>{{ group['learning_goal_id']}}</td>
-      <td>{{ group['learning_goal']}}</td>
-      <td>{{ group['level']}}</td>
-      <td>{{ group['average']}}</td>
-      <td>{{ group['kunnen']}}</td>
-    </tr>
-  {% endfor %}
-  </tbody>
+const ctx{{ loop.index }} = document.getElementById("chart-{{ loop.index }}");
+
+new Chart(ctx{{ loop.index }}, {
+    type: 'bar',
+    data: {
+        labels: {{ values.labels | tojson }},
+        datasets: [{
+            label: "{{ goal }}",
+            data: {{ values.data | tojson }},
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.6)',
+                'rgba(54, 162, 235, 0.6)',
+                'rgba(255, 206, 86, 0.6)',
+                'rgba(75, 192, 192, 0.6)',
+                'rgba(153, 102, 255, 0.6)',
+                'rgba(255, 159, 64, 0.6)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    }
+});
+</script>
+{% endfor %}
+{#  <tbody>#}
+{#    {% for group in groups %}#}
+{#      <tr>#}
+{#      <td>{{ group['class_name']}}</td>#}
+{#      <td>{{ group['student_name']}}</td>#}
+{#      <td>{{ group['learning_goal_id']}}</td>#}
+{#      <td>{{ group['learning_goal']}}</td>#}
+{#      <td>{{ group['level']}}</td>#}
+{#      <td>{{ group['average']}}</td>#}
+{#      <td>{{ group['kunnen']}}</td>#}
+{#    </tr>#}
+{#  {% endfor %}#}
+{#  </tbody>#}
 </table>
 
 {#        {% endfor %}#}
@@ -92,3 +111,4 @@
         {%endfor%}
     {% endif %}
 {% endblock %}
+</div>

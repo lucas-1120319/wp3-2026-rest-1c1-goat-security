@@ -164,7 +164,7 @@ class Teacher:
             )
             return cur.fetchone()
 
-    def get_learning_goal_by_class(self, class_id, learning_goal_id):
+    def get_learning_goal_by_class(self, class_id, subject_id):
         """ Get list of a group with selected learning goal. """
         with self.db.connect() as con:
             cur = con.cursor()
@@ -177,21 +177,23 @@ class Teacher:
                     lg.id AS learning_goal_id,
                     lg.title AS learning_goal,
                     tax.level AS level,
-                    
-                    AVG(tax.kennen + tax.kunnen) /2 * 10 AS average
-            
-            FROM taxonomies tax
-            JOIN students st ON st.id = tax.student_id
-            JOIN snapshots ss ON ss.id = tax.snapshot_id
-            JOIN learningGoals lg ON lg.id = ss.learningGoal_id
-            JOIN student_studentGroups ssg ON ssg.student_id = st.id
-            JOIN studentGroups sg ON sg.id = ssg.studentGroup_id
-            WHERE sg.id = ? AND lg.id = ?
-            GROUP BY st.id
-            ORDER BY st.first_name
+
+                    AVG(tax.kennen + tax.kunnen) / 2 AS average
+
+FROM taxonomies tax
+JOIN students st ON st.id = tax.student_id
+JOIN snapshots ss ON ss.id = tax.snapshot_id
+JOIN learningGoals lg ON lg.id = ss.learningGoal_id
+JOIN student_studentGroups ssg ON ssg.student_id = st.id
+JOIN studentGroups sg ON sg.id = ssg.studentGroup_id
+
+WHERE sg.id = ? AND lg.subject_id = ?
+
+GROUP BY st.id, lg.id
+ORDER BY lg.id, st.first_name
                     
                 """,
-                (class_id, learning_goal_id)
+                (class_id, subject_id)
             )
             return cur.fetchall()
 
