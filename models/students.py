@@ -363,9 +363,11 @@ class Student:
                         t.confidence,
                         t.student_id,
                         t.snapshot_id,
+                        lg.title,
                         s.at
                     FROM taxonomies t
                     INNER JOIN main.snapshots s on s.id = t.snapshot_id
+                    INNER JOIN LearningGoals lg ON s.learningGoal_id = lg.id
                     WHERE t.student_id = ?
                         AND t.snapshot_id = (
                             SELECT s2.id

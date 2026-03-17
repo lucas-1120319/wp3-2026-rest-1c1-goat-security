@@ -9,11 +9,14 @@
 {% endblock %}
 
 {% block content%}
+    <div class="mb-5">
     {% for keyword in keywords %}
         <span class="badge text-bg-primary">{{ keyword["name"] }}</span>
     {% endfor %}
+    </div>
     <div class="row">
         <div class="col-6">
+
             <canvas class="" id="level_progress_graph"></canvas>
         </div>
         <div class="col-6  row">
@@ -63,27 +66,22 @@
 
         </div>
         <div class="col-12">
-            <table class="table">
+            <table class="table table-hover">
               <thead>
                 <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">@</th>
-                  <th scope="col">EID</th>
-                  <th scope="col">Type</th>
-                  <th scope="col">Leerdoel</th>
+                    <th scope="col">Code</th>
+                    <th scope="col">Datum afnamen</th>
+                    <th scope="col">Type</th>
                 </tr>
               </thead>
               <tbody>
               {% for score in scores %}
-                  <tr>
-                    <th scope="row">{{ score["tax_snap"] }}</th>
-                    <td><a class="link-underline link-underline-opacity-0"
-                           href="/student/subject/learning_goals/{{ score['tax_snap'] }}/result">
-                        {{ score["snap_at"] }}</a></td>
-                    <td>{{ score["src_exid"] }}</td>
-                    <td>{{ score["src_type"] }}</td>
-                    <td>{{ score["lg_title"] }}</td>
-                </tr>
+                      <tr onclick="window.location='/student/subject/learning_goals/{{ score['tax_snap'] }}/result'" style="cursor: pointer;">
+                          <td>{{ score["src_exid"] }}</td>
+
+                        <td>{{ score["snap_at"] }}</td>
+                        <td>{{ score["src_type"] }}</td>
+                    </tr>
              {% endfor %}
                 </tbody>
             </table>

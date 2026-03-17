@@ -27,12 +27,6 @@ app.users = User(DB_PATH)
 
 @app.route("/")
 def index():
-    # counts = {
-    #     "experts": users.count_all()[0],
-    #     "organizations": organizations.count_all()[0],
-    #     "studies": studies.count_all()[0],
-    #     "enrollments": enrollments.count_all()[0],
-    # }
     return render_template("login.html")
 
 @app.route("/login")
@@ -51,7 +45,6 @@ def signin():
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]
-        print("Form data:", email, password)
         main_user = app.users.authenticate(email, password)
 
         if not main_user:
@@ -63,22 +56,16 @@ def signin():
 
         session["id"] = main_user["id"]
         session["role"] = user_role["name"]
-
-        print(user_role["name"], session["id"])
-
-        print("SUCCESSFULLY LOGGED IN")
-
         # -- Can be used later to redirect certain roles to different pages [TEST] --
         if session["role"] == "teacher":
             session["teacher_id"] = app.teachers.get_teacher_id(session["id"])['id']
 
-            return redirect(url_for("teacher.profile"))
+            return redirect(url_for("teacher.subjects"))
         elif session["role"] == "student":
             session["student_group"] = app.students.get_student_class(session["id"])["name"]
             session["student_group_id"] = app.students.get_student_class(session["id"])["id"]
-            return redirect(url_for("student.profile"))
+            return redirect(url_for("student.subjects"))
         # --
-
         return redirect(url_for("index"))
 
 
@@ -93,10 +80,7 @@ def signup():
         email = request.form["email"]
         password = request.form["password"]
         confirm_password = request.form["confirmpassword"]
-        print("Form data:", email, password, confirm_password)
         existing_user = False #users.authenticate_register(email)
-
-        print(existing_user)
 
         if existing_user:
             return render_template("register.html", error="Gebruiker bestaat al")
@@ -105,9 +89,6 @@ def signup():
             return render_template(
                 "register.html", error="Wachtwoorden zijn niet gelijk aan elkaar"
             )
-
-        new_user = False #users.create_new_user(email, password, role)
-        print("New User created:", new_user)
 
         return redirect(url_for("index")) #Can later lead to creating your profile
 
