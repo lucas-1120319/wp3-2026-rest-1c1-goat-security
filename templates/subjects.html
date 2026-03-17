@@ -72,7 +72,7 @@
                                     const average = ((level.kennen + level.kunnen) / 2).toFixed(2);
 
                         levelsHtml += `
-                           <div class="mb-3">
+                           <div class="mb-1">
                             <div class="d-flex justify-content-between align-items-center">
                                 <span class="fw-semibold">${level.level}</span>
                                 <span class="badge bg-primary">${average}</span>
@@ -80,11 +80,12 @@
                         </div>
                                 `;
                     });
-
+                    console.log(data)
                     // Combine into final HTML
                     const snapshot_text = `
                          <h5 class="card-title">Meest recente score</h5>
-                        <h6 class="card-subtitle mb-3 text-muted">${snapshotDate}</h6>
+                        <h6 class="card-subtitle text-muted">${data[0]["title"]}</h6>
+                        <h7 class="card-subtitle mb-5 text-muted">${snapshotDate}</h7>
                         <div class="card-text">
                             ${levelsHtml}
                         </div>
