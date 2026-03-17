@@ -179,13 +179,20 @@ def exam_list(learning_goal_id):
     student_id = session["id"]
     learning_goal = app.students.get_learning_goal(learning_goal_id)
     learning_goal_title  = learning_goal["title"]
+
     subject_name  = learning_goal["subject_name"]
+    icons = {"Biologie": "bi bi-leaf-fill",
+                   "Natuurkunde": "bi bi-lightning-fill",
+                   "Scheikunde": "bi bi-flask",
+                   "Wiskunde": "bi bi-plus-slash-minus",
+                   }
+
+    img = icons.get(subject_name, "bi bi-book")
 
     scores = app.students.get_exam_list(learning_goal_id, student_id)
-
     keywords = app.students.learning_goal_keywords(learning_goal_id)
 
-    return render_template("examlist.html", scores=scores, learning_goal_id=learning_goal_id, keywords=keywords, learning_goal_title=learning_goal_title, subject_name=subject_name)
+    return render_template("examlist.html", scores=scores, learning_goal_id=learning_goal_id, keywords=keywords, learning_goal_title=learning_goal_title, img=img)
 
 @student_bp.route("/all_snapshot_average/<int:learning_goal_id>", methods=["GET"])
 def all_snapshot_average(learning_goal_id):
