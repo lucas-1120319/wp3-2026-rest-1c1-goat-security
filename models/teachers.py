@@ -71,6 +71,7 @@ class Teacher:
             return cur.fetchall()
 
     def get_all_studentGroups(self):
+        """ Get all studentGroups """
         with self.db.connect() as con:
             cur = con.cursor()
             cur.execute("SELECT studentGroups.name, studentGroups.id FROM studentGroups",)
@@ -78,6 +79,7 @@ class Teacher:
             return cur.fetchall()
 
     def get_all_students_studentGroup(self, class_id: int):
+        """ Get all students from a studentGroup """
         with self.db.connect() as con:
             cur = con.cursor()
             cur.execute(
@@ -108,6 +110,7 @@ class Teacher:
             return cur.fetchall()
 
     def get_single_student_subject(self, student_id: int):
+        """ Get the average result of a student from a subject """
         with self.db.connect() as con:
             cur = con.cursor()
             cur.execute(
