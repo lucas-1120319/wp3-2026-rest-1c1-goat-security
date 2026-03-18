@@ -9,8 +9,8 @@
 {% block content%}
     <div class="mb-3">
         <button class="btn btn-danger btn-sm"
-            onclick="filterStatus('Achterloopt')">
-            Achterloopt
+            onclick="filterStatus('Onder')">
+            Onder
         </button>
 
         <button class="btn btn-warning btn-sm"
@@ -28,7 +28,7 @@
             Alles tonen
         </button>
         <strong>Legenda:</strong>
-        <span class="badge bg-danger">Slecht / Achterloopt < 0.5</span>
+        <span class="badge bg-danger">Slecht / Onder < 0.5</span>
         <span class="badge bg-warning text-dark">Gemiddeld / Op Schema 0.5 ~ 0.8</span>
         <span class="badge bg-success">Goed / Uitblinker > 0.8</span>
     </div>
@@ -63,8 +63,8 @@
 {#                <td>{{ student["street_name"] }}</td>#}
 {#                <td>{{ student["birth_date"] }}</td>#}
                 <td>
-                    {% if student["status"] == "Achterloopt" %}
-                        <span class="badge bg-danger"> Achterloopt </span>
+                    {% if student["status"] == "Onder" %}
+                        <span class="badge bg-danger"> Onder </span>
                     {% elif student["status"] == "Uitblinker" %}
                         <span class="badge bg-success"> Uitblinker </span>
                     {% elif student["status"] == "Op schema" %}
@@ -133,8 +133,8 @@
         students.forEach(student => {
 
             let badge = "";
-            if (student.status === "Achterloopt")
-                badge = '<span class="badge bg-danger">Achterloopt</span>';
+            if (student.status === "Onder")
+                badge = '<span class="badge bg-danger">Onder</span>';
             else if (student.status === "Uitblinker")
                 badge = '<span class="badge bg-success">Uitblinker</span>';
             else if (student.status === "Op schema")
