@@ -123,23 +123,17 @@
 
                 const row = `
                 <tr>
-                    <th>${student.id || "-"}</th>
-                    <td>${student.first_name || "-"}</td>
-                    <td>${student.last_name || "-"}</td>
-                    <td>
-                        <span class="text-success fw-bold">
-                             Boven (${amount_above_avg})
-                        </span>
-
-                        <span class="text-warning fw-bold">
-                             Op (${amount_on_avg})
-                        </span>
-
-                        <span class="text-danger fw-bold">
-                             Onder (${amount_below_avg})
-                        </span>
-                    </td>
-                    <td><a href="/teacher/studentdetail/${student["id"]}" class="btn btn-success">Gegevens</a></td>
+                    <th>${student.id}</th>
+                    <td>${student.first_name}</td>
+                    <td>${student.last_name}</td>
+                    {#<td>${student.postcode}</td>#}
+                    {#<td>${student.gender}</td>#}
+                    {#<td>${student.city}</td>#}
+                    {#<td>${student.country}</td>#}
+                    {#<td>${student.street_name}</td>#}
+                    {#<td>${student.birth_date}</td>#}
+                    <td>${badge}</td>
+                    <td><a href="/teacher/studentdetail/${ student["id"] }" class="btn btn-primary">Gegevens</a></td>
                 </tr>
             `;
 
