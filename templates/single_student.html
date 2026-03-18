@@ -9,9 +9,12 @@
 {% block content %}
 
 <div class="container mt-4">
-    <div class="row">
+    <div class="row align-items-stretch">
         <div class="col-lg-4 mb-4">
             <div class="card shadow border-0">
+                <div class="card-header">
+                    <h5 class="mb-0">Profiel Gegevens</h5>
+                </div>
                 <div class="card-body text-center">
                     <h3 class="mb-0">
                         {{ personInfo["first_name"] }} {{ personInfo["last_name"] }}
@@ -36,13 +39,15 @@
             </div>
         </div>
 
-        <div class="col-lg-8 mb-4">
-            <div class="card shadow border-0">
+        <div class="col-lg-8 mb-4 d-flex">
+            <div class="card shadow border-0 w-100 h-100">
                 <div class="card-header">
-                    <h5 id="chartTitle" class="mb-0">Alle vakken overzicht</h5>
+                    <h5 id="chartTitle" class="mb-0">Kies een vak</h5>
                 </div>
                 <div class="card-body">
-                    <canvas id="mainChart"></canvas>
+                    <div class="chart-wrapper">
+                        <canvas id="mainChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -157,6 +162,8 @@ function renderChart(title, labels, values, type = 'bar') {
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: true,
             scales: {
                 y: {
                     min: 0,
@@ -173,7 +180,7 @@ function renderChart(title, labels, values, type = 'bar') {
 {#renderChart("Alle vakken overzicht", defaultLabels, defaultValues, 'bar');#} // TEST RENDER/OLD CHART
 
 function loadSubject(subjectId, subjectName, average) {
-    renderChart("Vak: " + subjectName, [subjectName], [average], 'bar');
+    renderChart("Gemiddelde", [subjectName], [average], 'bar');
 
     learningGoalsTitle.innerText = "Leerdoelen van " + subjectName;
     resultsTitle.innerText = "Resultaten";
@@ -241,7 +248,7 @@ function loadLearningGoal(learningGoalId, learningGoalTitle) {
                 return result.average || 0;
             });
 
-            renderChart("Voortgang: " + learningGoalTitle, labels, values, 'line');
+            renderChart("Gemiddelde: " + learningGoalTitle, labels, values, 'line');
 
             let html = `
                 <table class="table table-striped">

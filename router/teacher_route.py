@@ -134,7 +134,7 @@ def select_studentGroup(name):
         if avg is None:
             return "Geen data"
         elif avg < 0.5:
-            return "Achterloopt"
+            return "Onder"
         elif avg > 0.8:
             return "Uitblinker"
         else:
@@ -159,7 +159,7 @@ def filter_students_status(name):
         if avg is None:
             return "Geen data"
         elif avg < 0.5:
-            return "Achterloopt"
+            return "Onder"
         elif avg > 0.8:
             return "Uitblinker"
         else:
