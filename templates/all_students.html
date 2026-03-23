@@ -2,7 +2,7 @@
 
 {% block header %}
     {% block title %}
-        Studenten {{ class_name }}
+        Studenten {{ class_name or "" }}
     {% endblock %}
 {% endblock %}
 
@@ -53,9 +53,9 @@
             <tbody>
             {% for student in students %}
             <tr>
-            <th scope="row">{{ student["id"] }}</th>
-                <td>{{ student["first_name"] }}</td>
-                <td>{{ student["last_name"] }}</td>
+            <th scope="row">{{ student["id"] or "-" }}</th>
+                <td>{{ student["first_name"] or "-" }}</td>
+                <td>{{ student["last_name"] or "-" }}</td>
 {#                <td>{{ student["postcode"] }}</td>#}
 {#                <td>{{ student["gender"] }}</td>#}
 {#                <td>{{ student["city"] }}</td>#}
@@ -144,9 +144,9 @@
 
             const row = `
                 <tr>
-                    <th>${student.id}</th>
-                    <td>${student.first_name}</td>
-                    <td>${student.last_name}</td>
+                    <th>${student.id || "-"}</th>
+                    <td>${student.first_name || "-"}</td>
+                    <td>${student.last_name || "-"}</td>
                     {#<td>${student.postcode}</td>#}
                     {#<td>${student.gender}</td>#}
                     {#<td>${student.city}</td>#}

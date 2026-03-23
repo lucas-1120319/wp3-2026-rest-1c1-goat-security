@@ -17,22 +17,22 @@
                 </div>
                 <div class="card-body text-center">
                     <h3 class="mb-0">
-                        {{ personInfo["first_name"] }} {{ personInfo["last_name"] }}
+                        {{ personInfo["first_name"] or "" }} {{ personInfo["last_name"] or "" }}
                     </h3>
                     <p class="text-muted mb-3">
-                        {{ personrole["name"] }}
+                        {{ personrole["name"] or "" }}
                     </p>
                     <ul class="list-unstyled text-start mt-4">
                         <li class="mb-2">
-                            Email: {{ personInfo["email"] }}
+                            Email: {{ personInfo["email"] or "" }}
                         </li>
                         <li class="mb-2">
-                            Telefoon: {{ personInfo["phone"] }}
+                            Telefoon: {{ personInfo["phone"] or "" }}
                         </li>
                         <li class="mb-2">
-                            Adres: {{ personInfo["city"] }},
-                            {{ personInfo["street_name"] }},
-                            {{ personInfo["postcode"] }}
+                            Adres: {{ personInfo["city"] or "" }}
+                            {{ personInfo["street_name"] or "" }}
+                            {{ personInfo["postcode"] or "" }}
                         </li>
                     </ul>
                 </div>
@@ -267,9 +267,9 @@ function loadLearningGoal(learningGoalId, learningGoalTitle) {
 
             html += `
             <tr>
-                <td>${result.source_id || ''}</td>
-                <td>${result.source_type || ''}</td>
-                <td>${result.snap_date || ''}</td>
+                <td>${result.source_id || '-'}</td>
+                <td>${result.source_type || '-'}</td>
+                <td>${result.snap_date || '-'}</td>
             </tr>
             <tr>
                 <td colspan="3" class="p-3">
@@ -299,8 +299,8 @@ function loadLearningGoal(learningGoalId, learningGoalTitle) {
             result.levels.forEach(function(level) {
                 html += `
                                             <tr>
-                                                <td>${level.level || ''}</td>
-                                                <td>${level.average || ''}</td>
+                                                <td>${level.level || '-'}</td>
+                                                <td>${level.average || '-'}</td>
                                             </tr>`;
             });
 
