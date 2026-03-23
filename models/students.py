@@ -246,10 +246,14 @@ class Student:
             cur.execute(
                 "SELECT DISTINCT tax.id AS tax_id, "
                 "tax.level AS level, "
+                "snap.id AS snapshot_id, "
+                "sources.external_id AS source_id, "
+                "sources.type AS source_type, "
                 "ROUND((AVG(tax.kennen) + AVG(tax.kunnen)) / 2.0, 2) AS average, "
                 "snap.at AS snap_date "
                 "FROM taxonomies tax "
                 "JOIN snapshots snap ON tax.snapshot_id = snap.id "
+                "JOIN sources ON sources.id = snap.source_id "
                 "JOIN learningGoals lg ON snap.learningGoal_id = lg.id "
                 "WHERE snap.learningGoal_id = ? AND tax.student_id = ? "
                 "GROUP BY snap.at, tax.level",
