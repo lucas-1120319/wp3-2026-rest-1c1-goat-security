@@ -123,7 +123,31 @@ def get_student_subject_learning_goals(subject_id):
 @teacher_bp.route("/studentdetail/<int:id>/learning-goal/<int:learning_goal_id>/results", methods=["GET"])
 def get_student_learning_goal_results(id, learning_goal_id):
     results = app.students.get_result_per_snapshot(learning_goal_id, id)
-    return {"success": True, "results": [dict(row) for row in results]}, 200
+    full_results = [dict(row) for row in results]
+    grouped = {}
+
+    for item in full_results:
+        key = str(item["snapshot_id"]) + "_" + item["source_id"] + "_" + item["source_type"]
+
+        if key not in grouped:
+            grouped[key] = {
+                "snapshot_id": item["snapshot_id"],
+                "source_type": item["source_type"],
+                "source_id": item["source_id"],
+                "snap_date": item["snap_date"],
+                "levels": []
+            }
+
+        grouped[key]["levels"].append({
+            "level": item["level"],
+            "tax_id": item["tax_id"],
+            "average": item["average"]
+
+        })
+
+    snapshots = list(grouped.values())
+
+    return {"success": True, "results": snapshots} , 200
 
 @teacher_bp.route("/studentGroup/<string:name>", methods=["GET"])
 def select_studentGroup(name):

@@ -54,7 +54,7 @@
     </div>
 
     <div class="row">
-        <div class="col-12 mb-4">
+        <div class="col-6 mb-4">
             <div class="card shadow border-0">
                 <div class="card-header">
                     <h5 class="mb-0">Vakken Scores</h5>
@@ -91,10 +91,8 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-12 mb-4">
+        <div class="col-6 mb-4">
             <div class="card shadow border-0">
                 <div class="card-header">
                     <h5 id="learningGoalsTitle" class="mb-0">Leerdoelen</h5>
@@ -245,40 +243,82 @@ function loadLearningGoal(learningGoalId, learningGoalTitle) {
             });
 
             const values = data.results.map(function(result) {
-                return result.average || 0;
+                 return result.levels.map(function(level) {
+                        return level.average || 0;
+                    });
             });
 
             renderChart("Gemiddelde: " + learningGoalTitle, labels, values, 'line');
 
-            let html = `
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Datum</th>
-                            <th>Level</th>
-                            <th>Gemiddelde</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
 
-            data.results.forEach(function(result) {
-                html += `
+            console.log(data)
+           let html = `<table class="table table-striped me-2">
+                <thead>
                     <tr>
-                        <td>${result.snap_date || ''}</td>
-                        <td>${result.level || ''}</td>
-                        <td>${result.average || ''}</td>
+                        <th>Code</th>
+                        <th>Type</th>
+                        <th>Datum</th>
                     </tr>
-                `;
+                </thead>
+                <tbody class="">`;
+
+        data.results.forEach(function(result) {
+            let collapseId = `collapse_${result.snapshot_id}_${result.source_id}`;
+
+            html += `
+            <tr>
+                <td>${result.source_id || ''}</td>
+                <td>${result.source_type || ''}</td>
+                <td>${result.snap_date || ''}</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="p-3">
+                    <div class="accordion accordion-flush" id="accordion_${result.snapshot_id}_${result.source_id}">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-white shadow-none p-1 pb-2"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#${collapseId}"
+                                        aria-expanded="false"
+                                        aria-controls="${collapseId}">
+                                    Details
+                                </button>
+                            </h2>
+                            <div id="${collapseId}" class="accordion-collapse collapse">
+                                <div class="accordion-body p-0">
+                                    <table class="table  mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Level</th>
+                                                <th>Gemiddelde</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody >`;
+
+            result.levels.forEach(function(level) {
+                html += `
+                                            <tr>
+                                                <td>${level.level || ''}</td>
+                                                <td>${level.average || ''}</td>
+                                            </tr>`;
             });
 
             html += `
-                    </tbody>
-                </table>
-            `;
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>`;
+        });
 
-            resultsContainer.innerHTML = html;
-        })
+        html += `</tbody></table>`;
+
+        resultsContainer.innerHTML = html;
+    })
 }
 </script>
 
