@@ -9,7 +9,7 @@
 {% block content %}
     <div class="col-12">
         <div class="card shadow border-0">
-            <div class="card-header">
+            <div class="card-header text-white fw-semibold" id="top-card">
                 <h5 class="mb-0">Studenten Lijst</h5>
             </div>
             <div class="card-body">
@@ -78,7 +78,7 @@
                                 {% endif %}
                             </td>
                             <td><a href="/teacher/studentdetail/{{ student["id"] }}"
-                                   class="btn btn-primary">Gegevens</a></td>
+                                   class="btn btn-success">Gegevens</a></td>
                         </tr>
                     {% else %}
                         <h2 class="fs-3">Geen studenten in deze klas</h2>
@@ -160,7 +160,7 @@
                     {#<td>${student.street_name}</td>#}
                     {#<td>${student.birth_date}</td>#}
                     <td>${badge}</td>
-                    <td><a href="/teacher/studentdetail/${student["id"]}" class="btn btn-primary">Gegevens</a></td>
+                    <td><a href="/teacher/studentdetail/${student["id"]}" class="btn btn-success">Gegevens</a></td>
                 </tr>
             `;
 
