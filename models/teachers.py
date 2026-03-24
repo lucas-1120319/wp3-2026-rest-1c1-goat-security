@@ -10,7 +10,7 @@ class Teacher:
         with self.db.connect() as con:
             con.row_factory = sqlite3.Row  # <--- make rows dictionary-like
             cur = con.cursor()
-            cur.execute("""SELECT user_id, email, phone, first_name, last_name, postcode, gender, city, country, street_name, birth_date 
+            cur.execute("""SELECT user_id, email, phone, first_name, last_name, birth_date 
                            FROM teachers
                         inner join users ON teachers.user_id = users.id WHERE user_id = ?
                         """, (user_id,))
@@ -33,11 +33,6 @@ class Teacher:
                                   phone,
                                   first_name,
                                   last_name,
-                                  postcode,
-                                  gender,
-                                  city,
-                                  country,
-                                  street_name,
                                   birth_date
                            FROM teachers
                                     inner join users ON teachers.user_id = users.id
@@ -50,15 +45,9 @@ class Teacher:
             cur.execute("""UPDATE teachers
                            Set first_name  = ?,
                                last_name   = ?,
-                               postcode    = ?,
-                               gender      = ?,
-                               city        = ?,
-                               country     = ?,
-                               street_name = ?,
                                birth_date  = ?
                            WHERE user_id = ?""",
-                        (data["first_name"], data["last_name"], data["postcode"], data["gender"], data["city"],
-                         data["country"], data["street_name"], data["birth_date"], user_id,))
+                        (data["first_name"], data["last_name"], data["birth_date"], user_id,))
             con.commit()
             cur.execute("""UPDATE users
                            Set email    = ?,
@@ -98,11 +87,6 @@ class Teacher:
                     students.id,
                     students.first_name,
                     students.last_name,
-                    students.postcode,
-                    students.gender,
-                    students.city,
-                    students.country,
-                    students.street_name,
                     students.birth_date,
                     (AVG(taxonomies.kennen) + AVG(taxonomies.kunnen)) / 2.0 AS average,
                     AVG(taxonomies.confidence) AS avg_confidence
