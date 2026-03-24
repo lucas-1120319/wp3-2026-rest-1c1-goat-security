@@ -1,6 +1,6 @@
 import sqlite3
 from data.database import Database
-
+from models.user import User
 
 class Teacher:
     def __init__(self, db_path: str):
@@ -55,7 +55,7 @@ class Teacher:
                                phone    = ?,
                                password = ?
                            WHERE id = ?""",
-                        (data["email"], data["phone"], data["password"], user_id,))
+                        (data["email"], data["phone"], User.hash_password(data["password"]), user_id,))
             con.commit()
 
             return cur.fetchone()
