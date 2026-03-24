@@ -138,6 +138,10 @@ main {
     transition: opacity 0.2s;
 }
 
+#top-card {
+    background: #041F74;
+}
+
 .date {
     font-size: 1.5rem;
 }
