@@ -192,7 +192,7 @@ def exam_list(learning_goal_id):
     scores = app.students.get_exam_list(learning_goal_id, student_id)
     keywords = app.students.learning_goal_keywords(learning_goal_id)
 
-    return render_template("examlist.html", scores=scores, learning_goal_id=learning_goal_id, keywords=keywords, learning_goal_title=learning_goal_title, img=img)
+    return render_template("examlist.html", scores=scores,subject_name=subject_name, learning_goal_id=learning_goal_id, keywords=keywords, learning_goal_title=learning_goal_title, img=img)
 
 @student_bp.route("/all_snapshot_average/<int:learning_goal_id>", methods=["GET"])
 def all_snapshot_average(learning_goal_id):
