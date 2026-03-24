@@ -1,5 +1,6 @@
 import sqlite3
 from data.database import Database
+from models.user import User
 
 class Seed:
     def __init__(self, db_path: str):
@@ -22,7 +23,7 @@ class Seed:
                 cur.execute(
                     "INSERT OR IGNORE INTO users (email, phone, password, role_id) "
                     "VALUES (?, ?, ?, ?)",
-                    (user['email'], user['phone'], 'secret', user['role_id']),
+                    (user['email'], user['phone'], User.hash_password('secret'), user['role_id']),
                 )
 
                 cur.execute(
