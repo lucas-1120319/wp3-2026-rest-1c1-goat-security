@@ -1,7 +1,7 @@
-import sqlite3
-from data.database import Database
 import json
 import os
+from data.database import Database
+from models.user import User
 
 class data_converter:
     def __init__(self, db_path: str, json_path: str):
@@ -23,7 +23,9 @@ class data_converter:
             for student_entry in data["students"]:
                 student = student_entry["student"]
                 email = f"{student['name'].lower()}@example.com"
-                password = "geheim"
+                test_password = "geheim"
+                password = User.hash_password(test_password)
+                print(password)
                 role_id = 2  # student
 
                 # Insert user
