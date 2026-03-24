@@ -253,6 +253,7 @@ function loadLearningGoal(learningGoalId, learningGoalTitle) {
                         <th>Code</th>
                         <th>Type</th>
                         <th>Datum</th>
+                        <th>Gemiddeld</th>
                     </tr>
                 </thead>
                 <tbody class="">`;
@@ -260,14 +261,19 @@ function loadLearningGoal(learningGoalId, learningGoalTitle) {
         data.results.forEach(function(result) {
             let collapseId = `collapse_${result.snapshot_id}_${result.source_id}`;
 
+            const avg_score = (
+              result.levels.reduce((sum, level) => sum + level.average, 0) / result.levels.length
+            ).toFixed(2);
+
             html += `
             <tr>
                 <td>${result.source_id || '-'}</td>
                 <td>${result.source_type || '-'}</td>
                 <td>${result.snap_date || '-'}</td>
+                <td>${ avg_score || '-'}</td>
             </tr>
             <tr>
-                <td colspan="3" class="p-3">
+                <td colspan="4" class="p-3">
                     <div class="accordion accordion-flush" id="accordion_${result.snapshot_id}_${result.source_id}">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
