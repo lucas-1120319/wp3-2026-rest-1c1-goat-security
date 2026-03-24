@@ -3,7 +3,6 @@ import binascii
 import hashlib
 from data.database import Database
 
-
 class User:
     def __init__(self, db_path: str):
         self.db = Database(db_path)
