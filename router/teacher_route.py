@@ -4,7 +4,14 @@ teacher_bp = Blueprint("teacher", __name__, url_prefix="/teacher")
 
 @teacher_bp.context_processor
 def inject_role():
-    return {'role': 'teacher'}
+    user_id = session["id"]
+    if user_id:
+        user = app.teachers.get_all_user_info(user_id)
+        return {'role': 'teacher',
+                'username': user['first_name'],
+                'user_id': user['user_id']
+                }
+    return {}
 
 @teacher_bp.route("/dashboard")
 def dashboard():

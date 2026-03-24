@@ -6,6 +6,16 @@ class Teacher:
     def __init__(self, db_path: str):
         self.db = Database(db_path)
 
+    def get_all_user_info(self, user_id: int):
+        with self.db.connect() as con:
+            con.row_factory = sqlite3.Row  # <--- make rows dictionary-like
+            cur = con.cursor()
+            cur.execute("""SELECT user_id, email, phone, first_name, last_name, postcode, gender, city, country, street_name, birth_date 
+                           FROM teachers
+                        inner join users ON teachers.user_id = users.id WHERE user_id = ?
+                        """, (user_id,))
+            return cur.fetchone()
+
     def get_teacher_id(self, user_id: int):
         with self.db.connect() as con:
             con.row_factory = sqlite3.Row  # <--- make rows dictionary-like
