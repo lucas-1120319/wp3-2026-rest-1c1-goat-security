@@ -46,12 +46,20 @@ class Student:
             cur.execute("""UPDATE students Set first_name = ?, last_name = ?, birth_date = ? WHERE user_id = ?""",
                         (data["first_name"], data["last_name"], data["birth_date"], user_id,))
             con.commit()
-            cur.execute("""UPDATE users
-                           Set email = ? ,
-                               phone = ?,
-                               password = ?
-                           WHERE id = ?""",
-                        (data["email"], data["phone"], data["password"],user_id, ))
+
+            if data.get("password"):
+                cur.execute("""
+                    UPDATE users
+                    SET email = ?, phone = ?, password = ?
+                    WHERE id = ?
+                """, (data["email"], data["phone"], data["password"], user_id))
+            else:
+                cur.execute("""
+                    UPDATE users
+                    SET email = ?, phone = ?
+                    WHERE id = ?
+                """, (data["email"], data["phone"], user_id))
+
             con.commit()
             return cur.fetchone()
 
