@@ -58,3 +58,13 @@ python DataBaseSeeder.py
 
 # Start de applicatie
 python app.py
+
+```
+## Inlog gegevens
+**Student**
+* **Email Address:** jamie@example.com
+* **Wachtwoord:** geheim
+
+**Docent**
+* **Email Address:** henk@mail.nl
+* **Wachtwoord:** secret
