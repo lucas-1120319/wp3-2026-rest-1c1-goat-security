@@ -5,21 +5,28 @@
     {% endblock %}
 {% endblock %}
 
-{% block content%}
-
-<div class="row">
-    {%for group in studentGroups %}
-        <div class="col-md-4">
-            <div class="card">
-                <a class="link-underline link-underline-opacity-0  " href="/teacher/studentGroup/{{ group["name"]  }}">
-                  <div class="card-body">
-                    <div class="fs-3">klas {{ group["name"] }}</div>
-                  </div>
-                </a>
+{% block content %}
+    <div class="col-12 row">
+        {% for group in studentGroups %}
+            <div class="col-md-4">
+                <div class="card">
+                    <a class="link-underline link-dark  link-underline-opacity-0"
+                       href="/teacher/studentGroup/{{ group["name"] }}">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="fs-3 fw-bold">klas {{ group["name"] }}</div>
+                            </div>
+                            {% if group["student_count"] %}
+                                <div class="small text-dark mb-1">{{ group["student_count"] }} studenten</div>
+                            {% else %}
+                                <div class="small text-dark mb-1">Geen studenten</div>
+                            {% endif %}
+                        </div>
+                    </a>
+                </div>
             </div>
-        </div>
-    {% else %}
-        <h2 class="fs-3">Geen klassen beschikbaar</h2>
-    {%endfor%}
-</div>
+        {% else %}
+            <h2 class="fs-3">Geen klassen beschikbaar</h2>
+        {% endfor %}
+    </div>
 {% endblock %}
