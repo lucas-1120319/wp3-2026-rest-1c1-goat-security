@@ -44,12 +44,6 @@
                         <th scope="col">Student ID</th>
                         <th scope="col">Voornaam</th>
                         <th scope="col">Achternaam</th>
-                        {#                <th scope="col">Postcode</th>#}
-                        {#                <th scope="col">Gender</th>#}
-                        {#                <th scope="col">Stad</th>#}
-                        {#                <th scope="col">Land</th>#}
-                        {#                <th scope="col">Adres</th>#}
-                        {#                <th scope="col">Geboorte-datum</th>#}
                         <th scope="col">Status</th>
                         <th scope="col">Extra</th>
                     </tr>
@@ -60,12 +54,6 @@
                             <th scope="row">{{ student["id"] or "-" }}</th>
                             <td>{{ student["first_name"] or "-" }}</td>
                             <td>{{ student["last_name"] or "-" }}</td>
-                            {#                <td>{{ student["postcode"] }}</td>#}
-                            {#                <td>{{ student["gender"] }}</td>#}
-                            {#                <td>{{ student["city"] }}</td>#}
-                            {#                <td>{{ student["country"] }}</td>#}
-                            {#                <td>{{ student["street_name"] }}</td>#}
-                            {#                <td>{{ student["birth_date"] }}</td>#}
                             <td>
                                 {% if student["status"] == "Onder" %}
                                     <span class="badge bg-danger"> Onder </span>
@@ -88,26 +76,10 @@
             </div>
         </div>
     </div>
-    <!--<div class="row">-->
-
-    <!--    {%for student in students %}-->
-        <!--        <div class="col-md-4">-->
-        <!--            <div class="card  " >-->
-        <!--                <a class="link-underline link-underline-opacity-0  " href="#">-->
-        <!--                  <div class="card-body">-->
-        <!--                    <div class="fs-3">Student {{ student["first_name"] }}</div>-->
-        <!--                  </div>-->
-        <!--                </a>-->
-        <!--            </div>-->
-        <!--        </div>-->
-
-        <!--    {% else %}-->
-        <!--        <h2 class="fs-3">Geen studenten in deze klass</h2>-->
-        <!--    {%endfor%}-->
-    <!--</div>-->
 
     <script>
         const className = "{{ class_name }}";
+        filterStatus(null)
 
         function filterStatus(status) {
             let url = `/teacher/studentGroup/${className}/filter_status`;
@@ -122,6 +94,8 @@
         }
 
         function update_table(students) {
+            console.log(students)
+
             const tbody = document.querySelector("tbody");
             tbody.innerHTML = "";
 
@@ -137,7 +111,6 @@
             }
 
             students.forEach(student => {
-
                 let badge = "";
                 if (student.status === "Onder")
                     badge = '<span class="badge bg-danger">Onder</span>';
@@ -153,12 +126,6 @@
                     <th>${student.id || "-"}</th>
                     <td>${student.first_name || "-"}</td>
                     <td>${student.last_name || "-"}</td>
-                    {#<td>${student.postcode}</td>#}
-                    {#<td>${student.gender}</td>#}
-                    {#<td>${student.city}</td>#}
-                    {#<td>${student.country}</td>#}
-                    {#<td>${student.street_name}</td>#}
-                    {#<td>${student.birth_date}</td>#}
                     <td>${badge}</td>
                     <td><a href="/teacher/studentdetail/${student["id"]}" class="btn btn-success">Gegevens</a></td>
                 </tr>
