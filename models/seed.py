@@ -102,7 +102,6 @@ class Seed:
             student_rows = cur.fetchall()
 
             if not student_rows:
-                print("No students found.")
                 return
 
             # Split students in half
@@ -116,7 +115,6 @@ class Seed:
                 group_row = cur.fetchone()
 
                 if not group_row:
-                    print(f"Group '{group_name}' does not exist")
                     continue
 
                 group_id = group_row[0]
