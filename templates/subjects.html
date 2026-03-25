@@ -52,10 +52,10 @@
                                         <div class="small text-muted">
                                             {% if group["student_count"] %}
                                                 {{ group["student_count"] }} studenten
-                                                <div class="mt-2 d-flex flex-wrap gap-1"
+                                                <span class="d-flex gap-3"
                                                      id="group-status-{{ group['name'] }}">
-                                                    <span class="badge bg-secondary">Laden...</span>
-                                                </div>
+                                                    <span class="text-secondary fw-bold">Laden...</span>
+                                                </span>
                                             {% else %}
                                                 Geen studenten
                                             {% endif %}
@@ -102,9 +102,9 @@
                     .then(data => {
                         onder = data.students.length;
                         container.innerHTML = `
-                    <span class="badge bg-success">${boven} Boven</span>
-                    <span class="badge bg-warning text-dark">${op} Op</span>
-                    <span class="badge bg-danger">${onder} Onder</span>
+                    <span class="text-success fw-bold">Boven (${boven})</span>
+                    <span class="text-warning fw-bold">Op (${op})</span>
+                    <span class="text-danger fw-bold">Onder (${onder})</span>
                 `;
                     })
             }
