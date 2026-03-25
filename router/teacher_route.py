@@ -186,28 +186,59 @@ def filter_students_status(name):
 
     status_filter = request.args.get("status")
 
-    def determine_status(avg):
-        if avg is None:
-            return "Geen data"
-        elif avg < 0.5:
-            return "Onder"
-        elif avg > 0.8:
-            return "Uitblinker"
-        else:
-            return "Op schema"
+
     group_id = app.teachers.get_group_per_name(name)
     group_results = app.students.get_studentGroup_average_all_subjects(group_id)
+    group_avg_dict = {
+        row[0]: row[4]
+        for row in group_results
+    }
     all_students_data = app.teachers.get_all_students_studentGroup(group_id)
+    student_group = []
+    avg_margin = 0.1
 
-    students = []
-    #
-    # for student in all_students_data:
-    #     student = dict(student)
-        # avg = student["average"] or 0
-        # student_status = determine_status(avg)
-        # student["status"] = student_status
+    for student in all_students_data["students"]:
+        has_above = False
+        has_on = False
+        has_below = False
 
-        # if status_filter is None or student_status == status_filter:
-        #     students.append(student)
+        for subject in student["subjects"]:
+            subject_avg = 0
+            group_avg = 0
 
-    return jsonify(all_students_data)
+            for learning_goal in subject["learning_goals"]:
+                subject_avg += learning_goal["avg"]
+                learning_goal["group_avg"] = group_avg_dict.get(learning_goal["id"])
+                group_avg += learning_goal["group_avg"]
+
+            if len(subject["learning_goals"]) > 0:
+                subject["student_avg"] = subject_avg / len(subject["learning_goals"])
+                subject["group_avg"] = group_avg / len(subject["learning_goals"])
+            else:
+                subject["student_avg"] = 0
+                subject["group_avg"] = 0
+
+            if abs(subject["student_avg"] - subject["group_avg"]) <= avg_margin:
+                has_on = True
+            elif subject["student_avg"] > subject["group_avg"]:
+                has_above = True
+            else:
+                has_below = True
+
+
+        if status_filter == "boven" and has_above:
+            student_group.append(student)
+
+        elif status_filter == "op" and has_on:
+            student_group.append(student)
+
+        elif status_filter == "onder" and has_below:
+            student_group.append(student)
+
+        elif status_filter is None:
+            student_group.append(student)
+
+    return jsonify( {
+    "class": all_students_data["class"],
+    "students": student_group
+})
