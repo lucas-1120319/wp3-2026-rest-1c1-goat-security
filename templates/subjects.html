@@ -25,44 +25,45 @@
         {%endfor%}
         </div>
 
-<div class="container mt-4">
-    <div class="row align-items-stretch">
-        <div class="col-lg-4 mb-4">
-            <div class="card shadow border-0">
-                <div class="card-header text-white fw-semibold" id="top-card">
-                    <h5 class="mb-0">Klassen Overzicht</h5>
-                </div>
+        <div class="container mt-4">
+            <div class="row align-items-stretch">
+                <div class="col-lg-4 mb-4">
+                    <div class="card shadow border-0">
+                        <div class="card-header text-white fw-semibold" id="top-card">
+                            <h5 class="mb-0">Klassen Overzicht</h5>
+                        </div>
 
-                <div class="card-body">
-                    {% for group in studentGroups %}
-                        <a class="link-underline link-dark link-underline-opacity-0"
-                           href="/teacher/studentGroup/{{ group['name'] }}">
-                            <div class="card-body border-bottom">
-                                <div class="fw-bold fs-5 text-dark">
-                                    Klas {{ group["name"] }}
-                                </div>
-
-                                <div class="small text-muted">
-                                    {% if group["student_count"] %}
-                                        {{ group["student_count"] }} studenten
-                                        <div class="mt-2 d-flex flex-wrap gap-1"
-                                             id="group-status-{{ group['name'] }}">
-                                            <span class="badge bg-secondary">Laden...</span>
+                        <div class="card-body">
+                            {% for group in studentGroups %}
+                                <a class="link-underline link-dark link-underline-opacity-0"
+                                   href="/teacher/studentGroup/{{ group['name'] }}">
+                                    <div class="card-body border-bottom">
+                                        <div class="fw-bold fs-5 text-dark">
+                                            Klas {{ group["name"] }}
                                         </div>
-                                    {% else %}
-                                        Geen studenten
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </a>
-                    {% else %}
-                        <h2 class="fs-3">Geen klassen beschikbaar</h2>
-                    {% endfor %}
+
+                                        <div class="small text-muted">
+                                            {% if group["student_count"] %}
+                                                {{ group["student_count"] }} studenten
+                                                <div class="mt-2 d-flex flex-wrap gap-1"
+                                                     id="group-status-{{ group['name'] }}">
+                                                    <span class="badge bg-secondary">Laden...</span>
+                                                </div>
+                                            {% else %}
+                                                Geen studenten
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </a>
+                            {% else %}
+                                <h2 class="fs-3">Geen klassen beschikbaar</h2>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+
         <script>
             startUpStatus()
 
@@ -73,8 +74,7 @@
             }
 
             function loadGroupStatus(className) {
-                const safeId = className.replaceAll(" ", "_");
-                const container = document.getElementById(`group-status-${safeId}`);
+                const container = document.getElementById(`group-status-${className}`);
 
                 let boven = 0;
                 let op = 0;
@@ -95,9 +95,9 @@
                     .then(data => {
                         onder = data.students.length;
                         container.innerHTML = `
-                    <span class="badge bg-success">${boven} boven</span>
-                    <span class="badge bg-warning text-dark">${op} op</span>
-                    <span class="badge bg-danger">${onder} onder</span>
+                    <span class="badge bg-success">${boven} Boven</span>
+                    <span class="badge bg-warning text-dark">${op} Op</span>
+                    <span class="badge bg-danger">${onder} Onder</span>
                 `;
                     })
             }
