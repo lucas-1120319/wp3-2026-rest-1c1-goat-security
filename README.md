@@ -14,6 +14,7 @@ Leerlingen krijgen inzicht in hun voortgang per vak en leerdoel, terwijl docente
 
 ---
 
+
 ## Functies
 
 **Leerling:**  
@@ -68,3 +69,7 @@ python app.py
 **Docent**
 * **Email Address:** henk@mail.nl
 * **Wachtwoord:** secret
+
+![img.png](static/images/img.png)
+![img.png](static/images/img2.png)
+![img.png](static/images/img3.png)

@@ -34,11 +34,19 @@
     display: block;
     margin-top: 0.5rem;
   }
+  #img{
+    display: block;       /* so margin auto works */
+    margin: 0 auto 1rem;  /* centers horizontally + adds bottom spacing */
+    max-width: 25%;      /* responsive */
+    height: auto;         /* keep aspect ratio */
+  }
 </style>
 </head>
 <body>
   <form method="post" action="/signin" class="login-card">
-    <h1 class="text-center mb-4">Login</h1>
+    <img src="{{ url_for('static', filename='images/Test-Correct.jpg') }}" id="img" alt="My Image">
+    <h1 class="text-center text-success mb-4">Test Correct</h1>
+    <h2 class="text-center mb-4">Login</h2>
 
     <label for="email" class="form-label">Email address</label>
     <input type="email" class="form-control mb-3" id="email" name="email" placeholder="name@example.com" required>
