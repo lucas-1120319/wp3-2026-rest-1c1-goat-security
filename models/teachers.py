@@ -106,7 +106,6 @@ class Teacher:
         }
 
         students_map = {}
-        print("hoi", rows)
 
         for row in rows:
             (
@@ -129,16 +128,28 @@ class Teacher:
                     "first_name": first_name,
                     "last_name": last_name,
                     "birth_date": birth_date,
+                    "subjects": {}  # 👈 use dict first (important!)
+                }
+
+            student = students_map[student_id]
+
+            # Create subject if not exists
+            if subject_title not in student["subjects"]:
+                student["subjects"][subject_title] = {
+                    "name": subject_title,
                     "learning_goals": []
                 }
 
-            # Add learning goal
-            students_map[student_id]["learning_goals"].append({
+            # Add learning goal to correct subject
+            student["subjects"][subject_title]["learning_goals"].append({
                 "id": lg_id,
                 "title": lg_title,
-                "subject": subject_title,
-                "avg_score": avg_score
+                "avg": avg_score
             })
+
+        # Convert subjects dict → list
+        for student in students_map.values():
+            student["subjects"] = list(student["subjects"].values())
 
         result["students"] = list(students_map.values())
         return result

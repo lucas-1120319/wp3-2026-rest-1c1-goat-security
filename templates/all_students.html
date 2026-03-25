@@ -14,29 +14,27 @@
             </div>
             <div class="card-body">
                 <div class="mb-3">
-                    <button class="btn btn-danger btn-sm"
-                            onclick="filterStatus('Onder')">
-                        Onder
+                    <h6>Aantal vakken vergeleken met groepsgemiddelde</h6>
+                    <button class="btn btn-success btn-sm"
+                            onclick="filterStatus('boven')">
+                        Boven
                     </button>
 
                     <button class="btn btn-warning btn-sm"
-                            onclick="filterStatus('Op schema')">
-                        Op schema
+                            onclick="filterStatus('op')">
+                        Op
                     </button>
 
-                    <button class="btn btn-success btn-sm"
-                            onclick="filterStatus('Uitblinker')">
-                        Uitblinker
+                    <button class="btn btn-danger btn-sm"
+                            onclick="filterStatus('onder')">
+                        Onder
                     </button>
 
                     <button class="btn btn-secondary btn-sm"
                             onclick="filterStatus(null)">
                         Alles tonen
                     </button>
-                    <strong>Legenda:</strong>
-                    <span class="badge bg-danger">Slecht / Onder < 0.5</span>
-                    <span class="badge bg-warning text-dark">Gemiddeld / Op Schema 0.5 ~ 0.8</span>
-                    <span class="badge bg-success">Goed / Uitblinker > 0.8</span>
+
                 </div>
                 <table class="table table-hover align-middle">
                     <thead class="table-light">
@@ -54,17 +52,7 @@
                             <th scope="row">{{ student["id"] or "-" }}</th>
                             <td>{{ student["first_name"] or "-" }}</td>
                             <td>{{ student["last_name"] or "-" }}</td>
-                            <td>
-                                {% if student["status"] == "Onder" %}
-                                    <span class="badge bg-danger"> Onder </span>
-                                {% elif student["status"] == "Uitblinker" %}
-                                    <span class="badge bg-success"> Uitblinker </span>
-                                {% elif student["status"] == "Op schema" %}
-                                    <span class="badge bg-warning text-dark"> Op schema </span>
-                                {% else %}
-                                    <span class="badge bg-secondary"> Geen data </span>
-                                {% endif %}
-                            </td>
+
                             <td><a href="/teacher/studentdetail/{{ student["id"] }}"
                                    class="btn btn-success">Gegevens</a></td>
                         </tr>
@@ -93,13 +81,12 @@
                 .then(data => update_table(data));
         }
 
-        function update_table(students) {
-            console.log(students)
+        function update_table(student_group) {
 
             const tbody = document.querySelector("tbody");
             tbody.innerHTML = "";
 
-            if (students.length === 0) {
+            if (student_group.length === 0) {
                 tbody.innerHTML = `
                 <tr>
                     <td colspan="10" class="text-center">
@@ -110,23 +97,46 @@
                 return;
             }
 
-            students.forEach(student => {
-                let badge = "";
-                if (student.status === "Onder")
-                    badge = '<span class="badge bg-danger">Onder</span>';
-                else if (student.status === "Uitblinker")
-                    badge = '<span class="badge bg-success">Uitblinker</span>';
-                else if (student.status === "Op schema")
-                    badge = '<span class="badge bg-warning text-dark">Op schema</span>';
-                else
-                    badge = '<span class="badge bg-secondary">Geen data</span>';
+            student_group.students.forEach(student => {
+
+                let amount_above_avg = 0;
+                let amount_on_avg = 0;
+                let amount_below_avg = 0;
+                let avg_margin = 0.1;
+
+                student.subjects.forEach(subject => {
+                    let student_avg = parseFloat(subject.student_avg);
+                    let group_avg = parseFloat(subject.group_avg);
+
+                    if ((student_avg + avg_margin) > group_avg && (student_avg - avg_margin) < group_avg) {
+                        amount_on_avg++;
+                    } else if (student_avg > group_avg) {
+                        amount_above_avg++;
+                    } else {
+                        amount_below_avg++;
+                    }
+                })
+
+
 
                 const row = `
                 <tr>
                     <th>${student.id || "-"}</th>
                     <td>${student.first_name || "-"}</td>
                     <td>${student.last_name || "-"}</td>
-                    <td>${badge}</td>
+                    <td>
+                        <span class="text-success fw-bold">
+                             Boven (${amount_above_avg})
+                        </span>
+
+                        <span class="text-warning fw-bold">
+                             Op (${amount_on_avg})
+                        </span>
+
+                        <span class="text-danger fw-bold">
+                             Onder (${amount_below_avg})
+                        </span>
+                    </td>
                     <td><a href="/teacher/studentdetail/${student["id"]}" class="btn btn-success">Gegevens</a></td>
                 </tr>
             `;
