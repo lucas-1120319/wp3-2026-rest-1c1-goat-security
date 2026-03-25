@@ -32,7 +32,17 @@ def profile():
 def subjects():
     """ Show list of subjects"""
     subject_list = app.teachers.get_all_subjects()
-    return render_template("subjects.html", subject_list=subject_list)
+
+    studentGroups = app.teachers.get_all_studentGroups()
+    studentGroups_data = []
+
+    for group in studentGroups:
+        group_data = dict(group)
+        all_students_data = app.teachers.get_all_students_studentGroup(group["id"])
+        group_data["student_count"] = len(all_students_data["students"])
+        studentGroups_data.append(group_data)
+
+    return render_template("subjects.html", subject_list=subject_list, studentGroups=studentGroups_data)
 
 @teacher_bp.route("/subjects/<int:subject_id>", methods=["GET"])
 def select_subject(subject_id):
