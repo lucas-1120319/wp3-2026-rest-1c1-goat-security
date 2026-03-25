@@ -9,22 +9,21 @@
 <div class="row">
 
     {% if role == "teacher" %}
-
-        <div class="row">
-        {% for sub in subject_list %}
+        <div class="col-12 row">
+        {%for subject in subject_list %}
             <div class="col-md-4">
-                <div class="card  " >
-                    <a class="link-underline link-underline-opacity-0" href="/teacher/subjects/{{ sub["id"] }}">
+                <div class="card">
+                    <a class="link-underline link-dark  link-underline-opacity-0" href="/teacher/subjects/{{ subject["id"] }}">
                       <div class="card-body">
-                        <div class="fs-3">{{ sub['name'] }}</div>
+                          <div class="d-flex justify-content-between align-items-start">
+                            <div class="fs-3 fw-bold">{{ subject["name"] }}</div>
+                          </div>
                       </div>
                     </a>
                 </div>
             </div>
+        {%endfor%}
         </div>
-
-        {% endfor %}
-
 
     {% else %}
         <div class="col-12 row">
