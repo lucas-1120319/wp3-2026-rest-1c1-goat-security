@@ -16,6 +16,9 @@ app.secret_key = "super_duper_secret_key"
 BASE_DIR = os.path.dirname(__file__)
 DB_PATH = os.path.join(BASE_DIR, "data", "app.db")
 
+if os.path.exists(DB_PATH):
+    os.remove(DB_PATH)
+    print("Old database deleted.")
 _db = Database(DB_PATH)
 app.students = Student(DB_PATH)
 app.teachers = Teacher(DB_PATH)

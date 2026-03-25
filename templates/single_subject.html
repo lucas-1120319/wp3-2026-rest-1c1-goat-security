@@ -10,39 +10,9 @@
 
     {% if role == "teacher" %}
 
-{#        <div class="row">#}
-{#        {% for lg in learning_goals %}#}
-{#            <div class="col-md-4">#}
-{#                <div class="card  " >#}
-{#                    <a class="link-underline link-underline-opacity-0  " href="/teacher/subjects/{{ lg["id"] }}">#}
-{#                      <div class="card-body">#}
-{#                        <div class="fs-3">{{ lg['title'] }}</div>#}
-{#                      </div>#}
-{#                    </a>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#        {% endfor %}#}
-
-
-
-{#</div>#}
-{#  <canvas id="myChart"></canvas>#}
-{#</div>#}
 
 <table class="table">
 
-{#  <thead>#}
-{#    <tr>#}
-{#      <th scope="col">Klass</th>#}
-{#      <th scope="col">Naam</th>#}
-{#      <th scope="col">ID</th>#}
-{#      <th scope="col">Leerdoel</th>#}
-{#      <th scope="col">Level</th>#}
-{#      <th scope="col">Kennen</th>#}
-{#      <th scope="col">Kunnen</th>#}
-{#    </tr>#}
-{#  </thead>#}
 {% for goal, values in goals.items() %}
 <div class="col-md-6 mb-4">
 {#<h3>{{ goal }}</h3>#}
@@ -80,23 +50,7 @@ new Chart(ctx{{ loop.index }}, {
 });
 </script>
 {% endfor %}
-{#  <tbody>#}
-{#    {% for group in groups %}#}
-{#      <tr>#}
-{#      <td>{{ group['class_name']}}</td>#}
-{#      <td>{{ group['student_name']}}</td>#}
-{#      <td>{{ group['learning_goal_id']}}</td>#}
-{#      <td>{{ group['learning_goal']}}</td>#}
-{#      <td>{{ group['level']}}</td>#}
-{#      <td>{{ group['average']}}</td>#}
-{#      <td>{{ group['kunnen']}}</td>#}
-{#    </tr>#}
-{#  {% endfor %}#}
-{#  </tbody>#}
 </table>
-
-{#        {% endfor %}#}
-
     {% else %}
         {%for subject in subjects %}
             <div class="col-md-4">

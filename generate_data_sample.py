@@ -70,50 +70,69 @@ def make_taxonomy_block(base_kennen, base_kunnen):
     return result
 
 # -----------------------------
-# Source Pool
+# Source Pool (MORE DATA)
 # -----------------------------
-def create_source_pool(n=100):
+def create_source_pool(n=500):
     types = ["quiz", "test", "observatie", "project"]
     base_date = date(2025, 9, 1)
     pool = []
+
     for i in range(n):
         source_type = random.choice(types)
-        day_offset = random.randint(0, 120)
+        day_offset = random.randint(0, 180)
+
         d = base_date + timedelta(days=day_offset)
         source_id = f"{source_type[:2].upper()}-{i+1}"
-        pool.append({"at": d.isoformat(), "source": {"type": source_type, "id": source_id}})
+
+        pool.append({
+            "at": d.isoformat(),
+            "source": {"type": source_type, "id": source_id}
+        })
 
     return pool
 
 SOURCE_POOL = create_source_pool()
-student_used_sources = {student_id: set() for student_id, _ in students}
 
 # -----------------------------
-# Snapshot generation per student
+# Learning Goal Progression
 # -----------------------------
-def make_student_snapshots(student_id, n_min=10, n_max=20):
-    used = student_used_sources[student_id]
-    available = [s for s in SOURCE_POOL if s["source"]["id"] not in used]
-    if not available:
-        return []
+def make_learning_goal_snapshots():
+    n = random.randint(5, 10)
 
-    max_n = min(n_max, len(available))
-    min_n = min(n_min, max_n)
-    n = random.randint(min_n, max_n)
+    chosen = random.sample(SOURCE_POOL, n)
+    chosen = sorted(chosen, key=lambda x: x["at"])
 
-    chosen = random.sample(available, n)
-    for src in chosen:
-        used.add(src["source"]["id"])
+    # Start low, end higher
+    start_kennen = random.uniform(0.1, 0.4)
+    end_kennen = random.uniform(0.6, 0.95)
+
+    start_kunnen = random.uniform(0.1, 0.3)
+    end_kunnen = random.uniform(0.5, 0.9)
 
     snapshots = []
-    for src in chosen:
-        base_kennen = random.uniform(0.3, 0.9)
-        base_kunnen = random.uniform(0.2, 0.8)
+
+    for i, src in enumerate(chosen):
+        t = i / (n - 1) if n > 1 else 1
+
+        # Non-linear growth curve
+        curve = t ** random.uniform(0.7, 1.5)
+
+        kennen = start_kennen + (end_kennen - start_kennen) * curve
+        kunnen = start_kunnen + (end_kunnen - start_kunnen) * curve
+
+        # Add randomness (important!)
+        kennen += random.uniform(-0.1, 0.1)
+        kunnen += random.uniform(-0.1, 0.1)
+
         snapshots.append({
             "at": src["at"],
             "source": src["source"],
-            "taxonomy": make_taxonomy_block(base_kennen, base_kunnen)
+            "taxonomy": make_taxonomy_block(
+                clamp(kennen),
+                clamp(kunnen)
+            )
         })
+
     return snapshots
 
 # -----------------------------
@@ -121,18 +140,13 @@ def make_student_snapshots(student_id, n_min=10, n_max=20):
 # -----------------------------
 def make_student_entry(student_id, student_name):
     subjects_list = []
-    snapshots_for_student = make_student_snapshots(student_id)
 
     for subject_id, subject_name in subjects:
         goals_for_subject = subject_learning_goals[subject_id]
         lg_list = []
 
-        # Distribute snapshots across learningGoals
-        remaining_snapshots = snapshots_for_student.copy()
         for g in goals_for_subject:
-            k = min(len(remaining_snapshots), random.randint(1, 3))
-            snapshots_for_lg = remaining_snapshots[:k]
-            remaining_snapshots = remaining_snapshots[k:]
+            snapshots_for_lg = make_learning_goal_snapshots()
 
             lg_list.append({
                 "id": g["id"],
@@ -157,12 +171,14 @@ def make_student_entry(student_id, student_name):
 # -----------------------------
 def main():
     students_data = []
+
     for student_id, student_name in students:
         entry = make_student_entry(student_id, student_name)
         students_data.append(entry)
 
     with open("data/data-sample.json", "w", encoding="utf-8") as f:
         json.dump({"students": students_data}, f, ensure_ascii=False, indent=2)
+
     print("JSON generation complete: data/data-sample.json")
 
 # -----------------------------

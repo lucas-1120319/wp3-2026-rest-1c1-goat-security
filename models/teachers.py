@@ -6,6 +6,16 @@ class Teacher:
     def __init__(self, db_path: str):
         self.db = Database(db_path)
 
+    def get_all_user_info(self, user_id: int):
+        with self.db.connect() as con:
+            con.row_factory = sqlite3.Row  # <--- make rows dictionary-like
+            cur = con.cursor()
+            cur.execute("""SELECT user_id, email, phone, first_name, last_name, birth_date 
+                           FROM teachers
+                        inner join users ON teachers.user_id = users.id WHERE user_id = ?
+                        """, (user_id,))
+            return cur.fetchone()
+
     def get_teacher_id(self, user_id: int):
         with self.db.connect() as con:
             con.row_factory = sqlite3.Row  # <--- make rows dictionary-like
@@ -23,11 +33,6 @@ class Teacher:
                                   phone,
                                   first_name,
                                   last_name,
-                                  postcode,
-                                  gender,
-                                  city,
-                                  country,
-                                  street_name,
                                   birth_date
                            FROM teachers
                                     inner join users ON teachers.user_id = users.id
@@ -40,22 +45,28 @@ class Teacher:
             cur.execute("""UPDATE teachers
                            Set first_name  = ?,
                                last_name   = ?,
-                               postcode    = ?,
-                               gender      = ?,
-                               city        = ?,
-                               country     = ?,
-                               street_name = ?,
                                birth_date  = ?
                            WHERE user_id = ?""",
-                        (data["first_name"], data["last_name"], data["postcode"], data["gender"], data["city"],
-                         data["country"], data["street_name"], data["birth_date"], user_id,))
+                        (data["first_name"], data["last_name"], data["birth_date"], user_id,))
             con.commit()
-            cur.execute("""UPDATE users
-                           Set email    = ?,
-                               phone    = ?,
-                               password = ?
-                           WHERE id = ?""",
-                        (data["email"], data["phone"], User.hash_password(data["password"]), user_id,))
+
+            if data.get("password"):
+                cur.execute("""
+                            UPDATE users
+                            SET email    = ?,
+                                phone    = ?,
+                                password = ?
+                            WHERE id = ?
+                            """,                         (data["email"], data["phone"], User.hash_password(data["password"]), user_id,))
+
+            else:
+                cur.execute("""
+                            UPDATE users
+                            SET email = ?,
+                                phone = ?
+                            WHERE id = ?
+                            """, (data["email"], data["phone"], user_id))
+
             con.commit()
 
             return cur.fetchone()
@@ -70,6 +81,16 @@ class Teacher:
             con.commit()
             return cur.fetchall()
 
+    def get_group_per_name(self, get_group_per_name: str):
+        with self.db.connect() as con:
+            cur = con.cursor()
+            cur.execute("SELECT studentGroups.id FROM teacher_studentGroup "
+                        "INNER JOIN studentGroups ON studentGroups.id = teacher_studentGroup.studentGroup_id "
+                        "WHERE studentGroups.name = ? ",
+                        (get_group_per_name,))
+            con.commit()
+            return cur.fetchone()[0]
+
     def get_all_studentGroups(self):
         """ Get all studentGroups """
         with self.db.connect() as con:
@@ -78,36 +99,126 @@ class Teacher:
             con.commit()
             return cur.fetchall()
 
+    def format_class_data(self, rows):
+        result = {
+            "class": None,
+            "students": []
+        }
+
+        students_map = {}
+
+        for row in rows:
+            (
+                class_id, class_name,
+                student_id, first_name, last_name, birth_date,
+                lg_id, lg_title, subject_title, avg_score
+            ) = row
+
+            # Set class info once
+            if result["class"] is None:
+                result["class"] = {
+                    "id": class_id,
+                    "name": class_name
+                }
+
+            # Create student if not exists
+            if student_id not in students_map:
+                students_map[student_id] = {
+                    "id": student_id,
+                    "first_name": first_name,
+                    "last_name": last_name,
+                    "birth_date": birth_date,
+                    "subjects": {}  # 👈 use dict first (important!)
+                }
+
+            student = students_map[student_id]
+
+            # Create subject if not exists
+            if subject_title not in student["subjects"]:
+                student["subjects"][subject_title] = {
+                    "name": subject_title,
+                    "learning_goals": []
+                }
+
+            # Add learning goal to correct subject
+            student["subjects"][subject_title]["learning_goals"].append({
+                "id": lg_id,
+                "title": lg_title,
+                "avg": avg_score
+            })
+
+        # Convert subjects dict → list
+        for student in students_map.values():
+            student["subjects"] = list(student["subjects"].values())
+
+        result["students"] = list(students_map.values())
+        return result
+
     def get_all_students_studentGroup(self, class_id: int):
         """ Get all students from a studentGroup """
         with self.db.connect() as con:
             cur = con.cursor()
             cur.execute(
                 """
-                SELECT 
-                    students.id,
-                    students.first_name,
-                    students.last_name,
-                    students.postcode,
-                    students.gender,
-                    students.city,
-                    students.country,
-                    students.street_name,
-                    students.birth_date,
-                    (AVG(taxonomies.kennen) + AVG(taxonomies.kunnen)) / 2.0 AS average,
-                    AVG(taxonomies.confidence) AS avg_confidence
-                FROM students
-                INNER JOIN student_studentGroups ON students.id = student_studentGroups.student_id
-                INNER JOIN studentGroups ON studentGroups.id = student_studentGroups.studentGroup_id
-                INNER JOIN taxonomies ON students.id = taxonomies.student_id
-                WHERE studentGroups.name = ?
-                GROUP BY students.id
-                ORDER BY students.id ASC
-                """,
-                (class_id,),
-            )
-            con.commit()
-            return cur.fetchall()
+                WITH class_info AS (
+                    SELECT id, name
+                    FROM studentGroups
+                    WHERE id = ?
+                ),
+                class_students AS (
+                    SELECT
+                        s.id AS student_id,
+                        s.first_name,
+                        s.last_name,
+                        s.birth_date,
+                        sg.id AS class_id,
+                        sg.name AS class_name
+                    FROM students s
+                    JOIN student_studentGroups ssg ON s.id = ssg.student_id
+                    JOIN studentGroups sg ON sg.id = ssg.studentGroup_id
+                    WHERE sg.id = ?
+                ),
+                latest_snapshots AS (
+                    SELECT
+                        t.student_id,
+                        s.learningGoal_id,
+                        MAX(s.at) AS latest_at
+                    FROM taxonomies t
+                    JOIN snapshots s ON t.snapshot_id = s.id
+                    WHERE t.student_id IN (SELECT student_id FROM class_students)
+                    GROUP BY t.student_id, s.learningGoal_id
+                )
+                SELECT
+                    cs.class_id,
+                    cs.class_name,
+                    cs.student_id,
+                    cs.first_name,
+                    cs.last_name,
+                    cs.birth_date,
+                    lg.id AS learningGoal_id,
+                    lg.title AS learningGoal_title,
+                    sub.name AS subject_title,
+                    (AVG(t.kennen) + AVG(t.kunnen)) / 2.0 AS avg_score
+                FROM latest_snapshots ls
+                JOIN class_students cs ON cs.student_id = ls.student_id
+                JOIN snapshots s
+                    ON s.learningGoal_id = ls.learningGoal_id
+                    AND s.at = ls.latest_at
+                JOIN taxonomies t
+                    ON t.student_id = ls.student_id AND t.snapshot_id = s.id
+                JOIN learningGoals lg ON lg.id = s.learningGoal_id
+                JOIN subjects sub ON sub.id = lg.subject_id
+                GROUP BY
+                    cs.student_id,
+                    lg.id
+                ORDER BY cs.student_id, lg.id;
+            """,
+                (class_id,class_id,))
+            rows = cur.fetchall()
+            data = self.format_class_data(rows)
+            return data
+
+
 
     def get_single_student_subject(self, student_id: int):
         """ Get the average result of a student from a subject """
@@ -202,36 +313,6 @@ ORDER BY lg.id, st.first_name
 
 
 
-    # def get_learning_goals_list(self):
-    #     """ Get keyword and taxonomy score for group. """
-    #     with self.db.connect() as con:
-    #         cur = con.cursor()
-    #         cur.execute(
-    #             """
-    #             SELECT st.id,
-    #                 st.first_name AS st_name,
-    #                 lg.title AS lg_title,
-    #                 lg.id AS lg_id,
-    #                 tax.level AS tax_level,
-    #                 tax.kennen AS tax_kennen,
-    #                 tax.kunnen  AS tax_kunnen
-    #
-    #             FROM students st
-    #                 LEFT JOIN student_studentGroups ssg ON st.id = ssg.student_id
-    #                 LEFT JOIN studentGroups sg ON sg.id = ssg.studentGroup_id
-    #                 LEFT JOIN studentGroup_subjects sgs ON ssg.studentGroup_id = sgs.studentGroup_id
-    #                 LEFT JOIN taxonomies tax ON st.id = tax.student_id
-    #                 LEFT JOIN learningGoals lg ON sgs.subject_id = lg.subject_id
-    #                 INNER JOIN learningGoal_keywords ON learningGoal_keywords.learningGoal_id = lg.id
-    #                 INNER JOIN keywords key ON learningGoal_keywords.keyword_id = key.id
-    #                 INNER JOIN snapshots ss ON ss.learningGoal_id = lg.id
-    #
-    #                 GROUP BY lg.title
-    #                 ORDER BY lg.id
-    #
-    #             """,
-    #         )
-    #         return cur.fetchall()
 
 
 # Controleren of deze werkt of niet ?

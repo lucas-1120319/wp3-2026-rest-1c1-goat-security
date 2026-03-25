@@ -25,7 +25,6 @@ class data_converter:
                 email = f"{student['name'].lower()}@example.com"
                 test_password = "geheim"
                 password = User.hash_password(test_password)
-                print(password)
                 role_id = 2  # student
 
                 # Insert user
