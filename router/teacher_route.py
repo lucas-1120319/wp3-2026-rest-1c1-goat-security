@@ -111,8 +111,8 @@ def studentGroups():
 
     for group in studentGroups:
         group_data = dict(group)
-        all_students_data = app.teachers.get_all_students_studentGroup(group["name"])
-        group_data["student_count"] = len(all_students_data)
+        all_students_data = app.teachers.get_all_students_studentGroup(group["id"])
+        group_data["student_count"] = len(all_students_data["students"])
         studentGroups_data.append(group_data)
 
     return render_template("studentGroup.html", studentGroups=studentGroups_data)
@@ -130,8 +130,8 @@ def studentGroup():
 
     for group in studentGroups:
         group_data = dict(group)
-        all_students_data = app.teachers.get_all_students_studentGroup(group["name"])
-        group_data["student_count"] = len(all_students_data)
+        all_students_data = app.teachers.get_all_students_studentGroup(group["id"])
+        group_data["student_count"] = len(all_students_data["students"])
         studentGroups_data.append(group_data)
 
     return render_template("studentGroup.html", studentGroups=studentGroups_data)
