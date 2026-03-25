@@ -4,8 +4,14 @@
         Klassen
     {% endblock %}
 {% endblock %}
-
 {% block content %}
+     {% set class_icons = {
+        "1a": "fa-solid fa-cat",
+        "1b": "fa-solid fa-dog",
+        "1c": "fa-solid fa-hippo",
+        "1d": "fa-solid fa-frog"
+    } %}
+
     <div class="col-12 row">
         {% for group in studentGroups %}
             <div class="col-md-4">
@@ -13,6 +19,7 @@
                     <a class="link-underline link-dark  link-underline-opacity-0"
                        href="/teacher/studentGroup/{{ group["name"] }}">
                         <div class="card-body">
+                            <i class="{{ class_icons[group['name']] }} fs-1 mb-2"></i>
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="fs-3 fw-bold">klas {{ group["name"] }}</div>
                             </div>

@@ -202,7 +202,6 @@ def all_snapshot_average(learning_goal_id):
     onthouden = []
     begrijpen = []
     toepassen = []
-    toepassen = []
     analyseren = []
 
     for score in scores:

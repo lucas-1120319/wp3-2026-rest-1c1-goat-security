@@ -15,78 +15,93 @@
     {% endfor %}
     </div>
     <div class="row">
-        <div class="col-6">
+    <div class="col-6">
+        <canvas class="" id="level_progress_graph"></canvas>
+    </div>
 
-            <canvas class="" id="level_progress_graph"></canvas>
-        </div>
-        <div class="col-6  row">
-            <div class="col">
-                <h3 class="mb-3">Gemiddelde</h3>
+    <div class="col-6 row">
+        <div class="col">
+            <h3 class="mb-3">Gemiddelde</h3>
 
-                <div class="row row-cols-2 g-3"> <!-- 2x2 grid with small gap -->
+            <div class="row row-cols-2 g-3"> <!-- 2x2 grid with small gap -->
 
-                    <div class="col">
-                        <div class="card h-100 text-center">
-                            <div class="card-body d-flex flex-column justify-content-center">
-                                <h4 class="card-title fw-bold mb-3">Onthouden</h4>
-                                <p id="onthouden_average_snapshots" class="fs-4 mb-0"></p>
+                <!-- Onthouden -->
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body d-flex align-items-center gap-3">
+                            <i class="fa-solid fa-brain fs-2"></i>
+                            <div class="d-flex flex-column">
+                                <div class="fw-bold fs-5">Onthouden</div>
+                                <div id="onthouden_average_snapshots" class="fs-5"></div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="col">
-                        <div class="card h-100 text-center">
-                            <div class="card-body d-flex flex-column justify-content-center">
-                                <h4 class="card-title fw-bold mb-3">Begrijpen</h4>
-                                <p id="begrijpen_average_snapshots" class="fs-4 mb-0"></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col">
-                        <div class="card h-100 text-center">
-                            <div class="card-body d-flex flex-column justify-content-center">
-                                <h4 class="card-title fw-bold mb-3">Toepassen</h4>
-                                <p id="toepassen_average_snapshots" class="fs-4 mb-0"></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col">
-                        <div class="card h-100 text-center">
-                            <div class="card-body d-flex flex-column justify-content-center">
-                                <h4 class="card-title fw-bold mb-3">Analyseren</h4>
-                                <p id="analyseren_average_snapshots" class="fs-4 mb-0"></p>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
-            </div>
 
+                <!-- Begrijpen -->
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body d-flex align-items-center gap-3">
+                            <i class="fa-solid fa-lightbulb fs-2"></i>
+                            <div class="d-flex flex-column">
+                                <div class="fw-bold fs-5">Begrijpen</div>
+                                <div id="begrijpen_average_snapshots" class="fs-5"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Toepassen -->
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body d-flex align-items-center gap-3">
+                            <i class="fa-solid fa-screwdriver-wrench fs-2"></i>
+                            <div class="d-flex flex-column">
+                                <div class="fw-bold fs-5">Toepassen</div>
+                                <div id="toepassen_average_snapshots" class="fs-5"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analyseren -->
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body d-flex align-items-center gap-3">
+                            <i class="fa-solid fa-magnifying-glass-chart fs-2"></i>
+                            <div class="d-flex flex-column">
+                                <div class="fw-bold fs-5">Analyseren</div>
+                                <div id="analyseren_average_snapshots" class="fs-5"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
-        <div class="col-12">
-            <table class="table table-hover">
-              <thead>
+    </div>
+
+    <div class="col-12">
+        <table class="table table-hover">
+            <thead>
                 <tr>
                     <th scope="col">Code</th>
                     <th scope="col">Datum afnamen</th>
                     <th scope="col">Type</th>
                 </tr>
-              </thead>
-              <tbody>
-              {% for score in scores %}
-                      <tr onclick="window.location='/student/subject/learning_goals/{{ score['tax_snap'] }}/result'" style="cursor: pointer;">
-                          <td>{{ score["src_exid"] }}</td>
-
+            </thead>
+            <tbody>
+                {% for score in scores %}
+                    <tr onclick="window.location='/student/subject/learning_goals/{{ score['tax_snap'] }}/result'" style="cursor: pointer;">
+                        <td>{{ score["src_exid"] }}</td>
                         <td>{{ score["snap_at"] }}</td>
                         <td>{{ score["src_type"] }}</td>
                     </tr>
-             {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+</div>
     <script>
         fetch("/student/learningGoals_data/{{ learning_goal_id }}")
           .then(response => response.json())

@@ -4,8 +4,14 @@
         Vakken
     {% endblock %}
 {% endblock %}
-
 {% block content %}
+    {% set icons = {
+    'Biologie': 'fa-solid fa-seedling',
+    'Natuurkunde': 'fa-solid fa-atom',
+    'Scheikunde': 'fa-solid fa-flask-vial',
+    'Wiskunde': 'fa-solid fa-calculator'
+} %}
+
 <div class="row">
 
     {% if role == "teacher" %}
@@ -15,6 +21,7 @@
                 <div class="card">
                     <a class="link-underline link-dark  link-underline-opacity-0" href="/teacher/subjects/{{ subject["id"] }}">
                       <div class="card-body">
+                          <i class="{{ icons[subject['name']] }} fs-1 mb-2"></i>
                           <div class="d-flex justify-content-between align-items-start">
                             <div class="fs-3 fw-bold">{{ subject["name"] }}</div>
                           </div>
@@ -111,8 +118,7 @@
                 <div class="card  " >
                     <a class="link-underline link-dark  link-underline-opacity-0" href="/student/subject/learning_goals/{{ subject['id'] }}">
                       <div class="card-body">
-{#                        <div class="fs-3">{{ subject["name"] }}</div>#}
-                        <i class="{{ ['img'] }}"></i>
+                        <i class="{{ icons[subject['name']] }} fs-1 mb-2"></i>
 
                           <div class="d-flex justify-content-between align-items-start">
                             <div class="fs-3 fw-bold">{{ subject["name"] }}</div>

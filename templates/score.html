@@ -7,29 +7,42 @@
     {% endblock %}
 {% endblock %}
 
-{% block content%}
+{% block content %}
 
-<div>
-  <canvas id="myChart"></canvas>
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-6">
+      <canvas id="myChart" style="height: 500px;"></canvas>
+    </div>
+
+    <div class="col-md-6">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Level</th>
+            <th scope="col">Kunnen</th>
+            <th scope="col">Kennen</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for score in scores %}
+          <tr>
+            <td>{{ score["tax_level"] }}</td>
+            <td>{{ score["tax_kunnen"] }}</td>
+            <td>{{ score["tax_kennen"] }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Level</th>
-      <th scope="col">Kunnen</th>
-      <th scope="col">Kennen</th>
-    </tr>
-  </thead>
-  <tbody>
-  {% for score in scores %}
-
 <script>
-fetch("/student/data/{{ score["tax_snap"] }}")
+fetch("/student/data/{{ scores[0]['tax_snap'] }}")
   .then(response => response.json())
   .then(data => {
       const ctx = document.getElementById('myChart');
-
       new Chart(ctx, {
           type: 'bar',
           data: {
@@ -37,20 +50,14 @@ fetch("/student/data/{{ score["tax_snap"] }}")
               datasets: [
                   {label: 'Kunnen', data: data.kunnen },
                   {label: 'Kennen', data: data.kennen},
-                  {#{label: 'Analyseren', data: data.toepassen},#}
-                  {#{label: 'Toepassen', data: data.analyseren},#}
-
               ],
+          },
+          options: {
+              responsive: true,
+              maintainAspectRatio: false
           }
       });
   });
 </script>
-      <tr>
-      <td>{{ score["tax_level"] }}</td>
-      <td>{{ score["tax_kunnen"] }}</td>
-      <td>{{ score["tax_kennen"] }}</td>
-    </tr>
-  {% endfor %}
-  </tbody>
-</table>
+
 {% endblock %}
