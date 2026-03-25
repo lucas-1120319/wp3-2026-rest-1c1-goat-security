@@ -95,15 +95,39 @@ def learningGoals():
 @teacher_bp.route("/studentGroups")
 def studentGroups():
     """ Get all studentGroups """
+
+    # There's probably a way to merge it with the other studentGroup function under
+    # Will get to it later (When I have the time) :D
+
     studentGroups = app.teachers.get_all_studentGroups()
-    return render_template("studentGroup.html", studentGroups=studentGroups)
+    studentGroups_data = []
+
+    for group in studentGroups:
+        group_data = dict(group)
+        all_students_data = app.teachers.get_all_students_studentGroup(group["name"])
+        group_data["student_count"] = len(all_students_data)
+        studentGroups_data.append(group_data)
+
+    return render_template("studentGroup.html", studentGroups=studentGroups_data)
 
 @teacher_bp.route("/studentGroup")
 def studentGroup():
     """ Get a single studentGroup """
+
+    # There's probably a way to merge it with the other studentGroups function above
+    # Will get to it later (When I have the time) :D
+
     teacher_id = session["teacher_id"]
     studentGroups = app.teachers.get_studentGroups(teacher_id)
-    return render_template("studentGroup.html", studentGroups=studentGroups)
+    studentGroups_data = []
+
+    for group in studentGroups:
+        group_data = dict(group)
+        all_students_data = app.teachers.get_all_students_studentGroup(group["name"])
+        group_data["student_count"] = len(all_students_data)
+        studentGroups_data.append(group_data)
+
+    return render_template("studentGroup.html", studentGroups=studentGroups_data)
 
 
 @teacher_bp.route("/studentdetail/<int:id>", methods=["GET"])
