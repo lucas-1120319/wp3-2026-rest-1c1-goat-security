@@ -12,7 +12,7 @@
     <div class="row align-items-stretch">
         <div class="col-lg-4 mb-4">
             <div class="card shadow border-0">
-                <div class="card-header">
+                <div class="card-header text-white fw-semibold" id="top-card">
                     <h5 class="mb-0">Profiel Gegevens</h5>
                 </div>
                 <div class="card-body text-center">
@@ -36,7 +36,7 @@
 
         <div class="col-lg-8 mb-4 d-flex">
             <div class="card shadow border-0 w-100 h-100">
-                <div class="card-header">
+                <div class="card-header text-white fw-semibold" id="top-card">
                     <h5 id="chartTitle" class="mb-0">Kies een vak</h5>
                 </div>
                 <div class="card-body">
@@ -51,7 +51,7 @@
     <div class="row">
         <div class="col-6 mb-4">
             <div class="card shadow border-0">
-                <div class="card-header">
+                <div class="card-header text-white fw-semibold" id="top-card">
                     <h5 class="mb-0">Vakken Scores</h5>
                 </div>
                 <div class="card-body">
@@ -70,7 +70,7 @@
                                 <td>{{ subject["average"] }}</td>
                                 <td>
                                     <button
-                                        class="btn btn-sm btn-primary"
+                                        class="btn btn-sm btn-success"
                                         onclick="loadSubject(
                                                 '{{ subject['id'] }}',
                                                 '{{ subject['name']|escape }}',
@@ -89,7 +89,7 @@
 
         <div class="col-6 mb-4">
             <div class="card shadow border-0">
-                <div class="card-header">
+                <div class="card-header text-white fw-semibold" id="top-card">
                     <h5 id="learningGoalsTitle" class="mb-0">Leerdoelen</h5>
                 </div>
                 <div class="card-body" id="learningGoalsContainer">
@@ -102,7 +102,7 @@
     <div class="row">
         <div class="col-12">
             <div class="card shadow border-0">
-                <div class="card-header">
+                <div class="card-header text-white fw-semibold" id="top-card">
                     <h5 id="resultsTitle" class="mb-0">Resultaten</h5>
                 </div>
                 <div class="card-body" id="resultsContainer">

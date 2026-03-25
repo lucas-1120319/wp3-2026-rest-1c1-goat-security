@@ -1,6 +1,6 @@
 import sqlite3
 from data.database import Database
-
+from models.user import User
 
 class Teacher:
     def __init__(self, db_path: str):
@@ -49,6 +49,7 @@ class Teacher:
                            WHERE user_id = ?""",
                         (data["first_name"], data["last_name"], data["birth_date"], user_id,))
             con.commit()
+
             if data.get("password"):
                 cur.execute("""
                             UPDATE users
@@ -56,7 +57,8 @@ class Teacher:
                                 phone    = ?,
                                 password = ?
                             WHERE id = ?
-                            """, (data["email"], data["phone"], data["password"], user_id))
+                            """,                         (data["email"], data["phone"], User.hash_password(data["password"]), user_id,))
+
             else:
                 cur.execute("""
                             UPDATE users

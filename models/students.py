@@ -1,7 +1,7 @@
 import sqlite3
 from data.database import Database
-from router.student_route import student_bp
-
+# from router.student_route import student_bp
+from models.user import User
 
 class Student:
     def __init__(self, db_path: str):
@@ -52,7 +52,8 @@ class Student:
                     UPDATE users
                     SET email = ?, phone = ?, password = ?
                     WHERE id = ?
-                """, (data["email"], data["phone"], data["password"], user_id))
+                """,   (data["email"], data["phone"], User.hash_password(data["password"]),user_id, ))
+
             else:
                 cur.execute("""
                     UPDATE users

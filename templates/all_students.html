@@ -2,147 +2,153 @@
 
 {% block header %}
     {% block title %}
-        Studenten {{ class_name or "" }}
+        Klas {{ class_name or "" }}
     {% endblock %}
 {% endblock %}
 
-{% block content%}
-    <div class="mb-3">
-        <button class="btn btn-danger btn-sm"
-            onclick="filterStatus('Onder')">
-            Onder
-        </button>
-
-        <button class="btn btn-warning btn-sm"
-            onclick="filterStatus('Op schema')">
-            Op schema
-        </button>
-
-        <button class="btn btn-success btn-sm"
-            onclick="filterStatus('Uitblinker')">
-            Uitblinker
-        </button>
-
-        <button class="btn btn-secondary btn-sm"
-            onclick="filterStatus(null)">
-            Alles tonen
-        </button>
-        <strong>Legenda:</strong>
-        <span class="badge bg-danger">Slecht / Onder < 0.5</span>
-        <span class="badge bg-warning text-dark">Gemiddeld / Op Schema 0.5 ~ 0.8</span>
-        <span class="badge bg-success">Goed / Uitblinker > 0.8</span>
-    </div>
-<div class="row mt-4">
+{% block content %}
     <div class="col-12">
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">Student ID</th>
-                <th scope="col">Voornaam</th>
-                <th scope="col">Achternaam</th>
-{#                <th scope="col">Postcode</th>#}
-{#                <th scope="col">Gender</th>#}
-{#                <th scope="col">Stad</th>#}
-{#                <th scope="col">Land</th>#}
-{#                <th scope="col">Adres</th>#}
-{#                <th scope="col">Geboorte-datum</th>#}
-                <th scope="col">Status</th>
-                <th scope="col">Extra</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for student in students %}
-            <tr>
-            <th scope="row">{{ student["id"] or "-" }}</th>
-                <td>{{ student["first_name"] or "-" }}</td>
-                <td>{{ student["last_name"] or "-" }}</td>
-{#                <td>{{ student["postcode"] }}</td>#}
-{#                <td>{{ student["gender"] }}</td>#}
-{#                <td>{{ student["city"] }}</td>#}
-{#                <td>{{ student["country"] }}</td>#}
-{#                <td>{{ student["street_name"] }}</td>#}
-{#                <td>{{ student["birth_date"] }}</td>#}
-                <td>
-                    {% if student["status"] == "Onder" %}
-                        <span class="badge bg-danger"> Onder </span>
-                    {% elif student["status"] == "Uitblinker" %}
-                        <span class="badge bg-success"> Uitblinker </span>
-                    {% elif student["status"] == "Op schema" %}
-                        <span class="badge bg-warning text-dark"> Op schema </span>
+        <div class="card shadow border-0">
+            <div class="card-header text-white fw-semibold" id="top-card">
+                <h5 class="mb-0">Studenten Lijst</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <button class="btn btn-danger btn-sm"
+                            onclick="filterStatus('Onder')">
+                        Onder
+                    </button>
+
+                    <button class="btn btn-warning btn-sm"
+                            onclick="filterStatus('Op schema')">
+                        Op schema
+                    </button>
+
+                    <button class="btn btn-success btn-sm"
+                            onclick="filterStatus('Uitblinker')">
+                        Uitblinker
+                    </button>
+
+                    <button class="btn btn-secondary btn-sm"
+                            onclick="filterStatus(null)">
+                        Alles tonen
+                    </button>
+                    <strong>Legenda:</strong>
+                    <span class="badge bg-danger">Slecht / Onder < 0.5</span>
+                    <span class="badge bg-warning text-dark">Gemiddeld / Op Schema 0.5 ~ 0.8</span>
+                    <span class="badge bg-success">Goed / Uitblinker > 0.8</span>
+                </div>
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                    <tr>
+                        <th scope="col">Student ID</th>
+                        <th scope="col">Voornaam</th>
+                        <th scope="col">Achternaam</th>
+                        {#                <th scope="col">Postcode</th>#}
+                        {#                <th scope="col">Gender</th>#}
+                        {#                <th scope="col">Stad</th>#}
+                        {#                <th scope="col">Land</th>#}
+                        {#                <th scope="col">Adres</th>#}
+                        {#                <th scope="col">Geboorte-datum</th>#}
+                        <th scope="col">Status</th>
+                        <th scope="col">Extra</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for student in students %}
+                        <tr>
+                            <th scope="row">{{ student["id"] or "-" }}</th>
+                            <td>{{ student["first_name"] or "-" }}</td>
+                            <td>{{ student["last_name"] or "-" }}</td>
+                            {#                <td>{{ student["postcode"] }}</td>#}
+                            {#                <td>{{ student["gender"] }}</td>#}
+                            {#                <td>{{ student["city"] }}</td>#}
+                            {#                <td>{{ student["country"] }}</td>#}
+                            {#                <td>{{ student["street_name"] }}</td>#}
+                            {#                <td>{{ student["birth_date"] }}</td>#}
+                            <td>
+                                {% if student["status"] == "Onder" %}
+                                    <span class="badge bg-danger"> Onder </span>
+                                {% elif student["status"] == "Uitblinker" %}
+                                    <span class="badge bg-success"> Uitblinker </span>
+                                {% elif student["status"] == "Op schema" %}
+                                    <span class="badge bg-warning text-dark"> Op schema </span>
+                                {% else %}
+                                    <span class="badge bg-secondary"> Geen data </span>
+                                {% endif %}
+                            </td>
+                            <td><a href="/teacher/studentdetail/{{ student["id"] }}"
+                                   class="btn btn-success">Gegevens</a></td>
+                        </tr>
                     {% else %}
-                        <span class="badge bg-secondary"> Geen data </span>
-                    {% endif %}
-                </td>
-                <td><a href="/teacher/studentdetail/{{ student["id"] }}" class="btn btn-primary">Gegevens</a></td>
-            </tr>
-            {% else %}
-                <h2 class="fs-3">Geen studenten in deze klas</h2>
-            {%endfor%}
-            </tbody>
-        </table>
+                        <h2 class="fs-3">Geen studenten in deze klas</h2>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-</div>
-<!--<div class="row">-->
+    <!--<div class="row">-->
 
-<!--    {%for student in students %}-->
-<!--        <div class="col-md-4">-->
-<!--            <div class="card  " >-->
-<!--                <a class="link-underline link-underline-opacity-0  " href="#">-->
-<!--                  <div class="card-body">-->
-<!--                    <div class="fs-3">Student {{ student["first_name"] }}</div>-->
-<!--                  </div>-->
-<!--                </a>-->
-<!--            </div>-->
-<!--        </div>-->
+    <!--    {%for student in students %}-->
+        <!--        <div class="col-md-4">-->
+        <!--            <div class="card  " >-->
+        <!--                <a class="link-underline link-underline-opacity-0  " href="#">-->
+        <!--                  <div class="card-body">-->
+        <!--                    <div class="fs-3">Student {{ student["first_name"] }}</div>-->
+        <!--                  </div>-->
+        <!--                </a>-->
+        <!--            </div>-->
+        <!--        </div>-->
 
-<!--    {% else %}-->
-<!--        <h2 class="fs-3">Geen studenten in deze klass</h2>-->
-<!--    {%endfor%}-->
-<!--</div>-->
+        <!--    {% else %}-->
+        <!--        <h2 class="fs-3">Geen studenten in deze klass</h2>-->
+        <!--    {%endfor%}-->
+    <!--</div>-->
 
-<script>
-    const className = "{{ class_name }}";
+    <script>
+        const className = "{{ class_name }}";
 
-    function filterStatus(status) {
-        let url = `/teacher/studentGroup/${className}/filter_status`;
+        function filterStatus(status) {
+            let url = `/teacher/studentGroup/${className}/filter_status`;
 
-        if (status !== null) {
-            url += `?status=${encodeURIComponent(status)}`;
+            if (status !== null) {
+                url += `?status=${encodeURIComponent(status)}`;
+            }
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => update_table(data));
         }
 
-        fetch(url)
-            .then(response => response.json())
-            .then(data => update_table(data));
-    }
+        function update_table(students) {
+            const tbody = document.querySelector("tbody");
+            tbody.innerHTML = "";
 
-    function update_table(students) {
-        const tbody = document.querySelector("tbody");
-        tbody.innerHTML = "";
-
-        if (students.length === 0) {
-            tbody.innerHTML = `
+            if (students.length === 0) {
+                tbody.innerHTML = `
                 <tr>
                     <td colspan="10" class="text-center">
                         Geen studenten gevonden
                     </td>
                 </tr>
             `;
-            return;
-        }
+                return;
+            }
 
-        students.forEach(student => {
+            students.forEach(student => {
 
-            let badge = "";
-            if (student.status === "Onder")
-                badge = '<span class="badge bg-danger">Onder</span>';
-            else if (student.status === "Uitblinker")
-                badge = '<span class="badge bg-success">Uitblinker</span>';
-            else if (student.status === "Op schema")
-                badge = '<span class="badge bg-warning text-dark">Op schema</span>';
-            else
-                badge = '<span class="badge bg-secondary">Geen data</span>';
+                let badge = "";
+                if (student.status === "Onder")
+                    badge = '<span class="badge bg-danger">Onder</span>';
+                else if (student.status === "Uitblinker")
+                    badge = '<span class="badge bg-success">Uitblinker</span>';
+                else if (student.status === "Op schema")
+                    badge = '<span class="badge bg-warning text-dark">Op schema</span>';
+                else
+                    badge = '<span class="badge bg-secondary">Geen data</span>';
 
-            const row = `
+                const row = `
                 <tr>
                     <th>${student.id || "-"}</th>
                     <td>${student.first_name || "-"}</td>
@@ -154,12 +160,12 @@
                     {#<td>${student.street_name}</td>#}
                     {#<td>${student.birth_date}</td>#}
                     <td>${badge}</td>
-                    <td><a href="/teacher/studentdetail/${ student["id"] }" class="btn btn-primary">Gegevens</a></td>
+                    <td><a href="/teacher/studentdetail/${student["id"]}" class="btn btn-success">Gegevens</a></td>
                 </tr>
             `;
 
-            tbody.innerHTML += row;
-        });
-    }
-</script>
+                tbody.innerHTML += row;
+            });
+        }
+    </script>
 {% endblock %}
