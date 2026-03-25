@@ -5,51 +5,134 @@
     {% endblock %}
 {% endblock %}
 {% block content %}
+    <h1 id="student_group_name">1a</h1>
 <div class="row">
-
     {% if role == "teacher" %}
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Kies een groep
+          </button>
 
+          <ul class="dropdown-menu">
 
-<table class="table">
+            <li onclick="On_click_studentGroup({{ subject_id }},'1a')">1a</li>
+            <li onclick="On_click_studentGroup({{ subject_id }},'1c')">1c</li>
 
-{% for goal, values in goals.items() %}
-<div class="col-md-6 mb-4">
-{#<h3>{{ goal }}</h3>#}
-<canvas id="chart-{{ loop.index }}"></canvas>
-</div>
+          </ul>
+        </div>
+        <div id="graph_container" class="row">
+            {% for goal, values in goals.items() %}
+
+                <div class="col-md-6 mb-4">
+                    <canvas id="chart-{{ loop.index }}"></canvas>
+                </div>
 <script>
-const ctx{{ loop.index }} = document.getElementById("chart-{{ loop.index }}");
+    const ctx{{ loop.index }} = document.getElementById("chart-{{ loop.index }}");
 
-new Chart(ctx{{ loop.index }}, {
-    type: 'bar',
-    data: {
-        labels: {{ values.labels | tojson }},
-        datasets: [{
-            label: "{{ goal }}",
-            data: {{ values.data | tojson }},
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.6)',
-                'rgba(54, 162, 235, 0.6)',
-                'rgba(255, 206, 86, 0.6)',
-                'rgba(75, 192, 192, 0.6)',
-                'rgba(153, 102, 255, 0.6)',
-                'rgba(255, 159, 64, 0.6)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
+    new Chart(ctx{{ loop.index }}, {
+        type: 'bar',
+        data: {
+            labels: {{ values.labels | tojson }},
+            datasets: [{
+                label: "{{ goal }}",
+                data: {{ values.data | tojson }},
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 159, 64, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        }
+    });
+
+    function On_click_studentGroup(subject_id, studentGroup_name){
+      fetch(`/teacher/subjects/${subject_id}/${studentGroup_name}/data`)
+          .then(response => response.json())
+          .then(data => {
+            make_graphs(data)
+              const studentGroup_name_element = document.getElementById("student_group_name")
+            studentGroup_name_element.innerHTML = studentGroup_name
+          })
+
     }
-});
+
+    function make_graphs(data){
+
+    const container = document.getElementById("graph_container")
+
+    container.innerHTML = ""
+
+    const grouped = {}
+
+    data.learning_goal.forEach((goal, i) => {
+        if (!grouped[goal]) {
+            grouped[goal] = {
+                labels: [],
+                data: []
+            }
+        }
+
+        grouped[goal].labels.push(data.labels[i])
+        grouped[goal].data.push(data.avg[i])
+    })
+
+    let index = 0
+    for (const goal in grouped) {
+        index++
+        const div = document.createElement("div")
+        div.className = "col-md-6 mb-4"
+        const canvas = document.createElement("canvas")
+        canvas.id = `chart-${index}`
+
+        div.appendChild(canvas)
+        container.appendChild(div)
+
+        const ctx = canvas.getContext("2d")
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: grouped[goal].labels,
+                datasets: [{
+                    label: goal,
+                    data: grouped[goal].data,
+                    backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 159, 64, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                    borderWidth: 1
+                }]
+            }
+        })
+    }
+}
 </script>
-{% endfor %}
-</table>
+            {% endfor %}
+        </div>
     {% else %}
         {%for subject in subjects %}
             <div class="col-md-4">

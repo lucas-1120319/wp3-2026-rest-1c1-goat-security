@@ -57,7 +57,6 @@ def select_subject(subject_id):
     goals = {}
     for g in groups:
         goal = g['learning_goal']
-        print(g["learning_goal_id"], g["learning_goal"])
 
         if goal not in goals:
             goals[goal] = {
@@ -68,20 +67,20 @@ def select_subject(subject_id):
         goals[goal]["labels"].append(g["student_name"])
         goals[goal]["data"].append(g["average"])
 
-
     return render_template("single_subject.html",
                            learning_goals=learning_goals,
                            subject_name=subject_name,
                            subject_id=subject_id, groups=groups, class_id=class_id, goals=goals)
 
 
-@teacher_bp.route("/subjects/<int:subject_id>/data", methods=["GET"])
-def data(subject_id):
-    groups = app.teachers.get_learning_goal_by_class(class_id='1', subject_id=subject_id)
-
+@teacher_bp.route("/subjects/<int:subject_id>/<studentGroup_name>/data", methods=["GET"])
+def data(subject_id,studentGroup_name):
+    studentGroup_id = app.teachers.get_group_per_name(studentGroup_name)
+    groups = app.teachers.get_learning_goal_by_class(class_id=studentGroup_id, subject_id=subject_id)
+    if not groups:
+        print("No data at all")
     student_name = [group['student_name'] for group in groups]
-    # kennen = [group['kennen'] for group in groups]
-    # kunnen = [group['kunnen'] for group in groups]
+
     avg = [group['average'] for group in groups]
     learning_goal = [group["learning_goal"] for group in groups]
 
@@ -89,7 +88,6 @@ def data(subject_id):
         "labels": student_name,
         "avg": avg,
         "learning_goal": learning_goal,
-        # "kunnen": kunnen,
     })
 
 
