@@ -4,8 +4,8 @@
         {{ learning_title["name"]}}
     {% endblock %}
 {% endblock %}
-
 {% block content%}
+
 
         <label for="filter_keywords">Filter op de onderwerpen</label>
     <input onkeyup="filterStatus()"  type="text"  name="filter_keywords" id="filter_keywords" >
@@ -17,7 +17,7 @@
     </div>
     <div class="row">
     <div class="col-6 container">
-        <div class="row g-5" id="learningGoals_container">
+        <div class="row g-2" id="learningGoals_container">
 
         </div>
     </div>
@@ -27,6 +27,26 @@
     </div>
     </div>
 <script>
+const icons = {
+    "Fotosynthese uitleggen": "fa-solid fa-leaf",
+    "Cellen en organellen herkennen": "fa-solid fa-microscope",
+    "DNA en erfelijkheid beschrijven": "fa-solid fa-dna",
+    "Ecosystemen analyseren": "fa-solid fa-globe",
+    "Beweging en snelheid beschrijven": "fa-solid fa-gauge-high",
+    "Energie en behoud verklaren": "fa-solid fa-bolt",
+    "Elektrische circuits analyseren": "fa-solid fa-plug",
+    "Golven en geluid begrijpen": "fa-solid fa-wave-square",
+    "Atomaire structuur uitleggen": "fa-solid fa-atom",
+    "Chemische bindingen herkennen": "fa-solid fa-link",
+    "Reacties en reactiemechanismen": "fa-solid fa-flask",
+    "Zuren en basen classificeren": "fa-solid fa-vial",
+    "Algebraïsche vergelijkingen oplossen": "fa-solid fa-square-root-variable",
+    "Functies en grafieken interpreteren": "fa-solid fa-chart-line",
+    "Meetkunde: eigenschappen en bewijs": "fa-solid fa-draw-polygon",
+    "Statistiek en kansberekening": "fa-solid fa-chart-pie"
+
+};
+
 filterStatus()
     function filterStatus(){
         const filter_keywords = document.getElementById("filter_keywords").value;
@@ -68,22 +88,31 @@ function update_cards(learning_goals){
 
 
 
-        const card_html = `
-        <div class="col-6 ">
-            <div class="card h-100  ">
-                <a class="link-dark link-underline link-underline-opacity-0" href="/student/subject/learning_goals/${goal.id}/examlist">
-                    <div class="card-body column ">
+        const iconClass = icons[goal.title] || "fa-solid fa-book";
 
-                        <div class="fs-3 fw-bold " >${goal.title}</div>
-                        <span class="badge bg-${scoreColor}">${toolTip_Text}</span>
-                        <div>
-                         ${badges_html}
-                        </div>
-                    </div>
-                </a>
+const card_html = `
+<div class="col-6">
+    <div class="card h-100">
+        <a class="link-dark link-underline link-underline-opacity-0" href="/student/subject/learning_goals/${goal.id}/examlist">
+            <div class="card-body">
+
+                <div class="d-flex align-items-center gap-2">
+                    <i class="${iconClass} fs-2 me-2"></i>
+
+                    <div class="fs-5 pb-3 fw-bold">${goal.title}</div>
+                </div>
+
+                <span class="badge bg-${scoreColor}">${toolTip_Text}</span>
+
+                <div>
+                    ${badges_html}
+                </div>
+
             </div>
-        </div>
-        `;
+        </a>
+    </div>
+</div>
+`;
         learningGoals_container.innerHTML += card_html;
     });
     makeGraph(learning_goals);
